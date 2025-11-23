@@ -1,5 +1,17 @@
 # AI Agent Guide - Payment System
 
+## 🤖 AI Agent Workflow (MANDATORY)
+
+This project uses a **Model Context Protocol (MCP)** server to enforce standards.
+**Before starting any task, you MUST:**
+
+1. **Check for Standards:** Use the `payment-system-mcp` server to retrieve the latest rules.
+2. **Use Templates:** When creating features, use `get_prompt('scaffold-feature')`.
+3. **Commit Rules:** When committing, use `get_prompt('generate-commit')`.
+4. **Documentation:** If you are unsure about a pattern, read the resource `docs://standards/development`.
+
+---
+
 ## Project Vision
 
 Local payment and business management system designed to modernize small businesses without expensive infrastructure. Single codebase supporting multiple countries (Mexico, Colombia, Argentina, Chile) by swapping only the payment processing layer.
@@ -11,20 +23,20 @@ Local payment and business management system designed to modernize small busines
 ## Technology Stack
 
 ### Backend
-- **Framework:** NestJS 10+ con TypeScript 5.3+ (strict mode)
-- **ORM:** Prisma 5+ (schema en `apps/backend/prisma/schema.prisma`)
-- **Base de datos:** PostgreSQL 16+ (multi-schema, JSONB, full-text search)
-- **Cache/Queue:** Redis 7+ con Bull MQ
-- **Autenticación:** Passport.js + JWT (access + refresh tokens)
-- **Validación:** class-validator + class-transformer
+- **Framework:** NestJS 10+ with TypeScript 5.3+ (strict mode)
+- **ORM:** Prisma 5+ (schema in `apps/backend/prisma/schema.prisma`)
+- **Database:** PostgreSQL 16+ (multi-schema, JSONB, full-text search)
+- **Cache/Queue:** Redis 7+ with Bull MQ
+- **Authentication:** Passport.js + JWT (access + refresh tokens)
+- **Validation:** class-validator + class-transformer
 - **Testing:** Jest + Supertest
 
 ### Frontend
-- **Framework:** Angular 19+ standalone components (sin NgModules)
-- **Características:** Signals, control flow (@if/@for), inject() function
-- **Estado:** NgRx Signal Store
-- **UI:** Angular Material 18+ o PrimeNG
-- **HTTP:** HttpClient con interceptors
+- **Framework:** Angular 19+ standalone components (no NgModules)
+- **Features:** Signals, control flow (@if/@for), inject() function
+- **State:** NgRx Signal Store
+- **UI:** Angular Material 18+ or PrimeNG
+- **HTTP:** HttpClient with interceptors
 - **Testing:** Jasmine/Karma (unit), Playwright (e2e)
 
 ---
@@ -38,7 +50,7 @@ Local payment and business management system designed to modernize small busines
 Business logic is country-agnostic. Payments process through abstraction:
 
 ```typescript
-// Interface común para todos los proveedores
+// Common interface for all providers
 interface IPaymentProvider {
   readonly country: string;
   readonly currency: string;
@@ -48,76 +60,76 @@ interface IPaymentProvider {
   refund(transactionId: string, amount: number): Promise<RefundResult>;
 }
 
-// Factory que inyecta el proveedor correcto según país
+// Factory that injects the correct provider based on country
 @Injectable()
 export class PaymentProviderFactory {
   getProvider(country: string): IPaymentProvider {
-    // Retorna: ConektaProvider (MX), PayUProvider (CO), MercadoPagoProvider (AR)
+    // Returns: ConektaProvider (MX), PayUProvider (CO), MercadoPagoProvider (AR)
   }
 }
 ```
 
-**Ubicación:** `apps/backend/src/modules/payments/`
+**Location:** `apps/backend/src/modules/payments/`
 
-**Adaptadores por país:**
+**Country Adapters:**
 - `providers/mexico/conekta-provider.service.ts` (Conekta + SPEI)
 - `providers/colombia/payu-provider.service.ts` (PayU + PSE)
 - `providers/argentina/mercadopago-provider.service.ts` (Mercado Pago)
 
-**Regla:** Al agregar funcionalidad de pagos, SIEMPRE usa la abstracción. NUNCA llames directamente a una pasarela.
+**Rule:** When adding payment functionality, ALWAYS use the abstraction. NEVER call a gateway directly.
 
-### 2. Estructura Modular (NestJS)
+### 2. Modular Structure (NestJS)
 
-Módulos principales:
-- `auth/` - Autenticación, KYC, roles (RBAC)
-- **`payments/`** - ⭐ Orquestación de pagos, webhooks, factory
-- `business/` - Comercios, sucursales, empleados
-- `inventory/` - Productos, stock, alertas
-- `sales/` - Ventas, caja, cierres
-- `billing/` - Facturas (SAT México, DIAN Colombia, AFIP Argentina)
+Main Modules:
+- `auth/` - Authentication, KYC, roles (RBAC)
+- **`payments/`** - ⭐ Payment orchestration, webhooks, factory
+- `business/` - Merchants, branches, employees
+- `inventory/` - Products, stock, alerts
+- `sales/` - Sales, cash register, closings
+- `billing/` - Invoices (SAT Mexico, DIAN Colombia, AFIP Argentina)
 - `notifications/` - SMS/Email/Push (Bull Queue)
-- `analytics/` - Reportes, dashboards, métricas
+- `analytics/` - Reports, dashboards, metrics
 
-**Convención:** Cada módulo tiene su carpeta con:
-- `*.module.ts` (módulo NestJS)
-- `*.controller.ts` (endpoints REST)
-- `*.service.ts` (lógica de negocio)
-- `dto/*.dto.ts` (validación con class-validator)
-- `entities/*.entity.ts` (modelos Prisma)
+**Convention:** Each module has its folder with:
+- `*.module.ts` (NestJS module)
+- `*.controller.ts` (REST endpoints)
+- `*.service.ts` (business logic)
+- `dto/*.dto.ts` (validation with class-validator)
+- `entities/*.entity.ts` (Prisma models)
 
-### 3. Base de Datos (Prisma)
+### 3. Database (Prisma)
 
 **Schema:** `apps/backend/prisma/schema.prisma`
 
-**Entidades core:**
-- `User` (multi-rol: ADMIN, MERCHANT, CUSTOMER)
-- `Business` (comercios, con campo `country` para determinar adaptador)
-- `Branch` (sucursales)
-- `Product` (catálogo, inventario)
-- `Transaction` (pagos, con `providerAdapter` y `providerData` JSONB)
-- `Sale` (ventas registradas)
-- `Invoice` (recibos/facturas con metadata fiscal por país)
-- `CashRegister` (cajas, cierres de turno)
-- `PaymentMethod` (QR estático, dinámico, enlaces)
+**Core Entities:**
+- `User` (multi-role: ADMIN, MERCHANT, CUSTOMER)
+- `Business` (merchants, with `country` field to determine adapter)
+- `Branch` (branches)
+- `Product` (catalog, inventory)
+- `Transaction` (payments, with `providerAdapter` and `providerData` JSONB)
+- `Sale` (registered sales)
+- `Invoice` (receipts/invoices with fiscal metadata per country)
+- `CashRegister` (cash registers, shift closings)
+- `PaymentMethod` (static, dynamic QR, links)
 
-**Reglas:**
-- Usar UUIDs para `id` (no auto-increment)
-- Campos obligatorios: `createdAt`, `updatedAt`
-- Soft deletes: `deletedAt` opcional
-- JSONB para datos específicos de país/proveedor
+**Rules:**
+- Use UUIDs for `id` (no auto-increment)
+- Mandatory fields: `createdAt`, `updatedAt`
+- Soft deletes: `deletedAt` optional
+- JSONB for country/provider specific data
 
-**Migraciones:**
+**Migrations:**
 ```bash
-bun run --filter backend db:migrate --name <descripcion>
-bun run --filter backend db:generate  # Regenera Prisma Client
+bun run --filter backend db:migrate --name <description>
+bun run --filter backend db:generate  # Regenerates Prisma Client
 ```
 
 ### 4. Frontend (Angular 19+)
 
-**Estructura:**
-- `core/` - Servicios singleton (auth, api, websocket, storage)
-- `shared/` - Componentes/pipes/directives reutilizables
-- `features/` - Módulos por feature (auth, dashboard, payments, sales, inventory)
+**Structure:**
+- `core/` - Singleton services (auth, api, websocket, storage)
+- `shared/` - Reusable components/pipes/directives
+- `features/` - Feature modules (auth, dashboard, payments, sales, inventory)
 - `layouts/` - Layouts (main, auth)
 
 **Standalone Components Pattern:**
@@ -141,7 +153,7 @@ export class PaymentCreateComponent {
 }
 ```
 
-**Signal Store (Estado):**
+**Signal Store (State):**
 ```typescript
 export const PaymentsStore = signalStore(
   withState({ payments: [], loading: false }),
@@ -160,22 +172,22 @@ export const PaymentsStore = signalStore(
 
 ---
 
-## 📋 Reglas de Codificación
+## 📋 Coding Rules
 
 ### General
 
-1. **TypeScript Strict Mode:** Siempre activo, no usar `any` (usar `unknown` si es necesario)
-2. **Async/Await:** Preferir sobre `.then()` para promesas
+1. **TypeScript Strict Mode:** Always active, do not use `any` (use `unknown` if necessary)
+2. **Async/Await:** Prefer over `.then()` for promises
 3. **Error Handling:** 
-   - Backend: `HttpException` de NestJS con status codes apropiados
-   - Frontend: Interceptors globales + toast notifications
-4. **Logging:** Winston (backend), console con niveles (frontend dev)
-5. **Validation:** DTO con decoradores de `class-validator`
+   - Backend: NestJS `HttpException` with appropriate status codes
+   - Frontend: Global interceptors + toast notifications
+4. **Logging:** Winston (backend), console with levels (frontend dev)
+5. **Validation:** DTO with `class-validator` decorators
 
 ### Backend (NestJS)
 
 ```typescript
-// ✅ CORRECTO: DTO con validación
+// ✅ CORRECT: DTO with validation
 export class CreatePaymentDto {
   @IsNumber()
   @Min(1)
@@ -190,7 +202,7 @@ export class CreatePaymentDto {
   customerId?: string;
 }
 
-// ✅ CORRECTO: Service con inyección
+// ✅ CORRECT: Service with injection
 @Injectable()
 export class PaymentsService {
   constructor(
@@ -200,17 +212,17 @@ export class PaymentsService {
   ) {}
 
   async createPayment(dto: CreatePaymentDto, userId: string): Promise<PaymentIntent> {
-    // 1. Obtener business del usuario
+    // 1. Get user business
     const business = await this.prisma.business.findFirst({ where: { ownerId: userId } });
     if (!business) throw new NotFoundException('Business not found');
 
-    // 2. Obtener provider según país del business
+    // 2. Get provider based on business country
     const provider = this.factory.getProvider(business.country);
 
-    // 3. Crear intent en pasarela externa
+    // 3. Create intent in external gateway
     const intent = await provider.createPaymentIntent(dto);
 
-    // 4. Guardar transacción en DB
+    // 4. Save transaction in DB
     const transaction = await this.prisma.transaction.create({
       data: {
         businessId: business.id,
@@ -228,9 +240,9 @@ export class PaymentsService {
   }
 }
 
-// ❌ INCORRECTO: Llamar directamente a pasarela
+// ❌ INCORRECT: Call gateway directly
 async createPayment(dto: CreatePaymentDto) {
-  // NO hacer esto - rompe abstracción multi-país
+  // DO NOT do this - breaks multi-country abstraction
   const conekta = new Conekta(apiKey);
   return conekta.createOrder(...);
 }
@@ -239,7 +251,7 @@ async createPayment(dto: CreatePaymentDto) {
 ### Frontend (Angular)
 
 ```typescript
-// ✅ CORRECTO: Standalone component con signals
+// ✅ CORRECT: Standalone component with signals
 @Component({
   selector: 'app-payment-form',
   standalone: true,
@@ -251,7 +263,7 @@ async createPayment(dto: CreatePaymentDto) {
       <form [formGroup]="form" (ngSubmit)="onSubmit()">
         <input formControlName="amount" />
         @if (form.controls.amount.errors?.['min']) {
-          <span>Monto mínimo: $1</span>
+          <span>Minimum amount: $1</span>
         }
       </form>
     }
@@ -272,27 +284,27 @@ export class PaymentFormComponent {
     this.loading.set(true);
     try {
       const intent = await this.paymentsService.createPayment(this.form.value);
-      // Navegar a pantalla de QR
+      // Navigate to QR screen
     } catch (error) {
-      // Error interceptor lo maneja
+      // Error interceptor handles it
     } finally {
       this.loading.set(false);
     }
   }
 }
 
-// ❌ INCORRECTO: No usar NgModules, no usar observables innecesarios
-@NgModule({ /* ... */ })  // ❌ No usar NgModules en Angular 19
+// ❌ INCORRECT: Do not use NgModules, do not use unnecessary observables
+@NgModule({ /* ... */ })  // ❌ Do not use NgModules in Angular 19
 export class PaymentModule {}
 
-// ❌ No convertir todo a observable si signal es suficiente
-amount$ = new BehaviorSubject(0);  // Usar signal() en su lugar
+// ❌ Do not convert everything to observable if signal is sufficient
+amount$ = new BehaviorSubject(0);  // Use signal() instead
 ```
 
 ### Prisma
 
 ```typescript
-// ✅ CORRECTO: Soft delete con select explícito
+// ✅ CORRECT: Soft delete with explicit select
 async deleteProduct(id: string) {
   return this.prisma.product.update({
     where: { id },
@@ -300,7 +312,7 @@ async deleteProduct(id: string) {
   });
 }
 
-// ✅ CORRECTO: Transacciones atómicas
+// ✅ CORRECT: Atomic transactions
 async createSaleWithTransaction(dto: CreateSaleDto) {
   return this.prisma.$transaction(async (tx) => {
     const sale = await tx.sale.create({ data: dto });
@@ -312,60 +324,60 @@ async createSaleWithTransaction(dto: CreateSaleDto) {
   });
 }
 
-// ❌ INCORRECTO: Queries N+1
+// ❌ INCORRECT: N+1 Queries
 const businesses = await prisma.business.findMany();
 for (const b of businesses) {
   const branches = await prisma.branch.findMany({ where: { businessId: b.id } });
 }
-// Usar include o select con relaciones
+// Use include or select with relations
 ```
 
 ---
 
-## 🚀 Flujos Críticos
+## 🚀 Critical Flows
 
-### Flujo 1: Cobro por QR Dinámico
+### Flow 1: Dynamic QR Payment
 
-1. Comerciante en app clic "Cobrar" → ingresa monto
+1. Merchant in app clicks "Charge" → enters amount
 2. Frontend → `POST /api/payments/create-intent`
 3. Backend → `PaymentProviderFactory.getProvider(country)`
-4. Backend → `provider.createPaymentIntent()` (llamada a Conekta/PayU/etc)
-5. Backend → Guarda `Transaction` en DB con status `PENDING`
-6. Backend → Retorna QR + link al frontend
-7. Cliente escanea QR y paga en su banco
-8. Pasarela → `POST /webhooks/{provider}` al backend
-9. Backend → Valida signature, actualiza `Transaction` a `CONFIRMED`
-10. Backend → Publica evento `payment.confirmed` en Redis
-11. Frontend (WebSocket) → Recibe notificación en tiempo real
-12. Backend (async) → Genera recibo PDF, envía SMS/email
+4. Backend → `provider.createPaymentIntent()` (call to Conekta/PayU/etc)
+5. Backend → Saves `Transaction` in DB with status `PENDING`
+6. Backend → Returns QR + link to frontend
+7. Customer scans QR and pays in their bank
+8. Gateway → `POST /webhooks/{provider}` to backend
+9. Backend → Validates signature, updates `Transaction` to `CONFIRMED`
+10. Backend → Publishes `payment.confirmed` event in Redis
+11. Frontend (WebSocket) → Receives real-time notification
+12. Backend (async) → Generates PDF receipt, sends SMS/email
 
-**Archivos involucrados:**
+**Files involved:**
 - `apps/backend/src/modules/payments/payments.service.ts`
 - `apps/backend/src/modules/payments/factories/payment-provider.factory.ts`
 - `apps/backend/src/modules/payments/providers/{country}/*.service.ts`
 - `apps/merchant-web/src/app/features/payments/payment-create/`
 
-### Flujo 2: Onboarding Comercio Nuevo
+### Flow 2: New Merchant Onboarding
 
-1. Usuario → Registra teléfono + país
-2. Backend → Envía OTP vía SMS (Twilio)
-3. Usuario → Verifica OTP
-4. Backend → Crea `User` (role=MERCHANT, kycLevel=0)
-5. Frontend → Formulario datos negocio (nombre, RFC/NIT, giro)
-6. Backend → Crea `Business` + `Branch` default
-7. Backend → Genera QR estático vía `PaymentProviderFactory`
-8. Frontend → Tutorial interactivo (cobro de prueba)
-9. Usuario completa primer cobro simulado
-10. Frontend → Redirige a dashboard
+1. User → Registers phone + country
+2. Backend → Sends OTP via SMS (Twilio)
+3. User → Verifies OTP
+4. Backend → Creates `User` (role=MERCHANT, kycLevel=0)
+5. Frontend → Business data form (name, RFC/NIT, type)
+6. Backend → Creates `Business` + `Branch` default
+7. Backend → Generates static QR via `PaymentProviderFactory`
+8. Frontend → Interactive tutorial (test charge)
+9. User completes first simulated charge
+10. Frontend → Redirects to dashboard
 
-**KYC Progresivo:**
-- Nivel 0: Solo teléfono → límite $500/día
-- Nivel 1: + INE/ID → límite $5,000/día
-- Nivel 2: + comprobante domicilio + datos fiscales → sin límites + facturación
+**Progressive KYC:**
+- Level 0: Phone only → limit $500/day
+- Level 1: + ID/Passport → limit $5,000/day
+- Level 2: + proof of address + fiscal data → no limits + invoicing
 
 ---
 
-## 🔍 Debugging y Testing
+## 🔍 Debugging and Testing
 
 ### Backend
 
@@ -376,14 +388,14 @@ bun test payments.service.spec.ts
 # E2E tests
 bun run test:e2e -- payments.e2e-spec.ts
 
-# Debug en VSCode
-# Usar launch.json preset "Debug NestJS"
+# Debug in VSCode
+# Use launch.json preset "Debug NestJS"
 ```
 
-**Tests recomendados:**
-- Mock `PaymentProviderFactory` en tests de `PaymentsService`
-- Usar Prisma en memoria para tests de integración
-- Mock webhooks externos con fixtures
+**Recommended tests:**
+- Mock `PaymentProviderFactory` in `PaymentsService` tests
+- Use in-memory Prisma for integration tests
+- Mock external webhooks with fixtures
 
 ### Frontend
 
@@ -394,35 +406,35 @@ bun run --filter merchant-web test --include='**/payment-create.component.spec.t
 # E2E tests
 bun run --filter merchant-web test:e2e
 
-# Debug en Chrome DevTools
+# Debug in Chrome DevTools
 bun run --filter merchant-web dev --open --configuration=development
 ```
 
-**Tests recomendados:**
-- TestBed para componentes con `provideHttpClientTesting()`
-- Harness para componentes Material
-- Mock `PaymentsService` con signals spy
+**Recommended tests:**
+- TestBed for components with `provideHttpClientTesting()`
+- Harness for Material components
+- Mock `PaymentsService` with signals spy
 
 ---
 
-## 📦 Agregar Nuevo País (Ejemplo: Chile)
+## 📦 Add New Country (Example: Chile)
 
-1. **Crear adapter:**
+1. **Create adapter:**
    ```bash
    touch apps/backend/src/modules/payments/providers/chile/khipu-provider.service.ts
    ```
 
-2. **Implementar `IPaymentProvider`:**
+2. **Implement `IPaymentProvider`:**
    ```typescript
    @Injectable()
    export class KhipuPaymentProvider implements IPaymentProvider {
      readonly country = 'CL';
      readonly currency = 'CLP';
-     // ... implementar métodos
+     // ... implement methods
    }
    ```
 
-3. **Registrar en factory:**
+3. **Register in factory:**
    ```typescript
    // payments.module.ts
    {
@@ -432,13 +444,13 @@ bun run --filter merchant-web dev --open --configuration=development
        map.set('MX', new ConektaPaymentProvider());
        map.set('CO', new PayUPaymentProvider());
        map.set('AR', new MercadoPagoPaymentProvider());
-       map.set('CL', new KhipuPaymentProvider());  // ← Nuevo
+       map.set('CL', new KhipuPaymentProvider());  // ← New
        return map;
      }
    }
    ```
 
-4. **Agregar configuración:**
+4. **Add configuration:**
    ```typescript
    // config/payment.config.ts
    CL: {
@@ -458,47 +470,47 @@ bun run --filter merchant-web dev --open --configuration=development
    };
    ```
 
-**Tiempo estimado:** ~3-5 días (adapter + tests + documentación)
+**Estimated time:** ~3-5 days (adapter + tests + documentation)
 
 ---
 
-## 🎨 Estilo de Código
+## 🎨 Code Style
 
 ### Commits (Conventional Commits)
 
 ```
-feat(payments): agrega soporte para pagos en Chile
-fix(auth): corrige validación de RFC en México
-docs(api): actualiza swagger de endpoints de cobro
-refactor(billing): extrae lógica SAT a provider separado
-test(payments): agrega tests para KhipuProvider
-chore(deps): actualiza Prisma a 5.8.0
+feat(payments): adds support for payments in Chile
+fix(auth): fixes RFC validation in Mexico
+docs(api): updates swagger for payment endpoints
+refactor(billing): extracts SAT logic to separate provider
+test(payments): adds tests for KhipuProvider
+chore(deps): updates Prisma to 5.8.0
 ```
 
 ### Code Review Checklist
 
-- [ ] ¿Usa la abstracción `IPaymentProvider` en lugar de llamadas directas?
-- [ ] ¿DTOs con validación `class-validator`?
-- [ ] ¿Manejo de errores con `HttpException` apropiado?
-- [ ] ¿Tests unitarios con coverage > 80%?
-- [ ] ¿Documentación Swagger actualizada?
-- [ ] ¿Migraciones Prisma si modifica DB?
-- [ ] ¿Logs con nivel apropiado (no `console.log`)?
-- [ ] ¿Variables sensibles en `.env` no hardcodeadas?
+- [ ] Uses `IPaymentProvider` abstraction instead of direct calls?
+- [ ] DTOs with `class-validator` validation?
+- [ ] Error handling with appropriate `HttpException`?
+- [ ] Unit tests with coverage > 80%?
+- [ ] Swagger documentation updated?
+- [ ] Prisma migrations if DB modified?
+- [ ] Logs with appropriate level (no `console.log`)?
+- [ ] Sensitive variables in `.env` not hardcoded?
 
 ---
 
-## 📚 Referencias Rápidas
+## 📚 Quick References
 
 - **Docs:** `/docs/VISION-Y-ARQUITECTURA.md`
-- **Estructura:** `/docs/ESTRUCTURA-PROYECTO.md`
-- **Diagramas:** `/docs/diagrams/*.puml`
+- **Structure:** `/docs/ESTRUCTURA-PROYECTO.md`
+- **Diagrams:** `/docs/diagrams/*.puml`
 - **API Spec:** `/docs/api/openapi.yaml` (TODO)
 - **Prisma Schema:** `/apps/backend/prisma/schema.prisma`
 
 ---
 
-## 🆘 Troubleshooting Común
+## 🆘 Common Troubleshooting
 
 ### Error: "Cannot find module @prisma/client"
 ```bash
@@ -506,19 +518,19 @@ cd apps/backend && bun run db:generate
 ```
 
 ### Error: "Provider not found for country XX"
-Verificar que el país esté registrado en `PaymentProviderFactory` y `payment.config.ts`
+Verify that the country is registered in `PaymentProviderFactory` and `payment.config.ts`
 
-### Webhooks no llegan en desarrollo local
-Usar ngrok o webhook.site para túnel:
+### Webhooks do not arrive in local development
+Use ngrok or webhook.site for tunnel:
 ```bash
 ngrok http 3000
-# Actualizar URL en dashboard de pasarela
+# Update URL in gateway dashboard
 ```
 
 ### Angular: "NG0203: inject() must be called from an injection context"
-Usar `inject()` solo en constructores o en inicializadores de campos de clase
+Use `inject()` only in constructors or class field initializers
 
 ---
 
-**Última actualización:** Octubre 2025  
-**Versión:** 1.0.0
+**Last updated:** October 2025  
+**Version:** 1.0.0
