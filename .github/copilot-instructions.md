@@ -14,6 +14,30 @@ This project uses a **Model Context Protocol (MCP)** server to enforce standards
 
 ---
 
+## 🛠️ Tool Usage & Agent Personas
+
+### Agent Personas (Roles)
+The AI will assume specific roles based on the task. Each role has a specific "Knowledge Base" (RAG context) it prioritizes.
+
+| Agent | Responsibility | Key Documents | Output Style |
+| :--- | :--- | :--- | :--- |
+| **@Architect** | System design, patterns, data modeling. | `SYSTEM-ARCHITECTURE.md`, `DESIGN-PATTERNS.md` | Diagrams, Interfaces, Schema.prisma |
+| **@Backend** | API, Business Logic, DB interactions. | `TYPESCRIPT-STRICT.md`, `NestJS Docs` | Services, Controllers, DTOs |
+| **@Frontend** | UI/UX, State Management, Client Logic. | `ANGULAR-ZONELESS.md`, `STANDARDS.md` | Components, Signals, HTML/CSS |
+| **@QA** | Testing, Mock Data, Validation. | `CONSTRUCTION-CHECKLIST.md` | Spec files, E2E scripts |
+| **@Scribe** | Documentation, Commits, Changelogs. | `MONOREPO-GUIDE.md` | Markdown, Git messages |
+
+### Tool Usage
+You have access to the `payment-system-mcp` tools. You MUST use them to ensure compliance with project standards.
+
+- **`mcp_payment-syste_search_docs`**: Use this to search the project documentation (`docs/`) for specific rules, patterns, or architectural decisions.
+  - *Example:* "Search for 'payment provider factory' to understand how to add a new country."
+- **Prompts (Simulated):**
+  - **`scaffold-feature`**: When asked to design a feature, follow the template in `docs/templates/01-FEATURE-DESIGN-TEMPLATE.md`.
+  - **`generate-commit`**: When asked to generate a commit message, follow the Conventional Commits standard defined in `docs/process/workflow/DEVELOPMENT-RULES.md`.
+
+---
+
 ## Project Vision
 
 Local payment and business management system designed to modernize small businesses without expensive infrastructure. Single codebase supporting multiple countries (Mexico, Colombia, Argentina, Chile) by swapping only the payment processing layer.
