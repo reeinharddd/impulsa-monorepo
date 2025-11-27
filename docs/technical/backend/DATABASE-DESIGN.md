@@ -24,7 +24,7 @@
   <!-- METADATA BADGES -->
   <img src="https://img.shields.io/badge/Status-Active-success?style=flat-square" alt="Status" />
   <img src="https://img.shields.io/badge/Audience-Backend-blue?style=flat-square" alt="Audience" />
-  <img src="https://img.shields.io/badge/Last%20Updated-2025--11--25-lightgrey?style=flat-square" alt="Date" />
+  <img src="https://img.shields.io/badge/Last%20Updated-2025--11--27-lightgrey?style=flat-square" alt="Date" />
 
 </div>
 
@@ -34,313 +34,121 @@
 
 _This section contains mandatory instructions for AI Agents (Copilot, Cursor, etc.) interacting with this document._
 
-| Directive      | Instruction                                                   |
-| :------------- | :------------------------------------------------------------ |
-| **Context**    | This document defines the database schema and ER diagrams.    |
-| **Constraint** | All schema changes MUST be modeled here first using PlantUML. |
-| **Pattern**    | Use the 'Code-First' approach but document here first.        |
-| **Related**    | `apps/backend/prisma/schema.prisma`                           |
+| Directive      | Instruction                                                                                              |
+| :------------- | :------------------------------------------------------------------------------------------------------- |
+| **Context**    | This document defines the database schema and ER diagrams.                                               |
+| **Constraint** | All schema changes MUST be modeled here first using PlantUML.                                            |
+| **Pattern**    | Use the 'Code-First' approach but document here first.                                                   |
+| **Rule**       | **Soft Delete:** ALWAYS use `deletedAt` (nullable timestamp). NEVER delete rows.                         |
+| **Rule**       | **Schema Separation:** Use PostgreSQL schemas (`auth`, `business`, `payments`, etc.) to organize tables. |
+| **Related**    | `apps/backend/prisma/schema.prisma`                                                                      |
 
 ---
 
-## Core Data Model
+## 📋 Design Progress Checklist
 
-```plantuml
-@startuml
+Use this checklist to track the maturity of the database design.
 
-' CONFIGURACIÓN VISUAL (Clean & Modern)
-!theme plain
-hide circle
-skinparam linetype ortho
-skinparam class {
-    BackgroundColor White
-    ArrowColor #333
-    BorderColor #333
-}
+- [x] **Initial Design:** Core entities defined (User, Business, Product, Transaction).
+- [x] **Identity & Auth:** Multi-provider, Sessions, Audit Logs, MFA, Trusted Devices.
+- [x] **UX & Engagement:** Push Notifications, User Preferences, Offline Sync support.
+- [ ] **Business Logic:** Roles, Permissions, Employee Management (In Progress).
+- [ ] **Inventory:** Stock movements, Variants, Alerts.
+- [ ] **Payments:** Multi-country adapters, Idempotency.
+- [ ] **Billing:** Invoicing (SAT/DIAN/AFIP) structures.
 
-' --- CLUSTER: IDENTIDAD Y ACCESO ---
+---
 
-entity "User" as user {
-  *id : UUID <<PK>>
-  --
-  email : VARCHAR <<UK>>
-  emailVerified : TIMESTAMP
-  phone : VARCHAR <<UK>>
-  phoneVerified : TIMESTAMP
-  firstName : VARCHAR
-  lastName : VARCHAR
-  displayName : VARCHAR
-  avatarUrl : VARCHAR
-  locale : VARCHAR
-  kycLevel : INT
-  kycData : JSONB
-  preferences : JSONB
-  isActive : BOOLEAN
-  createdAt : TIMESTAMP
-  updatedAt : TIMESTAMP
-}
+## 🛡️ Database Design Principles & Rules (The Constitution)
 
-entity "UserIdentity" as identity {
-  *id : UUID <<PK>>
-  --
-  *userId : UUID <<FK>>
-  provider : ENUM (LOCAL, GOOGLE, PHONE)
-  providerId : VARCHAR
-  credential : VARCHAR
-  accessToken : VARCHAR
-  refreshToken : VARCHAR
-  metadata : JSONB
-  lastLogin : TIMESTAMP
-}
+These rules are mandatory for all database development in this project.
 
-entity "ApiKey" as apikey {
-  *id : UUID <<PK>>
-  --
-  *businessId : UUID <<FK>>
-  keyHash : VARCHAR
-  scopes : JSONB
-  expiresAt : TIMESTAMP
-}
+### 1. Integrity & Safety
 
-' --- CLUSTER: ORGANIZACIÓN Y ROLES ---
+- **Soft Deletes Only:** Destructive `DELETE` operations are forbidden in production. All tables must have a `deletedAt` column.
+- **Idempotency:** Critical transactional tables (`Transaction`, `StockMovement`) MUST support an `idempotencyKey` to prevent duplicate processing during network retries or UI glitches.
+- **Optimistic Locking:** High-concurrency entities (`Stock`, `Balance`) must use a `version` (Int) field to prevent race conditions (Lost Update Problem).
 
-entity "Business" as business {
-  *id : UUID <<PK>>
-  --
-  *ownerId : UUID <<FK>>
-  legalName : VARCHAR
-  taxId : VARCHAR <<UK>>
-  country : VARCHAR
-  type : ENUM (RETAIL, RESTAURANT, SERVICE)
-  features : JSONB
-  isActive : BOOLEAN
-}
+### 2. Financial Precision
 
-entity "Employee" as employee {
-  *id : UUID <<PK>>
-  --
-  userId : UUID <<FK>>
-  *businessId : UUID <<FK>>
-  branchId : UUID <<FK>>
-  *roleId : UUID <<FK>>
-  alias : VARCHAR
-  pinCode : VARCHAR
-  status : ENUM (ACTIVE, INVITED)
-}
+- **No Floats:** NEVER use `Float` or `Double` for monetary values.
+- **Decimal Standard:** Use `DECIMAL(19, 4)` for all currency fields to handle exchange rates and fractional cents correctly.
+- **Snapshots:** Historical records (`SaleItem`, `Invoice`) must store a **snapshot** of the data (price, product name, tax rate) at the time of creation. Do not rely on relations to mutable master data.
 
-entity "Role" as role {
-  *id : UUID <<PK>>
-  --
-  businessId : UUID <<FK>>
-  name : VARCHAR
-  type : ENUM (SYSTEM, CUSTOM)
-}
+### 3. Time & Localization
 
-entity "RolePermission" as role_perm {
-  *roleId : UUID <<FK>>
-  *permissionId : UUID <<FK>>
-}
+- **UTC Always:** All `TIMESTAMP` columns must be stored in UTC.
+- **Timezones:** The `Branch` entity dictates the timezone for "End of Day" calculations.
+- **Audit:** All tables must have `createdAt` and `updatedAt`.
 
-entity "Permission" as perm {
-  *id : UUID <<PK>>
-  --
-  action : VARCHAR
-  resource : VARCHAR
-}
+### 4. Performance & Structure
 
-' --- CLUSTER: COMUNICACIÓN ---
+- **Normalization:** Default to 3NF. Denormalize ONLY for read-heavy performance (e.g., storing `currentStock` on `Product` instead of summing `StockMovements` every time), but ensure eventual consistency.
+- **Indexing:**
+  - Index all Foreign Keys.
+  - Index columns used in `WHERE`, `ORDER BY`, and `JOIN`.
+  - Use Partial Indexes for queues (e.g., `WHERE status = 'PENDING'`).
+- **JSONB Usage:** Use `JSONB` for:
+  - Polymorphic data (e.g., `providerData` from different payment gateways).
+  - Configuration/Settings (`features`, `preferences`).
+  - **Do NOT** use JSONB for data that requires frequent relational queries or aggregation.
 
-entity "NotificationLog" as notif {
-  *id : UUID <<PK>>
-  --
-  userId : UUID <<FK>>
-  businessId : UUID <<FK>>
-  channel : ENUM
-  recipient : VARCHAR
-  status : ENUM
-}
+### 5. Security & Future-Proofing
 
-' --- CLUSTER: INVENTORY ---
+- **Encryption:**
+  - **At Rest & Transit:** Database storage must be encrypted. All connections must use TLS.
+  - **Column Level:** Sensitive PII inside JSONB or specific columns should be considered for application-level encryption.
+- **Immutability (Ledger Concept):**
+  - Financial records (`Transaction`, `Invoice`) are **Immutable**. NEVER update a transaction status from `CONFIRMED` to `FAILED` directly; use a new compensating record (e.g., `Refund`).
+  - This structure prepares the system for future integration with **Blockchain** or **Immutable Ledgers** for decentralized auditability.
+- **Read/Write Splitting:**
+  - The architecture supports Read Replicas. Heavy analytical queries MUST target the `READ` connection to avoid blocking the transactional `WRITE` master.
 
-entity "Category" as category {
-  *id : UUID <<PK>>
-  --
-  *businessId : UUID <<FK>>
-  parentId : UUID <<FK>>
-  name : VARCHAR
-}
+### 6. Auth & Identity Standards
 
-entity "Product" as product {
-  *id : UUID <<PK>>
-  --
-  *businessId : UUID <<FK>>
-  categoryId : UUID <<FK>>
-  name : VARCHAR
-  sku : VARCHAR
-  barcode : VARCHAR
-  price : DECIMAL
-  cost : DECIMAL
-  type : ENUM
-  trackInventory : BOOLEAN
-}
+- **Session Management:**
+  - Use a dedicated `Session` table to track active devices/tokens.
+  - Support revocation of specific sessions (e.g., "Log out of all other devices").
+- **Audit Logging:**
+  - Critical security events (login, password change, MFA update) MUST be logged in `AuditLog`.
+  - This log is immutable and separate from operational logs.
+- **PII Protection:**
+  - Passwords MUST be hashed using **Argon2id**.
+  - Phone numbers and Emails MUST be unique at the `User` level.
 
-entity "Variant" as variant {
-  *id : UUID <<PK>>
-  --
-  *productId : UUID <<FK>>
-  name : VARCHAR
-  sku : VARCHAR
-  price : DECIMAL
-}
+### 7. Notification Architecture
 
-entity "Stock" as stock {
-  *id : UUID <<PK>>
-  --
-  *branchId : UUID <<FK>>
-  *productId : UUID <<FK>>
-  variantId : UUID <<FK>>
-  quantity : DECIMAL
-  minStock : DECIMAL
-}
+- **Hot vs Cold Storage:**
+  - `InAppNotification` table is for "Hot" data (what the user sees in the bell icon).
+  - **Retention Policy:** Records older than 30 days should be moved to cold storage (S3/Data Warehouse) or deleted.
+  - `NotificationLog` is for audit/debugging only and should have a strict TTL (Time To Live).
+- **Templates & Consistency:**
+  - **Do NOT** store raw HTML in the application code.
+  - Use `NotificationTemplate` to store the structure (MJML/Handlebars).
+  - **Images:** Store images in a CDN (S3/Cloudinary). Never store base64 images in the database.
+- **Performance:**
+  - Sending emails/SMS must be **Async** via a Job Queue (BullMQ).
+  - The API endpoint only creates the job; the worker handles the external API call (SendGrid/Twilio).
 
-entity "InventoryAlert" as alert {
-  *id : UUID <<PK>>
-  --
-  *businessId : UUID <<FK>>
-  *branchId : UUID <<FK>>
-  *productId : UUID <<FK>>
-  type : ENUM
-  status : ENUM
-}
+---
 
-' --- CLUSTER: SALES ---
+## 📚 Schema Documentation
 
-entity "Branch" as branch {
-  *id : UUID <<PK>>
-  --
-  *businessId : UUID <<FK>>
-  name : VARCHAR
-  address : VARCHAR
-}
+The database is divided into logical schemas. Click on each module for detailed ER diagrams, constraints, and rules.
 
-entity "CashRegister" as register {
-  *id : UUID <<PK>>
-  --
-  *branchId : UUID <<FK>>
-  name : VARCHAR
-  status : ENUM
-}
+| Schema                                                     | Description                                 | Status         |
+| :--------------------------------------------------------- | :------------------------------------------ | :------------- |
+| [**Auth & Identity**](./database/01-AUTH-SCHEMA.md)        | Users, Sessions, MFA, Trusted Devices.      | ✅ Ready       |
+| [**Business Core**](./database/02-BUSINESS-SCHEMA.md)      | Organizations, Branches, Employees, RBAC.   | 🚧 In Progress |
+| [**Communication**](./database/03-COMMUNICATION-SCHEMA.md) | Notifications, Templates, Push, Audit Logs. | ✅ Stable      |
+| [**Inventory**](./database/04-INVENTORY-SCHEMA.md)         | Products, Variants, Stock, Alerts.          | 📝 Draft       |
+| [**Sales (POS)**](./database/05-SALES-SCHEMA.md)           | Cash Registers, Shifts, Sales, Items.       | 📝 Draft       |
+| [**Payments**](./database/06-PAYMENTS-SCHEMA.md)           | Transactions, Payment Methods, Idempotency. | 📝 Draft       |
+| [**Billing**](./database/07-BILLING-SCHEMA.md)             | Fiscal Invoicing (SAT/DIAN).                | 📝 Draft       |
 
-entity "Shift" as shift {
-  *id : UUID <<PK>>
-  --
-  *cashRegisterId : UUID <<FK>>
-  *employeeId : UUID <<FK>>
-  startTime : TIMESTAMP
-  endTime : TIMESTAMP
-}
+> **[View Full ER Diagram](./database/FULL-ER-DIAGRAM.md)** (All schemas combined)
 
-entity "Sale" as sale {
-  *id : UUID <<PK>>
-  --
-  *shiftId : UUID <<FK>>
-  customerId : UUID <<FK>>
-  total : DECIMAL
-  status : ENUM
-  paymentMethod : ENUM
-}
-
-entity "SaleItem" as sale_item {
-  *id : UUID <<PK>>
-  --
-  *saleId : UUID <<FK>>
-  *productId : UUID <<FK>>
-  variantId : UUID <<FK>>
-  quantity : DECIMAL
-  unitPrice : DECIMAL
-}
-
-entity "Transaction" as txn {
-  *id : UUID <<PK>>
-  --
-  *businessId : UUID <<FK>>
-  branchId : UUID <<FK>>
-  saleId : UUID <<FK>>
-  amount : DECIMAL
-  status : ENUM
-  providerAdapter : VARCHAR
-}
-
-entity "Invoice" as invoice {
-  *id : UUID <<PK>>
-  --
-  *saleId : UUID <<FK>>
-  transactionId : UUID <<FK>>
-  invoiceNumber : VARCHAR
-  uuid : VARCHAR
-  status : ENUM
-}
-
-entity "PaymentMethod" as pay_method {
-  *id : UUID <<PK>>
-  --
-  *businessId : UUID <<FK>>
-  name : VARCHAR
-  type : ENUM
-}
-
-' --- RELACIONES (Notación Pata de Gallo) ---
-
-' Identity
-user ||..o{ identity : "tiene"
-user ||..o{ business : "posee"
-user ||..o{ employee : "trabaja como"
-user ||..o{ notif : "recibe"
-
-' Business Core
-business ||..o{ employee : "emplea"
-business ||..o{ branch : "tiene"
-business ||..o{ pay_method : "configura"
-business ||..o{ apikey : "tiene"
-business ||..o{ notif : "genera"
-
-' Roles
-role ||..o{ employee : "asignado a"
-role ||..|{ role_perm : "tiene"
-perm ||..|{ role_perm : "pertenece a"
-business ||..o{ role : "define"
-
-' Inventory
-business ||..o{ category : "gestiona"
-category ||..o{ category : "padre de"
-category ||..o{ product : "contiene"
-business ||..o{ product : "vende"
-product ||..o{ variant : "tiene"
-branch ||..o{ stock : "almacena"
-product ||..o{ stock : "inventariado en"
-variant ||..o{ stock : "inventariado en"
-business ||..o{ alert : "recibe"
-branch ||..o{ alert : "genera"
-product ||..o{ alert : "genera"
-
-' Sales
-branch ||..o{ register : "tiene"
-register ||..o{ shift : "registra"
-employee ||..o{ shift : "abre"
-shift ||..o{ sale : "incluye"
-sale ||..|{ sale_item : "contiene"
-product ||..o{ sale_item : "vendido como"
-variant ||..o{ sale_item : "vendido como"
-sale ||..o| txn : "pagado con"
-business ||..o{ txn : "procesa"
-branch ||..o{ txn : "procesa"
-
-' Billing
-sale ||..o| invoice : "factura"
-txn ||..o| invoice : "relacionado con"
-
-@enduml
-```
+---
 
 ## Platform vs Product Architecture
 
@@ -352,6 +160,12 @@ The `User` entity represents the human being. This data is **immutable** across 
 
 - **Single Sign-On:** A user logs in once via `UserIdentity` (Google, Phone, Password).
 - **Global Profile:** Name, email, phone are stored here.
+- **UX & Engagement:**
+  - **Notifications:** Users can receive alerts via Email, SMS, WhatsApp, or Push (PWA). Managed via `PushSubscription` and `preferences` JSON.
+  - **Templates & Consistency:** All notifications use `NotificationTemplate` to ensure consistent branding (e.g., "Security Alert" vs "Marketing").
+  - **Real-time Feed:** `InAppNotification` stores the persistent history of alerts shown in the "Bell" icon, while `PushSubscription` handles the "Wake up" signal.
+  - **Offline Persistence:** The `Session` table supports long-lived refresh tokens (`expiresAt`), allowing the PWA to work offline and re-sync when connectivity returns.
+  - **Identity Verification (KYC):** Progressive profiling (`kycLevel`) allows users to start with just a phone number and upgrade to full fiscal identity (`kycData`) only when needed (e.g., to issue invoices).
 
 ### 2. Contextual Profile (The "Where")
 
@@ -373,7 +187,3 @@ The `Business` entity determines the product experience via the `type` and `feat
 
 - If `type === 'RESTAURANT'`, the app loads the Table Management and Kitchen modules.
 - If `type === 'RETAIL'`, the app loads the Barcode Scanner and Quick POS modules.
-
-## Proposed Changes
-
-> (Add new diagrams here for proposed features before implementing them)
