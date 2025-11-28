@@ -1,5 +1,5 @@
 <!-- AI-INSTRUCTION: START -->
-<!-- 
+<!--
   This document defines the TECHNICAL FOUNDATIONS.
   1. Preserve the Header Table and Metadata block.
   2. Fill in the "Agent Directives" to guide future AI interactions.
@@ -32,14 +32,14 @@
 
 ## 🤖 Agent Directives (System Prompt)
 
-*This section contains mandatory instructions for AI Agents (Copilot, Cursor, etc.) interacting with this document.*
+_This section contains mandatory instructions for AI Agents (Copilot, Cursor, etc.) interacting with this document._
 
-| Directive | Instruction |
-| :--- | :--- |
-| **Context** | This document explains the "WHY" behind our technology choices. |
+| Directive      | Instruction                                                                                            |
+| :------------- | :----------------------------------------------------------------------------------------------------- |
+| **Context**    | This document explains the "WHY" behind our technology choices.                                        |
 | **Constraint** | Do NOT suggest alternative frameworks (e.g., React, Express) unless explicitly asked for a comparison. |
-| **Pattern** | When explaining concepts, use the "Misconception vs Reality" format. |
-| **Related** | `docs/technical/backend/TYPESCRIPT-STRICT.md`, `docs/technical/frontend/ANGULAR-ZONELESS.md` |
+| **Pattern**    | When explaining concepts, use the "Misconception vs Reality" format.                                   |
+| **Related**    | `docs/technical/backend/TYPESCRIPT-STRICT.md`, `docs/technical/frontend/ANGULAR-ZONELESS.md`           |
 
 ---
 
@@ -59,8 +59,8 @@ Bun implements most of the Node.js API (fs, path, http, etc.), so existing libra
 
 ```javascript
 // Works in Bun just like Node
-import fs from 'node:fs';
-const data = fs.readFileSync('file.txt');
+import fs from "node:fs";
+const data = fs.readFileSync("file.txt");
 ```
 
 **2. Native TypeScript Support**
@@ -82,12 +82,14 @@ bun run index.ts
 ### 1.3. Bun Performance Characteristics
 
 **What Bun is GOOD at:**
+
 - **Startup Time:** Near instant (great for serverless/CLI)
 - **I/O Operations:** Optimized system calls via Zig
 - **Package Installation:** Global cache, hard links, parallel downloads
 - **Testing:** Native test runner is significantly faster than Jest
 
 **Example: HTTP Server**
+
 ```javascript
 // Bun.serve (Native API - 4x faster than Node http)
 Bun.serve({
@@ -101,16 +103,19 @@ Bun.serve({
 ### 1.4. Alternatives to Bun
 
 **Node.js (The Legacy Standard):**
+
 - Pros: Massive ecosystem, 10+ years of stability
 - Cons: Slower, fragmented tooling (npm + jest + tsc + nodemon)
 - Verdict: Use only if a specific legacy library is incompatible with Bun
 
 **Deno:**
+
 - Pros: Secure by default, URL imports
 - Cons: Different philosophy (not drop-in Node compatible by default)
 - Verdict: Good, but Bun offers better migration path
 
 **Why We Choose Bun:**
+
 - **Speed:** Faster builds, tests, and runtime
 - **Simplicity:** One tool replaces five (npm, jest, tsc, nodemon, webpack)
 - **DX:** Native TypeScript support eliminates config hell
@@ -138,7 +143,7 @@ interface PaymentGateway {
 class ConektaGateway {
   // No explicit "implements PaymentGateway" needed
   charge(amount: number): Promise<string> {
-    return Promise.resolve('tx_123');
+    return Promise.resolve("tx_123");
   }
 }
 
@@ -147,6 +152,7 @@ const gateway: PaymentGateway = new ConektaGateway();
 ```
 
 **Why This Matters:**
+
 - Adapters work naturally (payment providers, tax calculators)
 - Easier testing (mock objects just need matching structure)
 - Interfaces document contracts without tight coupling
@@ -156,7 +162,7 @@ const gateway: PaymentGateway = new ConektaGateway();
 ```typescript
 // TypeScript infers types - you don't always need annotations
 const amount = 100; // inferred as: number
-const user = { name: 'John', age: 30 }; // inferred as: { name: string; age: number }
+const user = { name: "John", age: 30 }; // inferred as: { name: string; age: number }
 
 // Function return type inferred
 function getTotal(items: Array<{ price: number }>) {
@@ -168,15 +174,19 @@ function getTotal(items: Array<{ price: number }>) {
 
 ```typescript
 // Payment can be in multiple states
-type PaymentStatus = 'pending' | 'confirmed' | 'failed' | 'refunded';
+type PaymentStatus = "pending" | "confirmed" | "failed" | "refunded";
 
 function handlePayment(status: PaymentStatus) {
   // TypeScript ensures you handle ALL cases
   switch (status) {
-    case 'pending': return 'Waiting...';
-    case 'confirmed': return 'Success!';
-    case 'failed': return 'Error';
-    case 'refunded': return 'Refunded';
+    case "pending":
+      return "Waiting...";
+    case "confirmed":
+      return "Success!";
+    case "failed":
+      return "Error";
+    case "refunded":
+      return "Refunded";
     // Forget a case? TypeScript error!
   }
 }
@@ -196,17 +206,18 @@ function getFirstElement<T>(array: T[]): T {
 }
 
 const firstNumber = getFirstElement([1, 2, 3]); // Type: number
-const firstString = getFirstElement(['a', 'b']); // Type: string
+const firstString = getFirstElement(["a", "b"]); // Type: string
 ```
 
 **Use Case in Our System:**
+
 ```typescript
 // Generic repository pattern
 class Repository<T> {
   async findById(id: string): Promise<T | null> {
     // Implementation
   }
-  
+
   async save(entity: T): Promise<T> {
     // Implementation
   }
@@ -214,7 +225,7 @@ class Repository<T> {
 
 // Type-safe repositories
 const userRepo = new Repository<User>();
-const user = await userRepo.findById('123'); // Type: User | null
+const user = await userRepo.findById("123"); // Type: User | null
 ```
 
 ### 2.3. TypeScript Strict Mode (Why We Use It)
@@ -236,16 +247,17 @@ const user = await userRepo.findById('123'); // Type: User | null
 ```typescript
 // 1. Null/undefined errors
 function getUser(id: string) {
-  const user = users.find(u => u.id === id); // Type: User | undefined
+  const user = users.find((u) => u.id === id); // Type: User | undefined
   return user.name; // ERROR! user might be undefined
-  
+
   // Fix: Check before accessing
-  if (!user) throw new Error('User not found');
+  if (!user) throw new Error("User not found");
   return user.name; // OK now
 }
 
 // 2. Implicit any
-function process(data) { // ERROR! data has implicit 'any' type
+function process(data) {
+  // ERROR! data has implicit 'any' type
   return data.value;
 }
 
@@ -257,11 +269,11 @@ function process(data: PaymentData) {
 // 3. This binding errors
 class PaymentProcessor {
   process() {
-    setTimeout(function() {
+    setTimeout(function () {
       console.log(this.amount); // ERROR! 'this' is undefined
     }, 1000);
   }
-  
+
   // Fix: Use arrow function
   process() {
     setTimeout(() => {
@@ -293,12 +305,12 @@ function processPayment(req: PaymentRequest) {
 **Solution: Runtime Validation with Zod**
 
 ```typescript
-import { z } from 'zod';
+import { z } from "zod";
 
 // Zod schema = Runtime validation + TypeScript types
 const PaymentRequestSchema = z.object({
   amount: z.number().positive(),
-  currency: z.enum(['MXN', 'COP', 'ARS']),
+  currency: z.enum(["MXN", "COP", "ARS"]),
 });
 
 // Infer TypeScript type from schema
@@ -307,7 +319,7 @@ type PaymentRequest = z.infer<typeof PaymentRequestSchema>;
 function processPayment(req: unknown) {
   // Validate at runtime
   const validated = PaymentRequestSchema.parse(req); // Throws if invalid
-  
+
   // Now we KNOW validated.amount is a number
   return validated.amount * 1.1; // Safe!
 }
@@ -316,11 +328,13 @@ function processPayment(req: unknown) {
 ### 2.5. Alternatives to TypeScript
 
 **Flow (Facebook's type checker):**
+
 - Pros: Similar to TypeScript, gradual typing
 - Cons: Smaller ecosystem, Facebook abandoned it
 - Verdict: Dead, don't use
 
 **JSDoc (Comments-based typing):**
+
 ```javascript
 /**
  * @param {number} amount
@@ -331,11 +345,13 @@ function processPayment(amount, currency) {
   // Regular JavaScript with type hints in comments
 }
 ```
+
 - Pros: No build step, still JavaScript
 - Cons: Verbose, weaker type checking
 - Verdict: Use for small scripts, not production apps
 
 **Why We Choose TypeScript:**
+
 - Industry standard (90%+ of new projects)
 - Catches bugs before runtime
 - Better IDE support (autocomplete, refactoring)
@@ -388,6 +404,7 @@ RUN bun run build             # Layer 6 (build application)
 ```
 
 **Why Layer Order Matters:**
+
 ```dockerfile
 # BAD: Code changes invalidate ALL layers below
 FROM oven/bun:1
@@ -427,6 +444,7 @@ CMD ["bun", "dist/main.js"]
 ```
 
 **Why Multi-Stage:**
+
 - Smaller images = faster deployment
 - No dev dependencies in production = smaller attack surface
 - No source code in production image = IP protection
@@ -441,14 +459,14 @@ services:
     volumes:
       # Named volume: Docker manages location
       - postgres_data:/var/lib/postgresql/data
-      
+
   backend:
     volumes:
       # Bind mount: Map host directory to container
-      - ./apps/backend:/app  # Hot reload in development
-      
+      - ./apps/backend:/app # Hot reload in development
+
 volumes:
-  postgres_data:  # Persists even if container deleted
+  postgres_data: # Persists even if container deleted
 ```
 
 **Volume Types:**
@@ -472,6 +490,7 @@ Use case:  Temporary files, cache
 ### 3.3. Docker Networking
 
 **Bridge Network (Default):**
+
 ```
 Host Machine: 192.168.1.100
     ↓
@@ -485,42 +504,47 @@ postgres://postgres:5432  ← "postgres" resolves to 172.17.0.3
 ```
 
 **Custom Networks (Better Isolation):**
+
 ```yaml
 networks:
-  payment-network:  # Internal services
+  payment-network: # Internal services
     driver: bridge
-  public-network:   # Exposed services
+  public-network: # Exposed services
     driver: bridge
 
 services:
   postgres:
     networks:
-      - payment-network  # Only accessible to backend
-  
+      - payment-network # Only accessible to backend
+
   backend:
     networks:
-      - payment-network  # Can access postgres
-      - public-network   # Can be accessed from outside
+      - payment-network # Can access postgres
+      - public-network # Can be accessed from outside
 ```
 
 ### 3.4. Docker vs Alternatives
 
 **Podman (Docker alternative):**
+
 - Pros: Rootless (more secure), daemonless, OCI-compliant
 - Cons: Docker Compose support incomplete, smaller ecosystem
 - Verdict: Good for security-critical environments, but Docker more mature
 
 **LXC/LXD (Linux Containers):**
+
 - Pros: True system containers (full OS), better for VMs-like use
 - Cons: Heavier than Docker, slower startup
 - Verdict: Use for system-level isolation, not app containers
 
 **Kubernetes (Container Orchestration):**
+
 - Not a Docker alternative, but orchestrates Docker containers
 - Use when: >10 services, need auto-scaling, multi-node clusters
 - Our case: Overkill for MVP, consider after 50K+ merchants
 
 **Why We Choose Docker:**
+
 - Industry standard (all cloud providers support it)
 - Development-production parity (same image everywhere)
 - Easy local development (docker-compose)
@@ -529,6 +553,7 @@ services:
 ### 3.5. Docker Best Practices for Our System
 
 **1. Use Alpine Linux (Smaller Base Images)**
+
 ```dockerfile
 FROM oven/bun:1-alpine
 # vs
@@ -536,6 +561,7 @@ FROM oven/bun:1
 ```
 
 **2. Run as Non-Root User**
+
 ```dockerfile
 USER bun  # Built-in user in Bun images
 # vs
@@ -543,12 +569,14 @@ USER root  # ← NEVER do this in production
 ```
 
 **3. Health Checks**
+
 ```dockerfile
 HEALTHCHECK --interval=30s --timeout=3s --start-period=40s \
   CMD bun healthcheck.js || exit 1
 ```
 
 **4. Environment-Specific Configs**
+
 ```yaml
 # docker-compose.dev.yml (Development)
 services:
@@ -560,7 +588,7 @@ services:
       - ./apps/backend:/app  # Hot reload
     environment:
       NODE_ENV: development
-      
+
 # docker-compose.prod.yml (Production)
 services:
   backend:
@@ -591,7 +619,7 @@ services:
 class PaymentService {
   private db = new Database();  // ← Creates own dependency
   private gateway = new PaymentGateway();  // ← Hard to test
-  
+
   async processPayment() {
     await this.db.save(...);
     await this.gateway.charge(...);
@@ -605,7 +633,7 @@ class PaymentService {
     private readonly db: Database,  // ← Injected
     private readonly gateway: PaymentGateway,  // ← Injected
   ) {}
-  
+
   async processPayment() {
     await this.db.save(...);
     await this.gateway.charge(...);
@@ -619,6 +647,7 @@ const service = new PaymentService(mockDb, mockGateway);
 ```
 
 **How NestJS Resolves Dependencies:**
+
 ```
 Application Startup:
 1. NestJS scans for @Injectable() classes
@@ -647,23 +676,24 @@ Application Startup:
 // payments.module.ts
 @Module({
   imports: [
-    DatabaseModule,  // Other modules this module needs
+    DatabaseModule, // Other modules this module needs
   ],
   controllers: [
-    PaymentsController,  // HTTP endpoints
+    PaymentsController, // HTTP endpoints
   ],
   providers: [
-    PaymentsService,  // Business logic
-    PaymentProviderFactory,  // Available for injection
+    PaymentsService, // Business logic
+    PaymentProviderFactory, // Available for injection
   ],
   exports: [
-    PaymentsService,  // Other modules can import this
+    PaymentsService, // Other modules can import this
   ],
 })
 export class PaymentsModule {}
 ```
 
 **Module Dependency Graph:**
+
 ```
 AppModule
   ├─ AuthModule (exports: AuthService, JwtStrategy)
@@ -679,7 +709,7 @@ AppModule
 ```typescript
 // JWT Guard: Checks if request has valid JWT
 @Injectable()
-export class JwtAuthGuard extends AuthGuard('jwt') {
+export class JwtAuthGuard extends AuthGuard("jwt") {
   canActivate(context: ExecutionContext) {
     // 1. Extract JWT from header
     // 2. Verify signature
@@ -693,20 +723,23 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
 @Injectable()
 export class RolesGuard implements CanActivate {
   canActivate(context: ExecutionContext): boolean {
-    const requiredRoles = this.reflector.get<string[]>('roles', context.getHandler());
+    const requiredRoles = this.reflector.get<string[]>(
+      "roles",
+      context.getHandler(),
+    );
     const request = context.switchToHttp().getRequest();
     const user = request.user;
-    
-    return requiredRoles.some(role => user.roles.includes(role));
+
+    return requiredRoles.some((role) => user.roles.includes(role));
   }
 }
 
 // Usage in controller
-@Controller('payments')
-@UseGuards(JwtAuthGuard, RolesGuard)  // Applied to all routes
+@Controller("payments")
+@UseGuards(JwtAuthGuard, RolesGuard) // Applied to all routes
 export class PaymentsController {
   @Post()
-  @Roles('merchant')  // Only merchants can create payments
+  @Roles("merchant") // Only merchants can create payments
   async create(@Body() dto: CreatePaymentDto) {
     // User is already authenticated and authorized here
   }
@@ -714,6 +747,7 @@ export class PaymentsController {
 ```
 
 **Guard Execution Order:**
+
 ```
 Request → Guard 1 → Guard 2 → Interceptor → Pipe → Controller → Service
           ↓ fail    ↓ fail     ↓           ↓        ↓           ↓
@@ -729,11 +763,11 @@ export class CreatePaymentDto {
   @Min(1)
   @Max(1000000)
   amount: number;
-  
+
   @IsString()
   @IsIn(['MXN', 'COP', 'ARS'])
   currency: string;
-  
+
   @IsUUID()
   @IsOptional()
   customerId?: string;
@@ -757,9 +791,9 @@ export class LoggingInterceptor implements NestInterceptor {
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
     const request = context.switchToHttp().getRequest();
     const startTime = Date.now();
-    
+
     console.log(`→ ${request.method} ${request.url}`);
-    
+
     return next.handle().pipe(
       tap(() => {
         const duration = Date.now() - startTime;
@@ -774,7 +808,7 @@ export class LoggingInterceptor implements NestInterceptor {
 export class TransformInterceptor implements NestInterceptor {
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
     return next.handle().pipe(
-      map(data => ({
+      map((data) => ({
         success: true,
         data,
         timestamp: new Date().toISOString(),
@@ -787,25 +821,26 @@ export class TransformInterceptor implements NestInterceptor {
 ### 4.3. NestJS vs Alternatives
 
 **Express (Low-level):**
+
 ```javascript
 // Express: Manual everything
-app.post('/payments', async (req, res) => {
+app.post("/payments", async (req, res) => {
   // Manual validation
-  if (!req.body.amount || typeof req.body.amount !== 'number') {
-    return res.status(400).json({ error: 'Invalid amount' });
+  if (!req.body.amount || typeof req.body.amount !== "number") {
+    return res.status(400).json({ error: "Invalid amount" });
   }
-  
+
   // Manual auth
   const token = req.headers.authorization;
   const user = await verifyToken(token);
   if (!user) {
-    return res.status(401).json({ error: 'Unauthorized' });
+    return res.status(401).json({ error: "Unauthorized" });
   }
-  
+
   // Manual dependency creation
   const db = new Database();
   const service = new PaymentService(db);
-  
+
   // Business logic
   const result = await service.create(req.body);
   res.json(result);
@@ -813,30 +848,33 @@ app.post('/payments', async (req, res) => {
 ```
 
 **NestJS: Declarative**
+
 ```typescript
-@Controller('payments')
-@UseGuards(JwtAuthGuard)  // Auth handled
+@Controller("payments")
+@UseGuards(JwtAuthGuard) // Auth handled
 export class PaymentsController {
   constructor(
-    private readonly service: PaymentsService  // DI handled
+    private readonly service: PaymentsService, // DI handled
   ) {}
-  
+
   @Post()
   async create(
-    @Body() dto: CreatePaymentDto  // Validation handled
+    @Body() dto: CreatePaymentDto, // Validation handled
   ) {
-    return this.service.create(dto);  // Just business logic
+    return this.service.create(dto); // Just business logic
   }
 }
 ```
 
 **Fastify (NestJS Alternative Backend):**
+
 - NestJS can use Fastify instead of Express
 - 2x faster than Express
 - Better TypeScript support
 - Use when: Performance critical (>10K req/s)
 
 **Why We Choose NestJS:**
+
 - Enforces clean architecture (SOLID principles)
 - Built-in: validation, auth, caching, queues, WebSockets
 - TypeScript-first (not bolted on)
@@ -860,19 +898,19 @@ export class PaymentsController {
 ```typescript
 // Traditional component with template
 @Component({
-  selector: 'app-payment-form',
+  selector: "app-payment-form",
   template: `
     <form [formGroup]="form" (ngSubmit)="onSubmit()">
-      <input formControlName="amount" type="number">
+      <input formControlName="amount" type="number" />
       <button type="submit">Pay</button>
     </form>
   `,
 })
 export class PaymentFormComponent {
   form = new FormGroup({
-    amount: new FormControl(0, [Validators.required, Validators.min(1)])
+    amount: new FormControl(0, [Validators.required, Validators.min(1)]),
   });
-  
+
   onSubmit() {
     if (this.form.valid) {
       console.log(this.form.value);
@@ -882,6 +920,7 @@ export class PaymentFormComponent {
 ```
 
 **Component Lifecycle:**
+
 ```
 Creation:
   constructor() → Called when class instantiated
@@ -903,8 +942,8 @@ Destruction:
 // Old: RxJS Observables (complex)
 export class OldComponent {
   count$ = new BehaviorSubject(0);
-  doubled$ = this.count$.pipe(map(n => n * 2));
-  
+  doubled$ = this.count$.pipe(map((n) => n * 2));
+
   increment() {
     this.count$.next(this.count$.value + 1);
   }
@@ -912,16 +951,17 @@ export class OldComponent {
 
 // New: Signals (simple, performant)
 export class NewComponent {
-  count = signal(0);  // Writable signal
-  doubled = computed(() => this.count() * 2);  // Computed signal
-  
+  count = signal(0); // Writable signal
+  doubled = computed(() => this.count() * 2); // Computed signal
+
   increment() {
-    this.count.update(n => n + 1);  // Update signal
+    this.count.update((n) => n + 1); // Update signal
   }
 }
 ```
 
 **Why Signals:**
+
 - Fine-grained reactivity (only update what changed)
 - No Zone.js needed (faster change detection)
 - Simpler than RxJS for simple state
@@ -932,34 +972,34 @@ export class NewComponent {
 ```typescript
 // Service: Business logic + state
 @Injectable({
-  providedIn: 'root'  // Singleton across entire app
+  providedIn: "root", // Singleton across entire app
 })
 export class PaymentsService {
-  private http = inject(HttpClient);  // Modern inject() function
-  
+  private http = inject(HttpClient); // Modern inject() function
+
   getPayments(): Observable<Payment[]> {
-    return this.http.get<Payment[]>('/api/payments');
+    return this.http.get<Payment[]>("/api/payments");
   }
-  
+
   createPayment(data: CreatePaymentDto): Observable<Payment> {
-    return this.http.post<Payment>('/api/payments', data);
+    return this.http.post<Payment>("/api/payments", data);
   }
 }
 
 // Component: UI logic only
 @Component({
-  selector: 'app-payment-list',
-  standalone: true,  // No NgModule needed (Angular 19+)
+  selector: "app-payment-list",
+  standalone: true, // No NgModule needed (Angular 19+)
 })
 export class PaymentListComponent {
-  private paymentsService = inject(PaymentsService);  // Injected
-  
+  private paymentsService = inject(PaymentsService); // Injected
+
   payments = signal<Payment[]>([]);
-  
+
   ngOnInit() {
-    this.paymentsService.getPayments().subscribe(
-      payments => this.payments.set(payments)
-    );
+    this.paymentsService
+      .getPayments()
+      .subscribe((payments) => this.payments.set(payments));
   }
 }
 ```
@@ -971,16 +1011,16 @@ export class PaymentListComponent {
 @NgModule({
   declarations: [PaymentFormComponent],
   imports: [CommonModule, ReactiveFormsModule],
-  exports: [PaymentFormComponent]
+  exports: [PaymentFormComponent],
 })
 export class PaymentsModule {}
 
 // New: Standalone (direct imports)
 @Component({
-  selector: 'app-payment-form',
+  selector: "app-payment-form",
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],  // Import directly
-  template: `...`
+  imports: [CommonModule, ReactiveFormsModule], // Import directly
+  template: `...`,
 })
 export class PaymentFormComponent {}
 ```
@@ -1023,19 +1063,19 @@ export class PaymentFormComponent {}
 // New: Zoneless with signals
 bootstrapApplication(AppComponent, {
   providers: [
-    provideExperimentalZonelessChangeDetection(),  // Enable zoneless
-  ]
+    provideExperimentalZonelessChangeDetection(), // Enable zoneless
+  ],
 });
 
 // Components use signals for reactivity
 @Component({
-  template: `{{ count() }}`  // Auto-updates when signal changes
+  template: `{{ count() }}`, // Auto-updates when signal changes
 })
 export class CounterComponent {
-  count = signal(0);  // Signal-based state
-  
+  count = signal(0); // Signal-based state
+
   increment() {
-    this.count.update(n => n + 1);  // Triggers precise update
+    this.count.update((n) => n + 1); // Triggers precise update
   }
 }
 ```
@@ -1043,36 +1083,37 @@ export class CounterComponent {
 ### 5.3. Angular vs Alternatives
 
 **React (Library, not framework):**
+
 ```jsx
 // React: Manual everything
 function PaymentForm() {
   const [amount, setAmount] = useState(0);
-  const [error, setError] = useState('');
-  
+  const [error, setError] = useState("");
+
   // Manual validation
   const validate = () => {
     if (amount < 1) {
-      setError('Amount must be positive');
+      setError("Amount must be positive");
       return false;
     }
     return true;
   };
-  
+
   // Manual HTTP
   const submit = async () => {
     if (!validate()) return;
-    const response = await fetch('/api/payments', {
-      method: 'POST',
-      body: JSON.stringify({ amount })
+    const response = await fetch("/api/payments", {
+      method: "POST",
+      body: JSON.stringify({ amount }),
     });
   };
-  
+
   return (
     <form onSubmit={submit}>
-      <input 
-        type="number" 
-        value={amount} 
-        onChange={e => setAmount(e.target.value)} 
+      <input
+        type="number"
+        value={amount}
+        onChange={(e) => setAmount(e.target.value)}
       />
       {error && <span>{error}</span>}
       <button>Pay</button>
@@ -1082,43 +1123,47 @@ function PaymentForm() {
 ```
 
 **Angular: Batteries included**
+
 ```typescript
 @Component({
   template: `
     <form [formGroup]="form" (ngSubmit)="onSubmit()">
-      <input formControlName="amount" type="number">
-      @if (form.controls.amount.errors?.['min']) {
+      <input formControlName="amount" type="number" />
+      @if (form.controls.amount.errors?.["min"]) {
         <span>Amount must be positive</span>
       }
       <button>Pay</button>
     </form>
-  `
+  `,
 })
 export class PaymentFormComponent {
   private http = inject(HttpClient);
-  
+
   form = new FormGroup({
-    amount: new FormControl(0, [Validators.min(1)])  // Built-in validation
+    amount: new FormControl(0, [Validators.min(1)]), // Built-in validation
   });
-  
+
   onSubmit() {
     if (this.form.invalid) return;
-    this.http.post('/api/payments', this.form.value).subscribe();  // Built-in HTTP
+    this.http.post("/api/payments", this.form.value).subscribe(); // Built-in HTTP
   }
 }
 ```
 
 **Vue (Simpler than Angular):**
+
 - Pros: Easier learning curve, smaller bundle, flexible
 - Cons: Less opinionated, smaller enterprise adoption
 - Verdict: Good for small teams, but Angular better for large teams
 
 **Svelte (Compile-time framework):**
+
 - Pros: No runtime, tiny bundles, fast
 - Cons: Smaller ecosystem, newer
 - Verdict: Promising but wait for maturity
 
 **Why We Choose Angular:**
+
 - Complete framework (routing, forms, HTTP, testing)
 - TypeScript-first (strong typing everywhere)
 - Enterprise-ready (used by Google, Microsoft, Samsung)
@@ -1144,10 +1189,10 @@ export class PaymentFormComponent {
 BEGIN;
   -- 1. Deduct inventory
   UPDATE products SET stock = stock - 1 WHERE id = 123;
-  
+
   -- 2. Create sale
   INSERT INTO sales (product_id, quantity, amount) VALUES (123, 1, 500);
-  
+
   -- 3. Record payment
   INSERT INTO transactions (sale_id, status) VALUES (456, 'CONFIRMED');
 COMMIT;
@@ -1155,6 +1200,7 @@ COMMIT;
 ```
 
 **ACID Guarantees:**
+
 - **Atomicity:** All or nothing (no partial updates)
 - **Consistency:** Database always in valid state
 - **Isolation:** Concurrent transactions don't interfere
@@ -1174,6 +1220,7 @@ SELECT * FROM transactions WHERE business_id = '123';
 ```
 
 **Index Types:**
+
 ```sql
 -- B-Tree (default): Equality and range queries
 CREATE INDEX idx_amount ON transactions(amount);
@@ -1218,12 +1265,14 @@ CREATE INDEX idx_provider ON transactions USING gin((metadata->'provider'));
 ```
 
 **When to use JSONB:**
+
 - Payment provider-specific data (varies by provider)
 - Webhook payloads (preserve exact structure)
 - Feature flags or settings (flexible schema)
 - Event logs (different event types)
 
 **When NOT to use JSONB:**
+
 - Core business data (use proper columns + foreign keys)
 - Frequently queried fields (indexes less efficient)
 - Data with relationships (use proper tables)
@@ -1254,14 +1303,14 @@ SELECT * FROM transactions;
 ALTER TABLE products ADD COLUMN search_vector tsvector;
 
 -- Update search vector
-UPDATE products SET search_vector = 
+UPDATE products SET search_vector =
   to_tsvector('spanish', name || ' ' || description);
 
 -- Index for fast search
 CREATE INDEX idx_search ON products USING gin(search_vector);
 
 -- Search query
-SELECT * FROM products 
+SELECT * FROM products
 WHERE search_vector @@ to_tsquery('spanish', 'coca cola');
 
 -- Ranked results
@@ -1274,21 +1323,25 @@ ORDER BY rank DESC;
 ### 6.3. PostgreSQL vs Alternatives
 
 **MySQL:**
+
 - Pros: Slightly faster for simple queries, more hosts support it
 - Cons: Weaker data integrity, no JSONB, limited features
 - Verdict: Use PostgreSQL (better for complex apps)
 
 **MongoDB (NoSQL):**
+
 - Pros: Flexible schema, horizontal scaling
 - Cons: No ACID (multi-document), no joins, eventual consistency
 - Verdict: Use PostgreSQL with JSONB (same flexibility + ACID)
 
 **SQLite:**
+
 - Pros: Zero setup, embedded, perfect for dev
 - Cons: No concurrent writes, no network access
 - Verdict: Use for testing, not production
 
 **Why We Choose PostgreSQL:**
+
 - ACID transactions (critical for payments!)
 - JSONB (flexibility when needed)
 - Full-text search (product search)
@@ -1336,6 +1389,7 @@ ZRANGE leaderboard 0 9 WITHSCORES  # Top 10
 **2. Caching Strategies**
 
 **Cache-Aside (Lazy Loading):**
+
 ```typescript
 async getPayment(id: string): Promise<Payment> {
   // 1. Check cache
@@ -1343,18 +1397,19 @@ async getPayment(id: string): Promise<Payment> {
   if (cached) {
     return JSON.parse(cached);
   }
-  
+
   // 2. Cache miss - query database
   const payment = await db.payment.findUnique({ where: { id } });
-  
+
   // 3. Store in cache
   await redis.set(`payment:${id}`, JSON.stringify(payment), 'EX', 3600);
-  
+
   return payment;
 }
 ```
 
 **Write-Through (Eager Loading):**
+
 ```typescript
 async updatePayment(id: string, data: UpdatePaymentDto): Promise<Payment> {
   // 1. Update database
@@ -1362,20 +1417,21 @@ async updatePayment(id: string, data: UpdatePaymentDto): Promise<Payment> {
     where: { id },
     data,
   });
-  
+
   // 2. Update cache immediately
   await redis.set(`payment:${id}`, JSON.stringify(payment), 'EX', 3600);
-  
+
   return payment;
 }
 ```
 
 **Cache Invalidation:**
+
 ```typescript
 async deletePayment(id: string): Promise<void> {
   // 1. Delete from database
   await db.payment.delete({ where: { id } });
-  
+
   // 2. Invalidate cache
   await redis.del(`payment:${id}`);
   await redis.del(`business:${payment.businessId}:payments`);  // Related cache
@@ -1388,11 +1444,11 @@ async deletePayment(id: string): Promise<void> {
 async checkRateLimit(userId: string): Promise<boolean> {
   const key = `rate_limit:${userId}`;
   const current = await redis.incr(key);
-  
+
   if (current === 1) {
     await redis.expire(key, 60);  // 60 seconds window
   }
-  
+
   return current <= 100;  // Max 100 requests per minute
 }
 
@@ -1406,18 +1462,21 @@ if (!await checkRateLimit(user.id)) {
 
 ```typescript
 // Publisher: Payment confirmed
-await redis.publish('payment:confirmed', JSON.stringify({
-  paymentId: '123',
-  businessId: '456',
-  amount: 500,
-}));
+await redis.publish(
+  "payment:confirmed",
+  JSON.stringify({
+    paymentId: "123",
+    businessId: "456",
+    amount: 500,
+  }),
+);
 
 // Subscriber: Listen for payments
-redis.subscribe('payment:confirmed', (message) => {
+redis.subscribe("payment:confirmed", (message) => {
   const data = JSON.parse(message);
   // Notify merchant via WebSocket
   websocketGateway.emit(`business:${data.businessId}`, {
-    type: 'PAYMENT_CONFIRMED',
+    type: "PAYMENT_CONFIRMED",
     data,
   });
 });
@@ -1430,20 +1489,21 @@ redis.subscribe('payment:confirmed', (message) => {
 await redis.set(
   `session:${sessionId}`,
   JSON.stringify({ userId, roles, createdAt }),
-  'EX',
-  86400  // 24 hours
+  "EX",
+  86400, // 24 hours
 );
 
 // Retrieve session
 const session = await redis.get(`session:${sessionId}`);
 if (!session) {
-  throw new UnauthorizedException('Session expired');
+  throw new UnauthorizedException("Session expired");
 }
 ```
 
 ### 7.3. Redis Persistence Options
 
 **RDB (Snapshotting):**
+
 ```
 Save entire dataset to disk periodically
 - Pros: Compact, fast restart
@@ -1452,6 +1512,7 @@ Save entire dataset to disk periodically
 ```
 
 **AOF (Append-Only File):**
+
 ```
 Log every write operation
 - Pros: Minimal data loss (1 second)
@@ -1460,6 +1521,7 @@ Log every write operation
 ```
 
 **Our Strategy:**
+
 - Use AOF for critical data (sessions, rate limits)
 - Use RDB for cache (okay to lose on crash)
 - Persist to PostgreSQL for permanent data
@@ -1467,21 +1529,25 @@ Log every write operation
 ### 7.4. Redis vs Alternatives
 
 **Memcached:**
+
 - Pros: Simpler, slightly faster for pure caching
 - Cons: Only strings (no data structures), no persistence
 - Verdict: Redis is superset of Memcached, use Redis
 
 **Hazelcast (Distributed cache):**
+
 - Pros: Distributed by default, better for huge scale
 - Cons: Java-based, heavier, more complex
 - Verdict: Overkill for our scale, use Redis
 
 **DragonflyDB (Redis alternative):**
+
 - Pros: 25x faster than Redis, drop-in replacement
 - Cons: Newer, less battle-tested
 - Verdict: Promising, revisit when mature
 
 **Why We Choose Redis:**
+
 - Fast (sub-millisecond latency)
 - Versatile (cache, queue, pub/sub, rate limiter)
 - Battle-tested (Twitter, GitHub, Airbnb use it)
@@ -1491,13 +1557,13 @@ Log every write operation
 
 ## 8. Summary: Technology Selection Rationale
 
-| Technology | Why Chosen | When to Reconsider |
-|------------|------------|-------------------|
-| **Bun** | Speed, DX, TypeScript support | Legacy Node.js compatibility issues |
-| **TypeScript** | Type safety, catches bugs early | Never (industry standard) |
-| **NestJS** | Enforces architecture, batteries included | Microservices (consider lightweight) |
-| **Angular 19** | Complete framework, enterprise-ready | Simple sites (overkill) |
-| **PostgreSQL** | ACID + JSONB, most versatile | Pure key-value (use Redis) |
-| **Redis** | Fast caching, pub/sub, rate limiting | Persistent primary storage (use Postgres) |
-| **Docker** | Dev-prod parity, easy orchestration | Single static binary (overkill) |
-| **Prisma** | Type-safe ORM, great DX | Complex queries (raw SQL) |
+| Technology     | Why Chosen                                | When to Reconsider                        |
+| -------------- | ----------------------------------------- | ----------------------------------------- |
+| **Bun**        | Speed, DX, TypeScript support             | Legacy Node.js compatibility issues       |
+| **TypeScript** | Type safety, catches bugs early           | Never (industry standard)                 |
+| **NestJS**     | Enforces architecture, batteries included | Microservices (consider lightweight)      |
+| **Angular 19** | Complete framework, enterprise-ready      | Simple sites (overkill)                   |
+| **PostgreSQL** | ACID + JSONB, most versatile              | Pure key-value (use Redis)                |
+| **Redis**      | Fast caching, pub/sub, rate limiting      | Persistent primary storage (use Postgres) |
+| **Docker**     | Dev-prod parity, easy orchestration       | Single static binary (overkill)           |
+| **Prisma**     | Type-safe ORM, great DX                   | Complex queries (raw SQL)                 |

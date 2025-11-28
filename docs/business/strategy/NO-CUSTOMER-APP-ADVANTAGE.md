@@ -1,5 +1,5 @@
 <!-- AI-INSTRUCTION: START -->
-<!-- 
+<!--
   This document defines the "NO CUSTOMER APP" STRATEGY.
   1. Preserve the Header Table and Metadata block.
   2. Fill in the "Agent Directives" to guide future AI interactions.
@@ -32,14 +32,14 @@
 
 ## 🤖 Agent Directives (System Prompt)
 
-*This section contains mandatory instructions for AI Agents (Copilot, Cursor, etc.) interacting with this document.*
+_This section contains mandatory instructions for AI Agents (Copilot, Cursor, etc.) interacting with this document._
 
-| Directive | Instruction |
-| :--- | :--- |
-| **Context** | This document explains the core competitive advantage of the platform. |
-| **Constraint** | NEVER suggest features that require a customer-facing app. |
-| **Pattern** | All customer interactions MUST be via standard banking apps or web links. |
-| **Related** | `docs/business/strategy/BUSINESS-MODEL-ANALYSIS.md` |
+| Directive      | Instruction                                                               |
+| :------------- | :------------------------------------------------------------------------ |
+| **Context**    | This document explains the core competitive advantage of the platform.    |
+| **Constraint** | NEVER suggest features that require a customer-facing app.                |
+| **Pattern**    | All customer interactions MUST be via standard banking apps or web links. |
+| **Related**    | `docs/business/strategy/BUSINESS-MODEL-ANALYSIS.md`                       |
 
 ---
 
@@ -169,16 +169,16 @@ Final adoption rate: 80-95% of merchants actively use it
 
 ## 4. Competitive Comparison
 
-| Factor | Mercado Pago | PayPal/Venmo | Clip/SumUp | **Our System** |
-|--------|--------------|--------------|------------|----------------|
-| **Customer needs app?** | ✓ YES | ✓ YES | ✗ NO | **✗ NO** |
-| **Customer CAC** | $20-50 | $25-60 | $0 | **$0** |
-| **Merchant CAC** | $85 | $120 | $85 | **$85** |
-| **Total CAC/merchant** | **$4,085** | **$5,000+** | $85 | **$85** |
-| **Day 1 adoption rate** | 10-20% | 10-20% | 95% | **95%** |
-| **Works with banks** | Only MP wallet | Only PP wallet | All banks | **All banks** |
-| **Inventory integration** | ✗ NO | ✗ NO | ✗ NO | **✓ YES** |
-| **Focus** | Consumers | Consumers | Payments only | **Merchants** |
+| Factor                    | Mercado Pago   | PayPal/Venmo   | Clip/SumUp    | **Our System** |
+| ------------------------- | -------------- | -------------- | ------------- | -------------- |
+| **Customer needs app?**   | ✓ YES          | ✓ YES          | ✗ NO          | **✗ NO**       |
+| **Customer CAC**          | $20-50         | $25-60         | $0            | **$0**         |
+| **Merchant CAC**          | $85            | $120           | $85           | **$85**        |
+| **Total CAC/merchant**    | **$4,085**     | **$5,000+**    | $85           | **$85**        |
+| **Day 1 adoption rate**   | 10-20%         | 10-20%         | 95%           | **95%**        |
+| **Works with banks**      | Only MP wallet | Only PP wallet | All banks     | **All banks**  |
+| **Inventory integration** | ✗ NO           | ✗ NO           | ✗ NO          | **✓ YES**      |
+| **Focus**                 | Consumers      | Consumers      | Payments only | **Merchants**  |
 
 ---
 
@@ -187,26 +187,31 @@ Final adoption rate: 80-95% of merchants actively use it
 ### 5.1. Bank Partnerships Are Easy
 
 **Traditional fintech pitch to banks:**
+
 > "Let us take your customers and put them in our app."
 
 **Bank response:** 😠 "You're a competitor. No."
 
 **Our pitch to banks:**
+
 > "We increase usage of YOUR app. When merchants use our system, their customers open YOUR banking app more often."
 
 **Bank response:** 😍 "This helps us! Let's partner."
 
 **White-label opportunity:**
+
 > Banks can even white-label our merchant tools, keeping full customer relationship while we provide technology.
 
 ### 5.2. Government Adoption Is Faster
 
 **Governments worry about fintech monopolies:**
+
 - Vendor lock-in
 - Proprietary systems
 - Consumer data concentrated in one company
 
 **Our system addresses these concerns:**
+
 - Works with ALL banks (promotes competition)
 - Uses open standards (no lock-in)
 - No consumer data (merchants' data only)
@@ -217,6 +222,7 @@ Final adoption rate: 80-95% of merchants actively use it
 ### 5.3. International Expansion Is Simpler
 
 **For two-sided platforms:**
+
 ```
 New country launch requirements:
 - Translate customer app
@@ -229,6 +235,7 @@ Time to scale: 2-3 years
 ```
 
 **For our system:**
+
 ```
 New country launch requirements:
 - Integrate local payment rails (SPEI/PSE/etc.)
@@ -244,6 +251,7 @@ Time to scale: 6-12 months
 **Revenue per merchant:** $130/month (Year 3)
 
 **Costs per merchant:**
+
 ```
 Two-sided platform:
 - Merchant CAC: $85
@@ -267,12 +275,14 @@ Difference: We're profitable 26 months sooner
 ### 6.1. Mercado Pago / PayPal Can't Pivot
 
 **Sunk Cost Problem:**
+
 - Already spent $500M+ building consumer app
 - Consumer brand is their main asset
 - Wall Street values them on consumer user count
 - Pivoting would destroy valuation
 
 **Incentive Misalignment:**
+
 - Consumer data = advertising revenue
 - Merchant-only model loses this revenue stream
 - Shareholders would revolt
@@ -280,11 +290,13 @@ Difference: We're profitable 26 months sooner
 ### 6.2. Square / Stripe Don't See the Opportunity
 
 **US-Centric Thinking:**
+
 - In USA, credit cards are universal (different problem)
 - Latin America bank transfers ≠ US bank transfers
 - Don't understand local payment rails (SPEI, PSE, etc.)
 
 **Wrong Customer Focus:**
+
 - Focused on medium/large businesses
 - Micro-merchants "too small" for their sales model
 - Don't have field sales teams for corner stores
@@ -292,16 +304,19 @@ Difference: We're profitable 26 months sooner
 ### 6.3. Why We Can Win
 
 **Focus = Competitive Advantage:**
+
 - 100% of product development on merchant tools
 - Competitors split resources (merchant + consumer apps)
 - We get 2x better merchant features with same budget
 
 **Local Expertise:**
+
 - Deep understanding of SPEI (Mexico), PSE (Colombia), etc.
 - Tax compliance per country (SAT, DIAN, AFIP)
 - Field sales model for micro-merchants
 
 **Speed:**
+
 - Get to 50,000 merchants before incumbents notice
 - By then, switching costs lock merchants in
 - Government partnerships create regulatory moat
@@ -313,12 +328,15 @@ Difference: We're profitable 26 months sooner
 ### 7.1. What We Tell Merchants
 
 **Wrong pitch (two-sided platforms):**
+
 > "Get this terminal and tell your customers to download our app."
 
 **Our pitch:**
+
 > "Get this QR code. Works with every customer's banking app. Start accepting digital payments TODAY from 100% of your customers."
 
 **Demo:**
+
 ```
 Sales agent: "Let me show you. What bank do you use?"
 Merchant: "BBVA"
@@ -330,6 +348,7 @@ Merchant: "When can I start?"
 ```
 
 **Close Rate:**
+
 - Two-sided pitch: 15-20%
 - Our pitch: 60-70%
 
@@ -342,6 +361,7 @@ Merchant: "When can I start?"
 **Scenario: 25,000 merchants in Year 3**
 
 **Two-Sided Model:**
+
 ```
 Total CAC: 25,000 × $4,085 = $102,125,000
 Years to profitability: Never (need constant subsidies)
@@ -349,6 +369,7 @@ Outcome: Burn through VC money, hope for acquisition
 ```
 
 **Our Model:**
+
 ```
 Total CAC: 25,000 × $85 = $2,125,000
 Monthly revenue: 25,000 × $130 = $3,250,000

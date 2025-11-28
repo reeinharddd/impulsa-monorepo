@@ -1,5 +1,5 @@
 <!-- AI-INSTRUCTION: START -->
-<!-- 
+<!--
   This document defines the MONOREPO GUIDE. When creating new files:
   1. Preserve the Header Table and Metadata block.
   2. Fill in the "Agent Directives" to guide future AI interactions.
@@ -32,14 +32,14 @@
 
 ## 🤖 Agent Directives (System Prompt)
 
-*This section contains mandatory instructions for AI Agents (Copilot, Cursor, etc.) interacting with this document.*
+_This section contains mandatory instructions for AI Agents (Copilot, Cursor, etc.) interacting with this document._
 
-| Directive | Instruction |
-| :--- | :--- |
-| **Context** | This document explains the build system, package management, and workspace structure. |
-| **Constraint** | Always use `bun add --filter <name>` for adding dependencies. |
-| **Pattern** | Use `bun run <task>` or `turbo run <task>` for executing build/test/lint commands. |
-| **Related** | `docs/process/standards/PROJECT-STRUCTURE.md` |
+| Directive      | Instruction                                                                           |
+| :------------- | :------------------------------------------------------------------------------------ |
+| **Context**    | This document explains the build system, package management, and workspace structure. |
+| **Constraint** | Always use `bun add --filter <name>` for adding dependencies.                         |
+| **Pattern**    | Use `bun run <task>` or `turbo run <task>` for executing build/test/lint commands.    |
+| **Related**    | `docs/process/standards/PROJECT-STRUCTURE.md`                                         |
 
 ---
 
@@ -58,21 +58,25 @@ Monorepos allow us to share code (types, utilities) easily between the backend a
 #### Monorepo Benefits
 
 **Shared Code:**
+
 - Single source of truth for shared types and utilities
 - Consistent versioning across packages
 - Easier refactoring across boundaries
 
 **Unified Tooling:**
+
 - Single ESLint, Prettier, TypeScript configuration
 - Shared dev dependencies
 - Consistent build and test commands
 
 **Efficient CI/CD:**
+
 - Cache builds across workspaces
 - Run only affected tests
 - Parallel execution with Turborepo
 
 **Developer Experience:**
+
 - Single `bun install` for all packages
 - Easier onboarding
 - Unified IDE experience
@@ -80,6 +84,7 @@ Monorepos allow us to share code (types, utilities) easily between the backend a
 #### Turborepo Role
 
 Turborepo optimizes build times through:
+
 - **Caching:** Never build the same thing twice
 - **Parallel Execution:** Run tasks concurrently
 - **Task Pipelining:** Define dependencies between tasks
@@ -119,15 +124,12 @@ Root `package.json` defines workspaces:
 
 ```json
 {
-  "workspaces": [
-    "apps/*",
-    "libs/*",
-    "services/*"
-  ]
+  "workspaces": ["apps/*", "libs/*", "services/*"]
 }
 ```
 
 This tells Bun to:
+
 1. Hoist shared dependencies to root `node_modules`
 2. Symlink workspace packages for imports
 3. Allow workspace-specific scripts
@@ -137,11 +139,13 @@ This tells Bun to:
 #### Installing Dependencies
 
 **Root Dependencies (dev tools):**
+
 ```bash
 bun add -d eslint prettier typescript
 ```
 
 **Workspace-Specific:**
+
 ```bash
 # For backend
 bun add @nestjs/common --filter backend
@@ -154,6 +158,7 @@ bun add zod --filter mcp-server
 ```
 
 **All Workspaces:**
+
 ```bash
 bun install
 ```
@@ -161,11 +166,13 @@ bun install
 #### Dependency Resolution
 
 Bun workspaces use:
+
 1. **Hoisting:** Common dependencies installed once in root
 2. **Deduplication:** Same version shared across workspaces
 3. **Workspace Protocol:** Reference local packages
 
 Example workspace reference:
+
 ```json
 {
   "dependencies": {
@@ -177,16 +184,19 @@ Example workspace reference:
 #### Updating Dependencies
 
 **Update All:**
+
 ```bash
 bun update
 ```
 
 **Update Specific Workspace:**
+
 ```bash
 bun update --filter backend
 ```
 
 **Update Specific Package:**
+
 ```bash
 bun update @nestjs/common --filter backend
 ```
@@ -235,6 +245,7 @@ bun pm ls --filter backend
 #### Task Execution
 
 **Run Across All Workspaces:**
+
 ```bash
 # Build all packages
 turbo run build
@@ -247,6 +258,7 @@ turbo run lint --parallel
 ```
 
 **Workspace-Specific:**
+
 ```bash
 # Build specific workspace
 turbo run build --filter=backend
@@ -256,6 +268,7 @@ turbo run build --filter=backend --filter=frontend
 ```
 
 **With Options:**
+
 ```bash
 # Force rebuild (bypass cache)
 turbo run build --force
@@ -273,12 +286,14 @@ turbo run test --filter=[HEAD^1]
 #### Caching
 
 Turborepo caches based on:
+
 - Task inputs (source files)
 - Task outputs (build artifacts)
 - Environment variables
 - Global dependencies (.env files)
 
 **View Cache:**
+
 ```bash
 # Show what's cached
 turbo run build --dry-run=json
@@ -288,6 +303,7 @@ rm -rf .turbo
 ```
 
 **Cache Location:**
+
 - Local: `.turbo/cache`
 - Remote: Configured via Vercel or custom
 
@@ -336,6 +352,7 @@ bun run dev
 #### Daily Development
 
 **Start Development Servers:**
+
 ```bash
 # All services with hot reload
 bun run dev
@@ -347,6 +364,7 @@ bun run --filter mcp-server dev
 ```
 
 **Run Tests:**
+
 ```bash
 # All tests
 bun test
@@ -362,6 +380,7 @@ bun run test:e2e
 ```
 
 **Linting and Formatting:**
+
 ```bash
 # Lint all
 bun run lint
@@ -415,70 +434,73 @@ bun run db:studio
 
 Located in root `package.json`:
 
-| Script | Description |
-|--------|-------------|
-| `bun run dev` | Start all services in development mode |
-| `bun run build` | Build all packages |
-| `bun test` | Run all tests |
-| `bun run lint` | Lint all packages |
-| `bun run lint:fix` | Fix linting errors |
-| `bun run format` | Format code with Prettier |
-| `bun run typecheck` | Type check all TypeScript |
-| `bun run clean` | Remove all build artifacts |
+| Script              | Description                            |
+| ------------------- | -------------------------------------- |
+| `bun run dev`       | Start all services in development mode |
+| `bun run build`     | Build all packages                     |
+| `bun test`          | Run all tests                          |
+| `bun run lint`      | Lint all packages                      |
+| `bun run lint:fix`  | Fix linting errors                     |
+| `bun run format`    | Format code with Prettier              |
+| `bun run typecheck` | Type check all TypeScript              |
+| `bun run clean`     | Remove all build artifacts             |
 
 #### Backend Scripts
 
 Run with `--filter backend` or `cd apps/backend`:
 
-| Script | Description |
-|--------|-------------|
-| `bun run dev` | Start NestJS with hot reload |
-| `bun run build` | Build production bundle |
-| `bun test` | Run Jest unit tests |
-| `bun run test:e2e` | Run integration tests |
-| `bun run db:migrate` | Create and apply migration |
-| `bun run db:seed` | Seed database with test data |
-| `bun run db:studio` | Open Prisma Studio GUI |
+| Script               | Description                  |
+| -------------------- | ---------------------------- |
+| `bun run dev`        | Start NestJS with hot reload |
+| `bun run build`      | Build production bundle      |
+| `bun test`           | Run Jest unit tests          |
+| `bun run test:e2e`   | Run integration tests        |
+| `bun run db:migrate` | Create and apply migration   |
+| `bun run db:seed`    | Seed database with test data |
+| `bun run db:studio`  | Open Prisma Studio GUI       |
 
 #### Frontend Scripts
 
 Run with `--filter merchant-web` or `cd apps/merchant-web`:
 
-| Script | Description |
-|--------|-------------|
-| `bun run dev` | Start Angular dev server |
-| `bun run build` | Build production bundle |
-| `bun test` | Run Jasmine/Karma tests |
+| Script             | Description              |
+| ------------------ | ------------------------ |
+| `bun run dev`      | Start Angular dev server |
+| `bun run build`    | Build production bundle  |
+| `bun test`         | Run Jasmine/Karma tests  |
 | `bun run test:e2e` | Run Playwright E2E tests |
-| `bun run lint` | Lint with Angular ESLint |
+| `bun run lint`     | Lint with Angular ESLint |
 
 #### MCP Server Scripts
 
 Run with `--filter mcp-server` or `cd services/mcp-server`:
 
-| Script | Description |
-|--------|-------------|
-| `bun run dev` | Start with tsx watch mode |
-| `bun run build` | Compile TypeScript |
-| `bun test` | Run Vitest tests |
-| `bun run typecheck` | Check types without emit |
+| Script              | Description               |
+| ------------------- | ------------------------- |
+| `bun run dev`       | Start with tsx watch mode |
+| `bun run build`     | Compile TypeScript        |
+| `bun test`          | Run Vitest tests          |
+| `bun run typecheck` | Check types without emit  |
 
 ### 3.7. Adding New Packages
 
 #### Create New Workspace
 
 **1. Create Directory:**
+
 ```bash
 mkdir -p apps/new-app
 cd apps/new-app
 ```
 
 **2. Initialize Package:**
+
 ```bash
 bun init -y
 ```
 
 **3. Configure Package.json:**
+
 ```json
 {
   "name": "new-app",
@@ -493,6 +515,7 @@ bun init -y
 ```
 
 **4. Install from Root:**
+
 ```bash
 cd ../..
 bun install
@@ -501,6 +524,7 @@ bun install
 **5. Add to Turbo Pipeline:**
 
 Edit `turbo.json`:
+
 ```json
 {
   "pipeline": {
@@ -515,6 +539,7 @@ Edit `turbo.json`:
 #### Create Shared Library
 
 **1. Create Library:**
+
 ```bash
 mkdir -p libs/shared-utils
 cd libs/shared-utils
@@ -522,6 +547,7 @@ bun init -y
 ```
 
 **2. Configure for Import:**
+
 ```json
 {
   "name": "shared-utils",
@@ -539,11 +565,13 @@ bun init -y
 ```
 
 **3. Use in Other Packages:**
+
 ```bash
 bun add shared-utils --filter backend
 ```
 
 Package.json:
+
 ```json
 {
   "dependencies": {
@@ -559,6 +587,7 @@ Package.json:
 **Problem:** Conflicting versions across workspaces
 
 **Solution:**
+
 ```bash
 # Remove all node_modules
 rm -rf node_modules apps/*/node_modules services/*/node_modules
@@ -575,6 +604,7 @@ bun install
 **Problem:** Stale cache causing incorrect builds
 
 **Solution:**
+
 ```bash
 # Clear turbo cache
 rm -rf .turbo
@@ -588,6 +618,7 @@ turbo run build --force
 **Problem:** `error: Workspace not found`
 
 **Solution:**
+
 1. Check workspace paths in root `package.json`
 2. Ensure `package.json` exists in workspace
 3. Verify workspace name matches
@@ -597,6 +628,7 @@ turbo run build --force
 **Problem:** Build fails but no clear error
 
 **Solution:**
+
 ```bash
 # Build with verbose output
 turbo run build --verbose
@@ -615,6 +647,7 @@ bun run typecheck
 **Solution:**
 
 Add to `package.json` (Bun handles hoisting differently, but if needed):
+
 ```json
 {
   "trustedDependencies": ["package-name"]
@@ -622,6 +655,7 @@ Add to `package.json` (Bun handles hoisting differently, but if needed):
 ```
 
 Or install directly in workspace:
+
 ```bash
 bun add <package> --filter <name>
 ```
@@ -633,6 +667,7 @@ bun add <package> --filter <name>
 **Solution:**
 
 Bun is already fast. Ensure you are using the latest version:
+
 ```bash
 bun upgrade
 ```

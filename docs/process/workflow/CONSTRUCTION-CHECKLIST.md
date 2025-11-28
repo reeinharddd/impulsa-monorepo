@@ -1,5 +1,5 @@
 <!-- AI-INSTRUCTION: START -->
-<!-- 
+<!--
   This document defines the CONSTRUCTION CHECKLIST.
   1. Preserve the Header Table and Metadata block.
   2. Fill in the "Agent Directives" to guide future AI interactions.
@@ -32,14 +32,14 @@
 
 ## 🤖 Agent Directives (System Prompt)
 
-*This section contains mandatory instructions for AI Agents (Copilot, Cursor, etc.) interacting with this document.*
+_This section contains mandatory instructions for AI Agents (Copilot, Cursor, etc.) interacting with this document._
 
-| Directive | Instruction |
-| :--- | :--- |
-| **Context** | This document is a mandatory checklist for all code construction tasks. |
+| Directive      | Instruction                                                              |
+| :------------- | :----------------------------------------------------------------------- |
+| **Context**    | This document is a mandatory checklist for all code construction tasks.  |
 | **Constraint** | Verify every generated file against the specific checklist for its type. |
-| **Pattern** | Use the "Critical Rules" section to validate safety and security. |
-| **Related** | `docs/process/workflow/DEVELOPMENT-RULES.md` |
+| **Pattern**    | Use the "Critical Rules" section to validate safety and security.        |
+| **Related**    | `docs/process/workflow/DEVELOPMENT-RULES.md`                             |
 
 ---
 
@@ -107,6 +107,7 @@ async methodName(param1: string, param2: number): Promise<ReturnType> {
 ```
 
 **Checklist:**
+
 - [ ] Method has JSDoc comment
 - [ ] All parameters documented
 - [ ] Return type documented
@@ -144,6 +145,7 @@ async create(
 ```
 
 **Checklist:**
+
 - [ ] HTTP method decorator
 - [ ] Auth guard if protected
 - [ ] Swagger decorators
@@ -170,17 +172,18 @@ export class CreateResourceDto {
    * [ ] @example with real value
    */
   @ApiProperty({
-    description: '...',  // [ ] Description
-    example: '...',      // [ ] Example
-    minLength: 3,        // [ ] Constraints (if applicable)
+    description: "...", // [ ] Description
+    example: "...", // [ ] Example
+    minLength: 3, // [ ] Constraints (if applicable)
   })
-  @IsString()            // [ ] Type validator
-  @Length(3, 100)        // [ ] Length/range validators
+  @IsString() // [ ] Type validator
+  @Length(3, 100) // [ ] Length/range validators
   name: string;
 }
 ```
 
 **Checklist:**
+
 - [ ] Class JSDoc comment
 - [ ] Each field has JSDoc
 - [ ] Each field has @example
@@ -215,7 +218,7 @@ export class MyComponent {
   // [ ] SIGNALS section
   loading = signal(false);
   error = signal<string | null>(null);
-  
+
   // [ ] COMPUTED section
   canSubmit = computed(() => ...);
 
@@ -234,6 +237,7 @@ export class MyComponent {
 ```
 
 **Checklist:**
+
 - [ ] JSDoc comment
 - [ ] Standalone component
 - [ ] Proper selector (app- prefix)
@@ -299,6 +303,7 @@ describe('FeatureName', () => {
 ```
 
 **Checklist:**
+
 - [ ] describe block for feature/class
 - [ ] beforeEach for setup
 - [ ] afterEach for cleanup
@@ -336,6 +341,7 @@ docs(api): update endpoint docs
 ```
 
 **Checklist:**
+
 - [ ] Type: feat|fix|docs|style|refactor|test|chore
 - [ ] Scope: module name (payments, auth, etc)
 - [ ] Subject: imperative mood ("add" not "added")
@@ -361,30 +367,35 @@ docs(api): update endpoint docs
 ### 9.1. For Reviewer
 
 **Functionality:**
+
 - [ ] Code does what PR says
 - [ ] Edge cases handled
 - [ ] Error handling appropriate
 - [ ] No obvious bugs
 
 **Design:**
+
 - [ ] Follows established patterns
 - [ ] No code duplication
 - [ ] Appropriate abstraction
 - [ ] Single Responsibility Principle
 
 **Testing:**
+
 - [ ] Tests cover functionality
 - [ ] Tests cover errors
 - [ ] Coverage >= 80%
 - [ ] Tests are readable
 
 **Documentation:**
+
 - [ ] JSDoc for public APIs
 - [ ] Inline comments for complex logic
 - [ ] README updated (if needed)
 - [ ] API docs updated (if endpoints changed)
 
 **Security:**
+
 - [ ] No secrets in code
 - [ ] Input validation present
 - [ ] Authorization checks present
@@ -392,12 +403,14 @@ docs(api): update endpoint docs
 - [ ] XSS prevention
 
 **Performance:**
+
 - [ ] No N+1 queries
 - [ ] Indexes used appropriately
 - [ ] Large ops paginated
 - [ ] No blocking ops in critical path
 
 **Style:**
+
 - [ ] Linter passes
 - [ ] Consistent naming
 - [ ] No commented code
