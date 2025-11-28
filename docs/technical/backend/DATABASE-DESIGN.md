@@ -52,7 +52,7 @@ Use this checklist to track the maturity of the database design.
 - [x] **Initial Design:** Core entities defined (User, Business, Product, Transaction).
 - [x] **Identity & Auth:** Multi-provider, Sessions, Audit Logs, MFA, Trusted Devices.
 - [x] **UX & Engagement:** Push Notifications, User Preferences, Offline Sync support.
-- [ ] **Business Logic:** Roles, Permissions, Employee Management (In Progress).
+- [x] **Business Logic:** Roles, Permissions, Employee Management (Ready).
 - [ ] **Inventory:** Stock movements, Variants, Alerts.
 - [ ] **Payments:** Multi-country adapters, Idempotency.
 - [ ] **Billing:** Invoicing (SAT/DIAN/AFIP) structures.
@@ -136,15 +136,15 @@ These rules are mandatory for all database development in this project.
 
 The database is divided into logical schemas. Click on each module for detailed ER diagrams, constraints, and rules.
 
-| Schema                                                     | Description                                 | Status         |
-| :--------------------------------------------------------- | :------------------------------------------ | :------------- |
-| [**Auth & Identity**](./database/01-AUTH-SCHEMA.md)        | Users, Sessions, MFA, Trusted Devices.      | ✅ Ready       |
-| [**Business Core**](./database/02-BUSINESS-SCHEMA.md)      | Organizations, Branches, Employees, RBAC.   | 🚧 In Progress |
-| [**Communication**](./database/03-COMMUNICATION-SCHEMA.md) | Notifications, Templates, Push, Audit Logs. | ✅ Stable      |
-| [**Inventory**](./database/04-INVENTORY-SCHEMA.md)         | Products, Variants, Stock, Alerts.          | 📝 Draft       |
-| [**Sales (POS)**](./database/05-SALES-SCHEMA.md)           | Cash Registers, Shifts, Sales, Items.       | 📝 Draft       |
-| [**Payments**](./database/06-PAYMENTS-SCHEMA.md)           | Transactions, Payment Methods, Idempotency. | 📝 Draft       |
-| [**Billing**](./database/07-BILLING-SCHEMA.md)             | Fiscal Invoicing (SAT/DIAN).                | 📝 Draft       |
+| Schema                                                     | Description                                 | Status   |
+| :--------------------------------------------------------- | :------------------------------------------ | :------- |
+| [**Auth & Identity**](./database/01-AUTH-SCHEMA.md)        | Users, Sessions, MFA, Trusted Devices.      | ✅ Ready |
+| [**Business Core**](./database/02-BUSINESS-SCHEMA.md)      | Organizations, Branches, Employees, RBAC.   | ✅ Ready |
+| [**Communication**](./database/03-COMMUNICATION-SCHEMA.md) | Notifications, Templates, Push, Audit Logs. | 📝 Draft |
+| [**Inventory**](./database/04-INVENTORY-SCHEMA.md)         | Products, Variants, Stock, Alerts.          | 📝 Draft |
+| [**Sales (POS)**](./database/05-SALES-SCHEMA.md)           | Cash Registers, Shifts, Sales, Items.       | 📝 Draft |
+| [**Payments**](./database/06-PAYMENTS-SCHEMA.md)           | Transactions, Payment Methods, Idempotency. | 📝 Draft |
+| [**Billing**](./database/07-BILLING-SCHEMA.md)             | Fiscal Invoicing (SAT/DIAN).                | 📝 Draft |
 
 > **[View Full ER Diagram](./database/FULL-ER-DIAGRAM.md)** (All schemas combined)
 

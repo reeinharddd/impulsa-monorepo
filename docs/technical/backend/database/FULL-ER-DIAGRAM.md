@@ -110,6 +110,8 @@ package "business" {
     taxId : VARCHAR <<UK>>
     country : VARCHAR
     type : ENUM (RETAIL, RESTAURANT, SERVICE)
+    fiscalData : JSONB
+    branding : JSONB
     features : JSONB
     isActive : BOOLEAN
     createdAt : TIMESTAMP
@@ -140,19 +142,9 @@ package "business" {
     businessId : UUID <<FK>>
     name : VARCHAR
     type : ENUM (SYSTEM, CUSTOM)
+    permissions : JSONB
+    riskLevel : ENUM (LOW, MEDIUM, HIGH, CRITICAL)
     deletedAt : TIMESTAMP
-  }
-
-  entity "RolePermission" as role_perm {
-    *roleId : UUID <<FK>>
-    *permissionId : UUID <<FK>>
-  }
-
-  entity "Permission" as perm {
-    *id : UUID <<PK>>
-    --
-    action : VARCHAR
-    resource : VARCHAR
   }
 
   entity "Branch" as branch {
@@ -162,6 +154,7 @@ package "business" {
     name : VARCHAR
     address : JSONB
     timezone : VARCHAR
+    isDefault : BOOLEAN
     createdAt : TIMESTAMP
     updatedAt : TIMESTAMP
     deletedAt : TIMESTAMP
@@ -187,22 +180,26 @@ package "communication" {
     --
     userId : UUID <<FK>>
     businessId : UUID <<FK>>
+    templateId : UUID <<FK>>
     channel : ENUM
-    recipient : VARCHAR
+    priority : ENUM
     status : ENUM
+    provider : VARCHAR
+    providerId : VARCHAR
+    error : TEXT
     createdAt : TIMESTAMP
   }
 
   entity "NotificationTemplate" as template {
     *id : UUID <<PK>>
     --
-    name : VARCHAR
-    type : ENUM (TRANSACTIONAL, MARKETING, SECURITY)
+    businessId : UUID <<FK>>
+    code : VARCHAR
     channel : ENUM
     subject : VARCHAR
     content : TEXT
     variables : JSONB
-    isActive : BOOLEAN
+    isDefault : BOOLEAN
   }
 
   entity "InAppNotification" as in_app {
@@ -400,9 +397,10 @@ business ||..o{ notif : "generates"
 
 ' Roles
 role ||..o{ employee : "assigned to"
-role ||..|{ role_perm : "has"
-perm ||..|{ role_perm : "belongs to"
 business ||..o{ role : "defines"
+
+' Communication
+template ||..o{ notif : "instantiates"
 
 ' Inventory
 business ||..o{ category : "manages"
