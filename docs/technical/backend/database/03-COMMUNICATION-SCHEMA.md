@@ -1,8 +1,7 @@
 <!-- AI-INSTRUCTION: START -->
 <!--
   This document defines the COMMUNICATION SCHEMA.
-  1. Preserve the Header Table and Metadata block.
-  2. Fill in the "Agent Directives" to guide future AI interactions.
+  /* Lines 4-6 omitted */
   3. Keep the structure strict for RAG (Retrieval Augmented Generation) efficiency.
 -->
 <!-- AI-INSTRUCTION: END -->
@@ -22,7 +21,7 @@
 <div align="center">
 
   <!-- METADATA BADGES -->
-  <img src="https://img.shields.io/badge/Status-Stable-success?style=flat-square" alt="Status" />
+  <img src="https://img.shields.io/badge/Status-Ready-success?style=flat-square" alt="Status" />
   <img src="https://img.shields.io/badge/Audience-Backend-blue?style=flat-square" alt="Audience" />
   <img src="https://img.shields.io/badge/Last%20Updated-2025--11--27-lightgrey?style=flat-square" alt="Date" />
 
@@ -36,23 +35,23 @@ _This section contains mandatory instructions for AI Agents (Copilot, Cursor, et
 
 | Directive      | Instruction                                                                                               |
 | :------------- | :-------------------------------------------------------------------------------------------------------- |
-| **Context**    | Manages all outbound communication (Email, SMS, Push) and internal alerts.                                |
+| **Context**    | Manages all outbound communication (Email, SMS, Push, WhatsApp) and internal alerts.                      |
 | **Constraint** | **No Raw HTML:** Content MUST be generated from `NotificationTemplate`.                                   |
 | **Pattern**    | **Hot/Cold Storage:** `InAppNotification` is for UI display (Hot). `NotificationLog` is for audit (Cold). |
-| **Rule**       | **Async:** Sending is always handled by background workers (BullMQ).                                      |
+| **Rule**       | **Priority:** `HIGH` priority messages (OTP, Payment Links) bypass marketing queues.                      |
 | **Related**    | `apps/backend/src/modules/notifications/`                                                                 |
 
 ---
 
 ## 1. Executive Summary
 
-The **Communication Schema** centralizes how the platform talks to users. It abstracts the provider (SendGrid, Twilio, Firebase) from the business logic.
+The **Communication Schema** centralizes how the platform talks to users. It abstracts the provider (SendGrid, Twilio, Meta/WhatsApp) from the business logic.
 
 Key capabilities:
 
-1.  **Omnichannel:** Send one event ("Order Confirmed"), deliver via multiple channels (Email + Push).
-2.  **Templating:** MJML/Handlebars support for consistent branding.
-3.  **Audit:** Track delivery status (Sent, Delivered, Failed, Opened).
+1.  **Omnichannel:** Send one event ("Payment Link"), deliver via the user's preferred channel (WhatsApp > SMS > Email).
+2.  **Business Customization:** Merchants can override default templates with their own branding (Logo, Colors).
+3.  **Priority Queues:** Ensures critical messages (2FA, Payment Requests) are delivered instantly, even during high traffic.
 
 ---
 
@@ -65,14 +64,29 @@ hide circle
 skinparam linetype ortho
 
 package "communication" {
+  enum NotificationChannel {
+    EMAIL
+    SMS
+    PUSH
+    WHATSAPP
+  }
+
+  enum NotificationPriority {
+    HIGH
+    NORMAL
+    LOW
+  }
+
   entity "NotificationTemplate" as template {
     *id : UUID <<PK>>
     --
-    code : VARCHAR(50) <<UK>>
-    channel : ENUM (EMAIL, SMS, PUSH)
+    businessId : UUID <<FK, Nullable>>
+    code : VARCHAR(50)
+    channel : NotificationChannel
     subject : VARCHAR(255)
     content : TEXT
     variables : JSONB
+    isDefault : BOOLEAN
   }
 
   entity "InAppNotification" as inapp {
@@ -99,9 +113,13 @@ package "communication" {
     *id : UUID <<PK>>
     --
     userId : UUID <<FK>>
+    businessId : UUID <<FK>>
     templateId : UUID <<FK>>
-    channel : ENUM
-    status : ENUM (PENDING, SENT, FAILED)
+    channel : NotificationChannel
+    priority : NotificationPriority
+    status : ENUM (PENDING, SENT, FAILED, DELIVERED, READ)
+    provider : VARCHAR(50)
+    providerId : VARCHAR(100)
     error : TEXT
     createdAt : TIMESTAMP
   }
@@ -118,12 +136,14 @@ push }o..|| inapp : "notifies"
 
 ### 3.1. NotificationTemplate
 
-Stores the blueprints for messages.
+Stores the blueprints for messages. Supports global defaults and business-specific overrides.
 
-| Attribute | Type    | Description        | Rules & Constraints                       |
-| :-------- | :------ | :----------------- | :---------------------------------------- |
-| `code`    | VARCHAR | Unique slug.       | e.g., `WELCOME_EMAIL`, `PAYMENT_RECEIPT`. |
-| `content` | TEXT    | The body template. | MJML for Email, Plain text for SMS.       |
+| Attribute    | Type    | Description                       | Rules & Constraints                               |
+| :----------- | :------ | :-------------------------------- | :------------------------------------------------ |
+| `businessId` | UUID    | The tenant owning this template.  | If NULL, it is a System Default template.         |
+| `code`       | VARCHAR | Unique slug per Business/Channel. | e.g., `PAYMENT_LINK`, `RECEIPT`, `WELCOME`.       |
+| `content`    | TEXT    | The body template.                | MJML for Email, Plain text for SMS/WhatsApp.      |
+| `variables`  | JSONB   | Expected dynamic fields.          | e.g., `["customerName", "paymentUrl", "amount"]`. |
 
 ### 3.2. InAppNotification (The Bell Icon)
 
@@ -136,8 +156,11 @@ Stores persistent alerts shown in the application UI.
 
 ### 3.3. NotificationLog
 
-Audit trail for all sent messages.
+Audit trail for all sent messages. Critical for debugging "I didn't get the link".
 
-| Attribute | Type | Description     | Rules & Constraints                                  |
-| :-------- | :--- | :-------------- | :--------------------------------------------------- |
-| `status`  | ENUM | Delivery state. | Updated via Webhooks (e.g., SendGrid Event Webhook). |
+| Attribute    | Type    | Description               | Rules & Constraints                                  |
+| :----------- | :------ | :------------------------ | :--------------------------------------------------- |
+| `priority`   | ENUM    | Queue priority.           | `HIGH` for OTPs/Payments. `LOW` for Marketing.       |
+| `provider`   | VARCHAR | The actual sender.        | e.g., `Twilio`, `SendGrid`, `Meta`.                  |
+| `providerId` | VARCHAR | External ID for tracking. | Used to query the provider's API for status updates. |
+| `status`     | ENUM    | Delivery state.           | Updated via Webhooks (e.g., WhatsApp Read Receipt).  |
