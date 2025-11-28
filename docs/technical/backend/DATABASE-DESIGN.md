@@ -50,12 +50,13 @@ _This section contains mandatory instructions for AI Agents (Copilot, Cursor, et
 Use this checklist to track the maturity of the database design.
 
 - [x] **Initial Design:** Core entities defined (User, Business, Product, Transaction).
-- [x] **Identity & Auth:** Multi-provider, Sessions, Audit Logs, MFA, Trusted Devices.
-- [x] **UX & Engagement:** Push Notifications, User Preferences, Offline Sync support.
-- [x] **Business Logic:** Roles, Permissions, Employee Management (Ready).
-- [ ] **Inventory:** Stock movements, Variants, Alerts.
-- [ ] **Payments:** Multi-country adapters, Idempotency.
-- [ ] **Billing:** Invoicing (SAT/DIAN/AFIP) structures.
+- [x] **Schema 1 - Auth:** Multi-provider, Sessions, Audit Logs, MFA, Trusted Devices. **✅ READY**
+- [x] **Schema 2 - Business:** Roles, Permissions, Employee Management, Branches. **✅ READY**
+- [x] **Schema 3 - Communication:** Templates, Push, In-App Notifications, Logging. **✅ READY**
+- [ ] **Schema 4 - Inventory:** Stock movements, Variants, Alerts.
+- [ ] **Schema 5 - Sales:** Shifts, Transactions, Receipts.
+- [ ] **Schema 6 - Payments:** Multi-country adapters, Idempotency.
+- [ ] **Schema 7 - Billing:** Invoicing (SAT/DIAN/AFIP) structures.
 
 ---
 
