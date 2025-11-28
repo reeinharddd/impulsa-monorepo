@@ -93,20 +93,20 @@ services:
       context: .
       dockerfile: services/mcp-server/Dockerfile
     container_name: payment-mcp-server
+    working_dir: /app
     ports:
       - "8080:8080"
     environment:
       OLLAMA_URL: http://ollama:11434
       DATABASE_URL: postgresql://dev:dev123@postgres:5432/paymentdb
+      NODE_PATH: /app/node_modules
     depends_on:
       - ollama
       - postgres
     volumes:
-      - ./services/mcp-server:/app/services/mcp-server
-      - ./docs:/app/docs
+      - .:/app
       - /app/node_modules
-      - /app/services/mcp-server/node_modules
-    command: sh -c "bun install && bun run --filter mcp-server dev"
+    command: sh -c "bun install && cd services/mcp-server && bun run dev"
     networks:
       - payment-network
 

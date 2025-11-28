@@ -18,12 +18,38 @@ import express from "express";
 import { readdir, readFile, stat } from "fs/promises";
 import { basename, dirname, join, relative, resolve } from "path";
 import { fileURLToPath } from "url";
+import { DocumentationIndexService } from "./services/documentation-index.service.js";
+import { SearchService } from "./services/search.service.js";
+import {
+  getDocContext,
+  getDocContextSchema,
+  queryDocsByModule,
+  queryDocsByModuleSchema,
+  queryDocsByType,
+  queryDocsByTypeSchema,
+  searchFullText,
+  searchFullTextSchema,
+} from "./tools/index.js";
 
 // Configuration
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
-const PROJECT_ROOT = resolve(__dirname, "../../../"); // src -> mcp-server -> services -> root
+const PROJECT_ROOT = resolve(__dirname, "../../../");
 const DOCS_DIR = join(PROJECT_ROOT, "docs");
+
+// Initialize services
+const indexService = new DocumentationIndexService(DOCS_DIR);
+const searchService = new SearchService(indexService);
+
+console.log("[Server] Initializing documentation index...");
+indexService.initialize();
+console.log("[Server] Initializing search service...");
+searchService.initializeFuzzySearch();
+console.log("[Server] Services ready!");
+
+const stats = indexService.getStats();
+console.log(`[Server] Indexed ${stats.totalDocuments} documents`);
+console.log(`[Server] Modules:`, Object.keys(stats.documentsByModule));
 
 // Helper to recursively find markdown files
 async function getDocsFiles(
@@ -248,13 +274,169 @@ server.setRequestHandler(ListToolsRequestSchema, () => {
     tools: [
       {
         name: "search_docs",
-        description: "Search documentation for a specific query",
+        description: "Legacy: Search documentation for a specific query",
         inputSchema: {
           type: "object",
           properties: {
             query: {
               type: "string",
               description: "The search query",
+            },
+          },
+          required: ["query"],
+        },
+      },
+      {
+        name: "query_docs_by_module",
+        description: "Get all documents for a specific module",
+        inputSchema: {
+          type: "object",
+          properties: {
+            module: {
+              type: "string",
+              description: "Module name (e.g., 'payments', 'inventory')",
+            },
+            includeRelated: {
+              type: "boolean",
+              description: "Include related documents from other modules",
+            },
+          },
+          required: ["module"],
+        },
+      },
+      {
+        name: "query_docs_by_type",
+        description:
+          "Filter documents by type (e.g., 'api-design', 'database-schema')",
+        inputSchema: {
+          type: "object",
+          properties: {
+            documentType: {
+              type: "string",
+              enum: [
+                "general",
+                "feature-design",
+                "adr",
+                "database-schema",
+                "api-design",
+                "sync-strategy",
+                "ux-flow",
+                "testing-strategy",
+                "deployment-runbook",
+                "security-audit",
+              ],
+              description: "Type of document",
+            },
+            status: {
+              type: "string",
+              enum: [
+                "draft",
+                "review",
+                "approved",
+                "accepted",
+                "deprecated",
+                "superseded",
+              ],
+              description: "Filter by status",
+            },
+            module: {
+              type: "string",
+              description: "Filter by module",
+            },
+          },
+          required: ["documentType"],
+        },
+      },
+      {
+        name: "get_doc_context",
+        description:
+          "Get a document with all its related documents (follows relationship graph)",
+        inputSchema: {
+          type: "object",
+          properties: {
+            uri: {
+              type: "string",
+              description:
+                "Document URI (e.g., 'docs://technical/backend/payments')",
+            },
+            depth: {
+              type: "number",
+              description: "Depth of traversal (1-3)",
+              minimum: 1,
+              maximum: 3,
+            },
+            includeContent: {
+              type: "boolean",
+              description: "Include full document content",
+            },
+          },
+          required: ["uri"],
+        },
+      },
+      {
+        name: "search_full_text",
+        description:
+          "Fuzzy search across all documentation with advanced filtering",
+        inputSchema: {
+          type: "object",
+          properties: {
+            query: {
+              type: "string",
+              description: "Search query",
+            },
+            documentType: {
+              type: "array",
+              items: {
+                type: "string",
+                enum: [
+                  "general",
+                  "feature-design",
+                  "adr",
+                  "database-schema",
+                  "api-design",
+                  "sync-strategy",
+                  "ux-flow",
+                  "testing-strategy",
+                  "deployment-runbook",
+                  "security-audit",
+                ],
+              },
+              description: "Filter by document types",
+            },
+            module: {
+              type: "array",
+              items: { type: "string" },
+              description: "Filter by modules",
+            },
+            status: {
+              type: "array",
+              items: {
+                type: "string",
+                enum: [
+                  "draft",
+                  "review",
+                  "approved",
+                  "accepted",
+                  "deprecated",
+                  "superseded",
+                ],
+              },
+              description: "Filter by status",
+            },
+            page: {
+              type: "number",
+              description: "Page number",
+              minimum: 1,
+            },
+            limit: {
+              type: "number",
+              description: "Results per page",
+              minimum: 1,
+              maximum: 50,
+            },
+            includeSnippets: {
+              type: "boolean",
+              description: "Include content snippets",
             },
           },
           required: ["query"],
@@ -268,43 +450,79 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
   const name = request.params.name;
   const args = request.params.arguments;
 
-  if (name === "search_docs") {
-    const query = (args?.query as string).toLowerCase();
-    const docs = await getDocsFiles(DOCS_DIR);
-    const matches = [];
-
-    for (const doc of docs) {
-      try {
-        const content = await readFile(doc.filePath, "utf-8");
-        if (content.toLowerCase().includes(query)) {
-          // Extract a snippet
-          const index = content.toLowerCase().indexOf(query);
-          const start = Math.max(0, index - 50);
-          const end = Math.min(content.length, index + 150);
-          const snippet = content.substring(start, end).replace(/\n/g, " ");
-
-          matches.push({
-            uri: doc.uri,
-            name: doc.name,
-            snippet: `...${snippet}...`,
-          });
-        }
-      } catch {
-        // Ignore read errors
-      }
+  try {
+    if (name === "query_docs_by_module") {
+      const parsed = queryDocsByModuleSchema.parse(args);
+      const result = queryDocsByModule(parsed, indexService);
+      return {
+        content: [{ type: "text", text: JSON.stringify(result, null, 2) }],
+      };
     }
 
-    return {
-      content: [
-        {
-          type: "text",
-          text: JSON.stringify(matches, null, 2),
-        },
-      ],
-    };
-  }
+    if (name === "query_docs_by_type") {
+      const parsed = queryDocsByTypeSchema.parse(args);
+      const result = queryDocsByType(parsed, indexService);
+      return {
+        content: [{ type: "text", text: JSON.stringify(result, null, 2) }],
+      };
+    }
 
-  throw new McpError(ErrorCode.InvalidRequest, `Unknown tool: ${name}`);
+    if (name === "get_doc_context") {
+      const parsed = getDocContextSchema.parse(args);
+      const result = getDocContext(parsed, indexService);
+      return {
+        content: [{ type: "text", text: JSON.stringify(result, null, 2) }],
+      };
+    }
+
+    if (name === "search_full_text") {
+      const parsed = searchFullTextSchema.parse(args);
+      const result = searchFullText(parsed, searchService);
+      return {
+        content: [{ type: "text", text: JSON.stringify(result, null, 2) }],
+      };
+    }
+
+    if (name === "search_docs") {
+      const query = (args?.query as string).toLowerCase();
+      const docs = await getDocsFiles(DOCS_DIR);
+      const matches = [];
+
+      for (const doc of docs) {
+        try {
+          const content = await readFile(doc.filePath, "utf-8");
+          if (content.toLowerCase().includes(query)) {
+            const index = content.toLowerCase().indexOf(query);
+            const start = Math.max(0, index - 50);
+            const end = Math.min(content.length, index + 150);
+            const snippet = content.substring(start, end).replace(/\n/g, " ");
+
+            matches.push({
+              uri: doc.uri,
+              name: doc.name,
+              snippet: `...${snippet}...`,
+            });
+          }
+        } catch {
+          // Ignore read errors
+        }
+      }
+
+      return {
+        content: [{ type: "text", text: JSON.stringify(matches, null, 2) }],
+      };
+    }
+
+    throw new McpError(ErrorCode.InvalidRequest, `Unknown tool: ${name}`);
+  } catch (error) {
+    if (error instanceof McpError) {
+      throw error;
+    }
+    throw new McpError(
+      ErrorCode.InternalError,
+      `Tool execution failed: ${String(error)}`,
+    );
+  }
 });
 
 // Start the server

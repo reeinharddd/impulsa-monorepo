@@ -2,15 +2,22 @@ FROM oven/bun:1
 
 WORKDIR /app
 
-COPY package.json bun.lock ./
+# Copy root workspace files
+COPY package.json bun.lock turbo.json ./
+
+# Copy mcp-server package.json
 COPY services/mcp-server/package.json ./services/mcp-server/
 
+# Install dependencies (this installs in workspace root)
 RUN bun install
 
-COPY . .
+# Copy source code
+COPY services/mcp-server ./services/mcp-server
 
-RUN bun run --filter mcp-server build
+# Build
+WORKDIR /app/services/mcp-server
+RUN bun run build
 
 EXPOSE 8080
 
-CMD ["bun", "services/mcp-server/dist/server.js"]
+CMD ["bun", "run", "start"]
