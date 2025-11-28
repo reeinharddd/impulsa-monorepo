@@ -1,5 +1,40 @@
+---
+# YAML Frontmatter - Metadata for Semantic Search & RAG
+document_type: "adr"  # REQUIRED: Type identifier for MCP/RAG
+module: "architecture"  # REQUIRED: Module affected (e.g., "architecture", "infrastructure")
+status: "accepted"  # REQUIRED: proposed | accepted | rejected | deprecated | superseded
+version: "1.0.0"  # REQUIRED: Semantic versioning (Major.Minor.Patch)
+last_updated: "YYYY-MM-DD"  # REQUIRED: ISO date format
+author: "@username"  # REQUIRED: GitHub username or team
+
+# Keywords for semantic search (5-10 keywords)
+keywords:
+  - "adr"
+  - "architecture"
+  - "decision"
+  - "[topic]"  # e.g., "database", "api", "frontend", "sync"
+  - "[technology]"  # e.g., "postgresql", "nestjs", "angular"
+  - "[pattern]"  # e.g., "cqrs", "event-sourcing", "microservices"
+
+# Related documentation
+related_docs:
+  database_schema: ""  # Path to affected DB schema (if applicable)
+  api_design: ""  # Path to affected API design (if applicable)
+  feature_design: ""  # Path to affected feature design (if applicable)
+  previous_adr: ""  # Path to previous/superseded ADR (if applicable)
+  superseded_by: ""  # Path to ADR that supersedes this one (if deprecated)
+
+# ADR-specific metadata
+adr_metadata:
+  adr_number: 0  # Sequential number (e.g., 001, 002, 003)
+  decision_date: "YYYY-MM-DD"  # Date decision was made (if accepted)
+  impact_level: "high"  # "low" | "medium" | "high" | "critical"
+  affected_modules: []  # List of modules affected (e.g., ["inventory", "sales"])
+  stakeholders: []  # List of stakeholders involved (e.g., ["@Architect", "@Backend"])
+---
+
 <!-- AI-INSTRUCTION: START -->
-<!-- 
+<!--
   This document is a TEMPLATE for Architecture Decision Records (ADR).
   1. Preserve the Header Table and Metadata block.
   2. Fill in the "Agent Directives" to guide future AI interactions.
@@ -20,9 +55,9 @@
 </table>
 
 <div align="center">
-  
+
   <!-- METADATA BADGES -->
-  <img src="https://img.shields.io/badge/Status-Proposed-yellow?style=flat-square" alt="Status" />
+  <img src="https://img.shields.io/badge/Status-Accepted-green?style=flat-square" alt="Status" />
   <img src="https://img.shields.io/badge/Impact-High-red?style=flat-square" alt="Impact" />
   <img src="https://img.shields.io/badge/Date-YYYY--MM--DD-lightgrey?style=flat-square" alt="Date" />
 
@@ -30,34 +65,34 @@
 
 ---
 
-## 🤖 Agent Directives (System Prompt)
+## Agent Directives (System Prompt)
 
-*This section contains mandatory instructions for AI Agents (Copilot, Cursor, etc.) interacting with this document.*
+_This section contains mandatory instructions for AI Agents (Copilot, Cursor, etc.) interacting with this document._
 
-| Directive | Instruction |
-| :--- | :--- |
-| **Context** | This document records a critical architectural decision. |
+| Directive      | Instruction                                                           |
+| :------------- | :-------------------------------------------------------------------- |
+| **Context**    | This document records a critical architectural decision.              |
 | **Constraint** | Do NOT implement changes contrary to this decision without a new ADR. |
-| **Pattern** | Follow the decision outcome in all related code. |
-| **Related** | [Link to related documents or previous ADRs] |
+| **Pattern**    | Follow the decision outcome in all related code.                      |
+| **Related**    | [Link to related documents or previous ADRs]                          |
 
 ---
 
 ## 1. Context & Problem Statement
 
-*Describe the context and problem statement. What is the issue that we are seeing that is motivating this decision?*
+_Describe the context and problem statement. What is the issue that we are seeing that is motivating this decision?_
 
 ## 2. Decision Drivers
 
-*   [Driver 1, e.g., Performance]
-*   [Driver 2, e.g., Cost]
-*   [Driver 3, e.g., Developer Experience]
+- [Driver 1, e.g., Performance]
+- [Driver 2, e.g., Cost]
+- [Driver 3, e.g., Developer Experience]
 
 ## 3. Considered Options
 
-*   **Option 1:** [Description]
-*   **Option 2:** [Description]
-*   **Option 3:** [Description]
+- **Option 1:** [Description]
+- **Option 2:** [Description]
+- **Option 3:** [Description]
 
 ## 4. Decision Outcome
 
@@ -65,30 +100,40 @@ Chosen option: **[Option 1]**, because [Justification].
 
 ### 4.1. Positive Consequences
 
-*   [Consequence 1]
-*   [Consequence 2]
+- [Consequence 1]
+- [Consequence 2]
 
 ### 4.2. Negative Consequences
 
-*   [Consequence 1]
-*   [Consequence 2]
+- [Consequence 1]
+- [Consequence 2]
 
 ## 5. Pros and Cons of the Options
 
 ### Option 1: [Title]
 
-*   **Pros:**
-    *   [Pro 1]
-*   **Cons:**
-    *   [Con 1]
+- **Pros:**
+  - [Pro 1]
+- **Cons:**
+  - [Con 1]
 
 ### Option 2: [Title]
 
-*   **Pros:**
-    *   [Pro 1]
-*   **Cons:**
-    *   [Con 1]
+- **Pros:**
+  - [Pro 1]
+- **Cons:**
+  - [Con 1]
 
-## 6. Links
+## 6. Related Links
 
-*   [Link 1]
+- [Link 1: Description]
+- [Link 2: Description]
+
+---
+
+## Appendix A: Change Log
+
+| Date       | Version | Author     | Changes                    |
+| :--------- | :------ | :--------- | :------------------------- |
+| YYYY-MM-DD | 1.0.0   | @username  | Initial ADR proposal       |
+| YYYY-MM-DD | 1.1.0   | @username  | Decision accepted          |

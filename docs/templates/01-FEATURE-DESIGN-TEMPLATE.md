@@ -1,3 +1,37 @@
+---
+# YAML Frontmatter - Metadata for Semantic Search & RAG
+document_type: "feature-design"  # REQUIRED: Type identifier for MCP/RAG
+module: "[module-name]"  # REQUIRED: e.g., "inventory", "sales", "payments"
+status: "approved"  # REQUIRED: draft | in-review | approved | deprecated
+version: "1.0.0"  # REQUIRED: Semantic versioning (Major.Minor.Patch)
+last_updated: "YYYY-MM-DD"  # REQUIRED: ISO date format
+author: "@username"  # REQUIRED: GitHub username or team
+
+# Keywords for semantic search (5-10 keywords)
+keywords:
+  - "feature"
+  - "implementation"
+  - "[feature-name]"  # e.g., "barcode-scanning", "loyalty-points"
+  - "[technology]"  # e.g., "angular", "nestjs", "prisma"
+  - "[domain]"  # e.g., "inventory", "sales"
+
+# Related documentation
+related_docs:
+  database_schema: ""  # Path to related DB schema doc
+  api_design: ""  # Path to related API design doc
+  ux_flow: ""  # Path to related UX flow doc
+  sync_strategy: ""  # Path to related sync strategy doc
+  adr: ""  # Path to related ADR (if major architectural decision)
+
+# Feature-specific metadata
+feature_metadata:
+  priority: "medium"  # "low" | "medium" | "high" | "critical"
+  complexity: "medium"  # "low" | "medium" | "high"
+  estimated_effort: "TBD"  # e.g., "2 days", "1 week", "1 sprint"
+  dependencies: []  # List of dependent features/modules
+  target_release: "TBD"  # e.g., "v1.2.0", "Q1 2026"
+---
+
 <!-- AI-INSTRUCTION: START -->
 <!--
   This document is a TEMPLATE for Feature Designs.
@@ -22,7 +56,7 @@
 <div align="center">
 
   <!-- METADATA BADGES -->
-  <img src="https://img.shields.io/badge/Status-Draft-yellow?style=flat-square" alt="Status" />
+  <img src="https://img.shields.io/badge/Status-Approved-green?style=flat-square" alt="Status" />
   <img src="https://img.shields.io/badge/Priority-Medium-blue?style=flat-square" alt="Priority" />
   <img src="https://img.shields.io/badge/Owner-@Team-lightgrey?style=flat-square" alt="Owner" />
 
@@ -30,7 +64,7 @@
 
 ---
 
-## 🤖 Agent Directives (System Prompt)
+## Agent Directives (System Prompt)
 
 _This section contains mandatory instructions for AI Agents (Copilot, Cursor, etc.) interacting with this document._
 
@@ -83,9 +117,24 @@ model Example {
 3. [ ] Frontend Store & UI
 4. [ ] E2E Tests
 
-## 5. Open Questions / Risks
+## 5. Open Questions and Risks
 
-- *Are there any performance concerns?*
-- *Dependencies on other teams?*
+**Open Questions:**
+
+- [Question 1: e.g., "How do we handle concurrent stock updates?"]
+- [Question 2: e.g., "Should we implement rate limiting?"]
+
+**Risks:**
+
+- [Risk 1: Impact and mitigation strategy]
+- [Risk 2: Impact and mitigation strategy]
+
+---
+
+## Appendix A: Change Log
+
+| Date       | Version | Author     | Changes          |
+| :--------- | :------ | :--------- | :--------------- |
+| YYYY-MM-DD | 1.0.0   | @username  | Initial creation |
 
 ```
