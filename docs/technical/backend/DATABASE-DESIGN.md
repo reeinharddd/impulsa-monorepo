@@ -53,7 +53,7 @@ Use this checklist to track the maturity of the database design.
 - [x] **Schema 1 - Auth:** Multi-provider, Sessions, Audit Logs, MFA, Trusted Devices. **✅ READY**
 - [x] **Schema 2 - Business:** Roles, Permissions, Employee Management, Branches. **✅ READY**
 - [x] **Schema 3 - Communication:** Templates, Push, In-App Notifications, Logging. **✅ READY**
-- [ ] **Schema 4 - Inventory:** Stock movements, Variants, Alerts.
+- [x] **Schema 4 - Inventory:** Stock movements, Variants, Alerts. **✅ READY**
 - [ ] **Schema 5 - Sales:** Shifts, Transactions, Receipts.
 - [ ] **Schema 6 - Payments:** Multi-country adapters, Idempotency.
 - [ ] **Schema 7 - Billing:** Invoicing (SAT/DIAN/AFIP) structures.
@@ -141,8 +141,8 @@ The database is divided into logical schemas. Click on each module for detailed 
 | :--------------------------------------------------------- | :------------------------------------------ | :------- |
 | [**Auth & Identity**](./database/01-AUTH-SCHEMA.md)        | Users, Sessions, MFA, Trusted Devices.      | ✅ Ready |
 | [**Business Core**](./database/02-BUSINESS-SCHEMA.md)      | Organizations, Branches, Employees, RBAC.   | ✅ Ready |
-| [**Communication**](./database/03-COMMUNICATION-SCHEMA.md) | Notifications, Templates, Push, Audit Logs. | 📝 Draft |
-| [**Inventory**](./database/04-INVENTORY-SCHEMA.md)         | Products, Variants, Stock, Alerts.          | 📝 Draft |
+| [**Communication**](./database/03-COMMUNICATION-SCHEMA.md) | Notifications, Templates, Push, Audit Logs. | ✅ Ready |
+| [**Inventory**](./database/04-INVENTORY-SCHEMA.md)         | Products, Variants, Stock, Alerts.          | ✅ Ready |
 | [**Sales (POS)**](./database/05-SALES-SCHEMA.md)           | Cash Registers, Shifts, Sales, Items.       | 📝 Draft |
 | [**Payments**](./database/06-PAYMENTS-SCHEMA.md)           | Transactions, Payment Methods, Idempotency. | 📝 Draft |
 | [**Billing**](./database/07-BILLING-SCHEMA.md)             | Fiscal Invoicing (SAT/DIAN).                | 📝 Draft |
