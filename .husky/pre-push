@@ -1,0 +1,7 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+# Run validation (Lint, Typecheck, Test, Build) before pushing
+# This prevents broken code from reaching the remote repository and failing CI
+echo "Running pre-push validation..."
+bun run validate
