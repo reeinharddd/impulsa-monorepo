@@ -13,7 +13,7 @@
       <img src="libs/assets/src/images/logo.png" width="80" alt="Project Logo" />
     </td>
     <td align="left" valign="middle">
-      <h1 style="margin: 0; border-bottom: none;">Payment System</h1>
+      <h1 style="margin: 0; border-bottom: none;">Impulsa</h1>
       <p style="margin: 0; color: #6e7681; font-size: 1.1em;">Local payment and business management platform for small merchants</p>
     </td>
   </tr>
@@ -24,7 +24,7 @@
   <!-- METADATA BADGES -->
   <img src="https://img.shields.io/badge/Status-Active_Development-green?style=flat-square" alt="Status" />
   <img src="https://img.shields.io/badge/Audience-Developers-blue?style=flat-square" alt="Audience" />
-  <img src="https://img.shields.io/badge/Last%20Updated-2025--11--22-lightgrey?style=flat-square" alt="Date" />
+  <img src="https://img.shields.io/badge/Last%20Updated-2025--12--01-lightgrey?style=flat-square" alt="Date" />
 
 </div>
 
@@ -45,7 +45,7 @@ _This section contains mandatory instructions for AI Agents (Copilot, Cursor, et
 
 ## 1. Executive Summary
 
-**Payment System** is a local payment and business management platform designed to modernize small businesses without expensive infrastructure. It features a single codebase supporting multiple countries (Mexico, Colombia, Argentina, Chile) by swapping only the payment processing layer.
+**Impulsa** is a local payment and business management platform designed to modernize small businesses without expensive infrastructure. It features a single codebase supporting multiple countries (Mexico, Colombia, Argentina, Chile) by swapping only the payment processing layer.
 
 **Core Value:** "Not making them pay more, making them earn more."
 
@@ -79,10 +79,13 @@ bun run docker:dev
 ```
 /
 ├── apps/
-│   ├── backend/          # NestJS API
-│   ├── merchant-web/     # Angular merchant app
-│   └── customer-web/     # Angular customer app
+│   ├── api/              # NestJS API (@impulsa/api)
+│   ├── web/              # Angular merchant app (@impulsa/web)
+│   └── admin/            # (Future) Admin dashboard
 ├── libs/                 # Shared libraries
+│   ├── assets/           # Shared assets (@impulsa/assets)
+│   ├── core/             # Core business logic (@impulsa/core)
+│   └── ui/               # Design system (@impulsa/ui)
 ├── docs/                 # Documentation
 ├── docker/               # Docker configurations
 └── scripts/              # Utility scripts

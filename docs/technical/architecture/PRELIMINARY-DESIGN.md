@@ -170,7 +170,7 @@ MCP --> API
 ### Core Modules
 
 ```text
-apps/backend/src/
+apps/api/src/
 ├── main.ts                          # Bootstrap application
 ├── app.module.ts                    # Root module
 ├── common/                          # Shared utilities
@@ -298,7 +298,7 @@ modules/payments/
 
 ### Prisma Schema Structure
 
-**File:** `apps/backend/prisma/schema.prisma`
+**File:** `apps/api/prisma/schema.prisma`
 
 ```prisma
 // Configuration
