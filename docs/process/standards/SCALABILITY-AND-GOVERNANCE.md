@@ -56,7 +56,7 @@ doc_metadata:
 
 ## 1. Executive Summary
 
-This document outlines the strategy for scaling the `payment-system` monorepo beyond its initial phase. It addresses three critical dimensions of growth:
+This document outlines the strategy for scaling the `impulsa` monorepo beyond its initial phase. It addresses three critical dimensions of growth:
 
 1.  **Documentation Scale:** Managing 1000+ documents and ensuring freshness.
 2.  **Organizational Scale:** Governance for 50+ developers across multiple teams.

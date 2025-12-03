@@ -41,7 +41,7 @@ _This section contains mandatory instructions for AI Agents (Copilot, Cursor, et
 
 | Directive      | Instruction                                                                                    |
 | :------------- | :--------------------------------------------------------------------------------------------- |
-| **Context**    | This document defines the workflow for ALL documentation tasks in the payment system project.  |
+| **Context**    | This document defines the workflow for ALL documentation tasks in the Impulsa project.         |
 | **Constraint** | MUST use appropriate template. MUST NOT mix concerns across document types.                    |
 | **Pattern**    | Before creating docs: 1) Identify type, 2) Select template, 3) Apply structure, 4) Add to log. |
 | **Related**    | `docs/templates/`, `STANDARDS.md`                                                              |
@@ -50,7 +50,7 @@ _This section contains mandatory instructions for AI Agents (Copilot, Cursor, et
 
 ## 1. Executive Summary
 
-This document establishes **mandatory workflows** for creating, updating, and maintaining documentation in the payment system project. It defines:
+This document establishes **mandatory workflows** for creating, updating, and maintaining documentation in the Impulsa project. It defines:
 
 - **Which template to use** for each type of documentation
 - **Separation of concerns** rules (DB vs UI vs Business Logic)
@@ -331,6 +331,7 @@ related_docs:
   api_design: "path/to/api.md"
   ux_flow: "path/to/ux.md"
   feature_design: "path/to/feature.md"
+
 
 # Document-specific metadata (varies by template)
 # See template for exact structure

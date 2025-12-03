@@ -558,7 +558,7 @@ postgres://postgres:5432  < "postgres" resolves to 172.17.0.3
 
 ```yaml
 networks:
-  payment-network: # Internal services
+  impulsa-network: # Internal services
     driver: bridge
   public-network: # Exposed services
     driver: bridge
@@ -566,11 +566,11 @@ networks:
 services:
   postgres:
     networks:
-      - payment-network # Only accessible to backend
+      - impulsa-network # Only accessible to backend
 
   backend:
     networks:
-      - payment-network # Can access postgres
+      - impulsa-network # Can access postgres
       - public-network # Can be accessed from outside
 ```
 

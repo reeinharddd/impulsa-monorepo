@@ -83,7 +83,7 @@ _This section contains mandatory instructions for AI Agents (Copilot, Cursor, et
 
 ## 1. Executive Summary
 
-This document establishes **mandatory tooling standards** for the payment system project to ensure:
+This document establishes **mandatory tooling standards** for the Impulsa project to ensure:
 
 - **Consistency:** All developers use the same tools and follow the same patterns
 - **Quality:** Automated validation catches errors before code review
@@ -969,7 +969,7 @@ Code blocks MUST have language tags
 
 ```bash
 # Database
-DATABASE_URL="postgresql://user:password@localhost:5432/payment_system"
+DATABASE_URL="postgresql://user:password@localhost:5432/impulsadb"
 
 # JWT
 JWT_SECRET="your-secret-key-here"

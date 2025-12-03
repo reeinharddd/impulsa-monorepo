@@ -193,7 +193,7 @@ X-RateLimit-Reset: 1701100800
 
 ```http
 GET /api/v1/products?page=1&limit=20&status=ACTIVE&search=sabritas HTTP/1.1
-Host: api.payment-system.com
+Host: api.impulsa-app.com
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
 X-Business-ID: 123e4567-e89b-12d3-a456-426614174000
 ```
@@ -307,7 +307,7 @@ export class PaginationMetaDto {
 
 ```http
 GET /api/v1/products/550e8400-e29b-41d4-a716-446655440001 HTTP/1.1
-Host: api.payment-system.com
+Host: api.impulsa-app.com
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
 X-Business-ID: 123e4567-e89b-12d3-a456-426614174000
 ```
@@ -657,7 +657,7 @@ export class UpdateProductDto {
 
 ```http
 DELETE /api/v1/products/550e8400-e29b-41d4-a716-446655440001 HTTP/1.1
-Host: api.payment-system.com
+Host: api.impulsa-app.com
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
 X-Business-ID: 123e4567-e89b-12d3-a456-426614174000
 ```
@@ -924,18 +924,18 @@ Content-Type: application/json
 
 Full OpenAPI 3.0 spec available at: `/api/docs`
 
-**Swagger UI:** `https://api.payment-system.com/api/docs`
+**Swagger UI:** `https://api.impulsa-app.com/api/docs`
 
-**JSON Spec:** `https://api.payment-system.com/api/docs-json`
+**JSON Spec:** `https://api.impulsa-app.com/api/docs-json`
 
 **Example (partial):**
 
 ```yaml
 openapi: 3.0.0
 info:
-  title: Payment System API
+  title: Impulsa API
   version: 1.0.0
-  description: REST API for payment system operations
+  description: REST API for Impulsa operations
 
 paths:
   /api/v1/products:
@@ -967,12 +967,12 @@ paths:
 
 ```bash
 # List products
-curl -X GET "https://api.payment-system.com/api/v1/products?page=1&limit=20" \
+curl -X GET "https://api.impulsa-app.com/api/v1/products?page=1&limit=20" \
   -H "Authorization: Bearer <token>" \
   -H "X-Business-ID: <uuid>"
 
 # Create product
-curl -X POST "https://api.payment-system.com/api/v1/products" \
+curl -X POST "https://api.impulsa-app.com/api/v1/products" \
   -H "Authorization: Bearer <token>" \
   -H "X-Business-ID: <uuid>" \
   -H "Content-Type: application/json" \

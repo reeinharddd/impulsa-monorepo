@@ -101,7 +101,7 @@ _This section contains mandatory instructions for AI Agents (Copilot, Cursor, et
 
 _High-level overview of deployment strategy._
 
-**Service/Environment:** [e.g. "Payment System Backend - Production"]
+**Service/Environment:** [e.g. "Impulsa Backend - Production"]
 
 **Deployment Strategy:** [e.g. "Blue-Green with automated health checks"]
 
@@ -263,18 +263,18 @@ npm run db:restore -- --backup-id=<backup-id>
 
 ```bash
 # 1. Build Docker image
-docker build -t payment-system-backend:$DEPLOY_VERSION .
+docker build -t impulsa-backend:$DEPLOY_VERSION .
 
 # 2. Tag image
-docker tag payment-system-backend:$DEPLOY_VERSION \
-  registry.example.com/payment-system-backend:$DEPLOY_VERSION
+docker tag impulsa-backend:$DEPLOY_VERSION \
+  registry.example.com/impulsa-backend:$DEPLOY_VERSION
 
 # 3. Push to registry
-docker push registry.example.com/payment-system-backend:$DEPLOY_VERSION
+docker push registry.example.com/impulsa-backend:$DEPLOY_VERSION
 
 # 4. Deploy to GREEN environment (Kubernetes)
 kubectl set image deployment/backend-green \
-  backend=registry.example.com/payment-system-backend:$DEPLOY_VERSION \
+  backend=registry.example.com/impulsa-backend:$DEPLOY_VERSION \
   --namespace=production
 
 # 5. Wait for rollout
@@ -297,13 +297,13 @@ kubectl rollout status deployment/backend-green --namespace=production
 
 ```bash
 # 1. HTTP Health check
-curl -f https://green.api.payment-system.com/health || exit 1
+curl -f https://green.api.impulsa-app.com/health || exit 1
 
 # 2. Database connectivity check
-curl -f https://green.api.payment-system.com/health/db || exit 1
+curl -f https://green.api.impulsa-app.com/health/db || exit 1
 
 # 3. API smoke tests
-npm run test:smoke -- --target=https://green.api.payment-system.com
+npm run test:smoke -- --target=https://green.api.impulsa-app.com
 
 # 4. Check metrics (error rate, latency)
 # Open Grafana dashboard and verify:
@@ -341,11 +341,11 @@ kubectl patch service backend-service \
   -p '{"spec":{"selector":{"version":"green"}}}'
 
 # 2. Verify traffic switch
-curl https://api.payment-system.com/version
+curl https://api.impulsa-app.com/version
 # Expected output: {"version": "1.6.0", "environment": "green"}
 
 # 3. Monitor error rate in real-time
-watch -n 5 'curl -s https://api.payment-system.com/metrics | grep error_rate'
+watch -n 5 'curl -s https://api.impulsa-app.com/metrics | grep error_rate'
 ```
 
 **Validation:**
@@ -364,10 +364,10 @@ watch -n 5 'curl -s https://api.payment-system.com/metrics | grep error_rate'
 
 ```bash
 # 1. Monitor error rate (should stay < 0.1%)
-# Open Grafana: https://grafana.payment-system.com/d/deployment-dashboard
+# Open Grafana: https://grafana.impulsa-app.com/d/deployment-dashboard
 
 # 2. Check for exceptions in Sentry
-# Open Sentry: https://sentry.io/payment-system/
+# Open Sentry: https://sentry.io/impulsa/
 
 # 3. Monitor key business metrics
 # - Transactions per minute (should remain stable)
@@ -457,7 +457,7 @@ kubectl patch service backend-service \
   -p '{"spec":{"selector":{"version":"blue"}}}'
 
 # 2. Verify rollback
-curl https://api.payment-system.com/version
+curl https://api.impulsa-app.com/version
 # Expected: {"version": "1.5.0", "environment": "blue"}
 
 # 3. Notify team
@@ -589,10 +589,10 @@ Status: Investigating / Mitigating / Resolved
 
 ### 7.2. Monitoring Tools
 
-- **Grafana:** https://grafana.payment-system.com/d/production-dashboard
-- **Sentry:** https://sentry.io/payment-system/
+- **Grafana:** <https://grafana.impulsa-app.com/d/production-dashboard>
+- **Sentry:** <https://sentry.io/impulsa/>
 - **Logs:** `kubectl logs -l app=backend --namespace=production`
-- **Metrics:** Prometheus (http://prometheus.payment-system.com)
+- **Metrics:** Prometheus (<http://prometheus.impulsa-app.com>)
 
 ---
 

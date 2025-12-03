@@ -70,11 +70,11 @@ doc_metadata:
 
 _This section contains mandatory instructions for AI Agents (Copilot, Cursor, etc.) interacting with this document._
 
-| Directive      | Instruction                                                                                              |
-| :------------- | :------------------------------------------------------------------------------------------------------- |
+| Directive      | Instruction                                                                                             |
+| :------------- | :------------------------------------------------------------------------------------------------------ |
 | **Context**    | MCP Server provides semantic search over 47 documentation files using lightweight index (NOT vector DB) |
-| **Constraint** | NEVER bypass MCP tools when searching docs. ALWAYS use `search_full_text` or `query_docs_by_module`    |
-| **Pattern**    | Services use Maps for O(1) lookups, Fuse.js for fuzzy search, BFS for relationship graph traversal     |
+| **Constraint** | NEVER bypass MCP tools when searching docs. ALWAYS use `search_full_text` or `query_docs_by_module`     |
+| **Pattern**    | Services use Maps for O(1) lookups, Fuse.js for fuzzy search, BFS for relationship graph traversal      |
 | **Related**    | `services/mcp-server/`, `.github/copilot-instructions.md`                                               |
 
 ---
@@ -83,11 +83,11 @@ _This section contains mandatory instructions for AI Agents (Copilot, Cursor, et
 
 ### Purpose
 
-The MCP Server Documentation Index System provides **intelligent documentation discovery** for the payment-system monorepo. It enables AI agents and developers to query 47 structured documentation files using semantic search, fuzzy matching, and relationship graph traversal.
+The MCP Server Documentation Index System provides **intelligent documentation discovery** for the impulsa-monorepo. It enables AI agents and developers to query 47 structured documentation files using semantic search, fuzzy matching, and relationship graph traversal.
 
 ### Target Audience
 
-- **Developers** working on the payment-system monorepo
+- **Developers** working on the impulsa-monorepo
 - **AI Agents** (GitHub Copilot, Cursor, etc.) needing documentation context
 - **Architects** analyzing documentation relationships and coverage
 
@@ -105,7 +105,7 @@ The MCP Server Documentation Index System provides **intelligent documentation d
 
 ### Problem Statement
 
-The payment-system monorepo contains 47 well-structured documentation files with rich YAML frontmatter metadata. However, finding relevant documentation required:
+The impulsa-monorepo contains 47 well-structured documentation files with rich YAML frontmatter metadata. However, finding relevant documentation required:
 
 1. **Manual file browsing**: Developers browsing `/docs` tree structure
 2. **Keyword guessing**: Relying on file names or grep searches
@@ -146,14 +146,14 @@ The payment-system monorepo contains 47 well-structured documentation files with
 
 **Rationale:**
 
-| Factor                | Vector DB/RAG                        | Lightweight Index (Chosen)         |
-| :-------------------- | :----------------------------------- | :--------------------------------- |
-| **Data Size**         | Best for 1000s of documents          | 47 docs (overkill for vector DB)   |
-| **Metadata Quality**  | Poor metadata → embeddings help      | Rich YAML frontmatter (11 fields)  |
-| **Query Precision**   | Semantic similarity (fuzzy)          | Exact filters + fuzzy search       |
-| **Dependencies**      | Postgres extension, embeddings API   | 2 lightweight libs (gray-matter, fuse.js) |
-| **Latency**           | Embedding generation + vector search | In-memory Maps (O(1) lookups)      |
-| **Maintenance**       | Schema migrations, re-embedding      | Stateless rebuild (28ms)           |
+| Factor               | Vector DB/RAG                        | Lightweight Index (Chosen)                |
+| :------------------- | :----------------------------------- | :---------------------------------------- |
+| **Data Size**        | Best for 1000s of documents          | 47 docs (overkill for vector DB)          |
+| **Metadata Quality** | Poor metadata → embeddings help      | Rich YAML frontmatter (11 fields)         |
+| **Query Precision**  | Semantic similarity (fuzzy)          | Exact filters + fuzzy search              |
+| **Dependencies**     | Postgres extension, embeddings API   | 2 lightweight libs (gray-matter, fuse.js) |
+| **Latency**          | Embedding generation + vector search | In-memory Maps (O(1) lookups)             |
+| **Maintenance**      | Schema migrations, re-embedding      | Stateless rebuild (28ms)                  |
 
 **Trade-offs Accepted:**
 
@@ -838,17 +838,17 @@ Generates faceted search aggregations (counts by type/module/status, top keyword
 
 ```typescript
 type DocumentType =
-  | "general"              // General docs, guides, overviews
-  | "feature-design"       // Feature implementation specs
-  | "adr"                  // Architecture Decision Records
-  | "database-schema"      // DB tables, indexes, constraints
-  | "api-design"           // REST API endpoints, DTOs
-  | "sync-strategy"        // Offline sync, conflict resolution
-  | "ux-flow"              // User journeys, screen flows
-  | "testing-strategy"     // Test coverage, QA strategy
-  | "deployment-runbook"   // Deployment procedures, rollback
-  | "security-audit"       // Vulnerabilities, compliance
-  | "other";               // Uncategorized docs
+  | "general" // General docs, guides, overviews
+  | "feature-design" // Feature implementation specs
+  | "adr" // Architecture Decision Records
+  | "database-schema" // DB tables, indexes, constraints
+  | "api-design" // REST API endpoints, DTOs
+  | "sync-strategy" // Offline sync, conflict resolution
+  | "ux-flow" // User journeys, screen flows
+  | "testing-strategy" // Test coverage, QA strategy
+  | "deployment-runbook" // Deployment procedures, rollback
+  | "security-audit" // Vulnerabilities, compliance
+  | "other"; // Uncategorized docs
 ```
 
 ### 6.2. DocumentStatus (Enum)
@@ -857,12 +857,12 @@ type DocumentType =
 
 ```typescript
 type DocumentStatus =
-  | "draft"        // Work in progress, not reviewed
-  | "review"       // Ready for review, awaiting approval
-  | "approved"     // Reviewed and approved, production-ready
-  | "accepted"     // Accepted (ADRs only)
-  | "deprecated"   // Outdated, replaced by newer docs
-  | "superseded";  // Replaced, redirect to new doc
+  | "draft" // Work in progress, not reviewed
+  | "review" // Ready for review, awaiting approval
+  | "approved" // Reviewed and approved, production-ready
+  | "accepted" // Accepted (ADRs only)
+  | "deprecated" // Outdated, replaced by newer docs
+  | "superseded"; // Replaced, redirect to new doc
 ```
 
 ### 6.3. BaseDocumentMetadata (Interface)
@@ -872,13 +872,14 @@ Core metadata extracted from YAML frontmatter:
 ```typescript
 interface BaseDocumentMetadata {
   document_type: DocumentType;
-  module: string;                  // e.g., "payments", "inventory"
+  module: string; // e.g., "payments", "inventory"
   status: DocumentStatus;
-  version: string;                 // Semantic versioning (1.0.0)
-  last_updated: string;            // ISO date (YYYY-MM-DD)
-  author: string;                  // GitHub username (@username)
-  keywords: string[];              // 5-10 keywords for search
-  related_docs: {                  // Links to related documents
+  version: string; // Semantic versioning (1.0.0)
+  last_updated: string; // ISO date (YYYY-MM-DD)
+  author: string; // GitHub username (@username)
+  keywords: string[]; // 5-10 keywords for search
+  related_docs: {
+    // Links to related documents
     database_schema?: string;
     api_design?: string;
     feature_design?: string;
@@ -887,9 +888,9 @@ interface BaseDocumentMetadata {
     deployment_runbook?: string;
     security_audit?: string;
   };
-  filePath: string;                // Absolute filesystem path
-  uri: string;                     // MCP URI (docs://...)
-  title: string;                   // H1 or filename
+  filePath: string; // Absolute filesystem path
+  uri: string; // MCP URI (docs://...)
+  title: string; // H1 or filename
 }
 ```
 
@@ -900,9 +901,9 @@ Extended metadata for specific document types:
 ```typescript
 interface DatabaseMetadata extends BaseDocumentMetadata {
   document_type: "database-schema";
-  tables?: string[];               // Table names
-  indexes?: string[];              // Index definitions
-  relationships?: string[];        // Foreign key relationships
+  tables?: string[]; // Table names
+  indexes?: string[]; // Index definitions
+  relationships?: string[]; // Foreign key relationships
 }
 
 interface ApiMetadata extends BaseDocumentMetadata {
@@ -912,26 +913,26 @@ interface ApiMetadata extends BaseDocumentMetadata {
     path: string;
     description: string;
   }>;
-  dtos?: string[];                 // DTO class names
+  dtos?: string[]; // DTO class names
 }
 
 interface UxMetadata extends BaseDocumentMetadata {
   document_type: "ux-flow";
-  screens?: string[];              // Screen names
-  userRoles?: string[];            // User roles involved
+  screens?: string[]; // Screen names
+  userRoles?: string[]; // User roles involved
 }
 
 interface TestingMetadata extends BaseDocumentMetadata {
   document_type: "testing-strategy";
-  coverageTarget?: number;         // Coverage % target
-  testTypes?: string[];            // unit, integration, e2e
+  coverageTarget?: number; // Coverage % target
+  testTypes?: string[]; // unit, integration, e2e
 }
 
 interface AdrMetadata extends BaseDocumentMetadata {
   document_type: "adr";
-  decision_date?: string;          // ISO date
+  decision_date?: string; // ISO date
   status: "proposed" | "accepted" | "superseded" | "deprecated";
-  superseded_by?: string;          // URI of replacement ADR
+  superseded_by?: string; // URI of replacement ADR
 }
 ```
 
@@ -971,13 +972,13 @@ interface AdrMetadata extends BaseDocumentMetadata {
 
 ### 7.3. Scalability Limits
 
-| Documents | Indexing Time | Query Time | Notes                                     |
-| :-------- | :------------ | :--------- | :---------------------------------------- |
-| 47        | 28ms          | 10ms       | Current (production)                      |
-| 100       | ~60ms         | ~15ms      | Acceptable                                |
-| 200       | ~120ms        | ~25ms      | Consider caching                          |
-| 500       | ~300ms        | ~50ms      | Consider vector DB migration              |
-| 1000+     | ~600ms+       | ~100ms+    | Re-architecture required (pgvector)       |
+| Documents | Indexing Time | Query Time | Notes                               |
+| :-------- | :------------ | :--------- | :---------------------------------- |
+| 47        | 28ms          | 10ms       | Current (production)                |
+| 100       | ~60ms         | ~15ms      | Acceptable                          |
+| 200       | ~120ms        | ~25ms      | Consider caching                    |
+| 500       | ~300ms        | ~50ms      | Consider vector DB migration        |
+| 1000+     | ~600ms+       | ~100ms+    | Re-architecture required (pgvector) |
 
 ---
 
@@ -1066,7 +1067,9 @@ const results = await searchService.search({
   filters: { documentType: ["general"] },
   pagination: { page: 1, limit: 5 },
 });
-console.log(`Search returned ${results.results.length} results in ${results.queryTime}ms`);
+console.log(
+  `Search returned ${results.results.length} results in ${results.queryTime}ms`,
+);
 ```
 
 **Run:** `bun run services/mcp-server/test-tools.ts`
@@ -1092,7 +1095,7 @@ console.log(`Search returned ${results.results.length} results in ${results.quer
 **Service Configuration:**
 
 ```yaml
-payment-mcp-server:
+impulsa-mcp-server:
   build:
     context: .
     dockerfile: services/mcp-server/Dockerfile
@@ -1120,13 +1123,13 @@ payment-mcp-server:
 **Start Container:**
 
 ```bash
-docker-compose -f docker-compose.dev.yml up payment-mcp-server
+docker-compose -f docker-compose.dev.yml up impulsa-mcp-server
 ```
 
 **Verify Initialization:**
 
 ```bash
-docker logs payment-mcp-server
+docker logs impulsa-mcp-server
 # Expected output:
 # [Server] Initializing documentation index...
 # [DocumentationIndexService] Scanning /app/docs...
@@ -1160,7 +1163,7 @@ curl http://localhost:8080/health
 1. Remove local node_modules: `rm -rf services/mcp-server/node_modules`
 2. Update docker-compose.dev.yml: Set `NODE_PATH=/app/node_modules`
 3. Update command: `cd /app && bun install && cd services/mcp-server && bun run dev`
-4. Rebuild: `docker-compose build payment-mcp-server`
+4. Rebuild: `docker-compose build impulsa-mcp-server`
 
 #### Issue: MCP tool returns 0 documents for valid module
 
@@ -1207,7 +1210,7 @@ uri: "docs://technical/backend/database/06-PAYMENTS-SCHEMA.md";
 1. **Check Server Logs:**
 
    ```bash
-   docker logs payment-mcp-server
+   docker logs impulsa-mcp-server
    ```
 
 2. **Verify Indexing:**
@@ -1297,7 +1300,6 @@ Tools for documentation health checks:
 
 ## Appendix A: Change Log
 
-| Date       | Version | Author    | Changes          |
-| :--------- | :------ | :-------- | :--------------- |
-| 2025-11-27 | 1.0.0   | @copilot  | Initial creation |
-
+| Date       | Version | Author   | Changes          |
+| :--------- | :------ | :------- | :--------------- |
+| 2025-11-27 | 1.0.0   | @copilot | Initial creation |

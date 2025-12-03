@@ -150,7 +150,7 @@ Orchestrates all services for local development with hot reload and debugging ca
 
 ### 3.3. Networks
 
-Single bridge network `payment-network` connects all services.
+Single bridge network `impulsa-network` connects all services.
 
 ### 3.4. Volumes
 
@@ -256,8 +256,8 @@ docker compose -f docker-compose.dev.yml down -v
 docker-compose up backend
 
 # Or build and run manually
-docker build -f apps/backend/Dockerfile.dev -t payment-backend-dev .
-docker run -p 3000:3000 -p 9229:9229 payment-backend-dev
+docker build -f apps/backend/Dockerfile.dev -t impulsa-api-dev .
+docker run -p 3000:3000 -p 9229:9229 impulsa-api-dev
 ```
 
 ---
@@ -362,7 +362,7 @@ location /health {
 
 - Connects to Ollama for LLM capabilities
 - Accesses PostgreSQL for data queries
-- Provides tools for AI agents to interact with payment system
+- Provides tools for AI agents to interact with Impulsa
 
 **Usage in Development:**
 
@@ -491,18 +491,18 @@ docker compose -f docker-compose.dev.yml down --rmi all
 **Backend:**
 
 ```bash
-docker build -f apps/backend/Dockerfile -t payment-backend:latest .
+docker build -f apps/backend/Dockerfile -t impulsa-api:latest .
 docker run -p 3000:3000 \
   -e DATABASE_URL="..." \
   -e REDIS_URL="..." \
-  payment-backend:latest
+  impulsa-api:latest
 ```
 
 **Frontend:**
 
 ```bash
-docker build -f apps/merchant-web/Dockerfile -t payment-frontend:latest .
-docker run -p 80:80 payment-frontend:latest
+docker build -f apps/merchant-web/Dockerfile -t impulsa-web:latest .
+docker run -p 80:80 impulsa-web:latest
 ```
 
 ### 8.3. Docker Compose Production
@@ -570,7 +570,7 @@ docker-compose ps postgres
 docker-compose logs postgres
 
 # Ensure DATABASE_URL uses service name
-DATABASE_URL=postgresql://dev:dev123@postgres:5432/paymentdb
+DATABASE_URL=postgresql://dev:dev123@postgres:5432/impulsadb
 # NOT localhost - use service name
 ```
 

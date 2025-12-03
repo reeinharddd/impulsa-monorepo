@@ -103,7 +103,7 @@ async function getDocsFiles(
 // Initialize Server
 const server = new Server(
   {
-    name: "payment-system-mcp",
+    name: "impulsa-mcp",
     version: "1.0.0",
   },
   {

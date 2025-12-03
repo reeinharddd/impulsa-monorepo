@@ -45,7 +45,7 @@ doc_metadata:
     </td>
     <td align="left" valign="middle">
       <h1 style="margin: 0; border-bottom: none;">Project Structure</h1>
-      <p style="margin: 0; color: #6e7681; font-size: 1.1em;">Organization and naming conventions for the payment system monorepo</p>
+      <p style="margin: 0; color: #6e7681; font-size: 1.1em;">Organization and naming conventions for the Impulsa monorepo</p>
     </td>
   </tr>
 </table>
@@ -76,7 +76,7 @@ _This section contains mandatory instructions for AI Agents (Copilot, Cursor, et
 
 ## 1. Executive Summary
 
-This document outlines the directory structure, file naming conventions, and module organization for the Payment System monorepo. It serves as the definitive guide for where code should live and how it should be named to maintain consistency across the project.
+This document outlines the directory structure, file naming conventions, and module organization for the Impulsa monorepo. It serves as the definitive guide for where code should live and how it should be named to maintain consistency across the project.
 
 ## 2. Context & Motivation
 

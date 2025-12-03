@@ -1,7 +1,7 @@
 {
   "name": "impulsa-monorepo",
   "version": "1.0.0",
-  "description": "Impulsa - Local payment and business management platform for small merchants",
+  "description": "Impulsa - Business management platform",
   "private": true,
   "workspaces": [
     "apps/*",
@@ -71,17 +71,15 @@
   "packageManager": "bun@1.3.0",
   "repository": {
     "type": "git",
-    "url": "https://github.com/yourusername/payment-system.git"
+    "url": "https://github.com/reeinharddd/impulsa.git"
   },
   "keywords": [
-    "payment",
-    "pos",
-    "merchant",
-    "business-management",
+    "impulsa",
     "nestjs",
     "angular",
-    "multi-country"
+    "typescript",
+    "monorepo"
   ],
-  "author": "Your Team",
+  "author": "Impulsa Team",
   "license": "UNLICENSED"
 }

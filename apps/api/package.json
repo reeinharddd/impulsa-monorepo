@@ -1,7 +1,7 @@
 {
   "name": "@impulsa/api",
   "version": "1.0.0",
-  "description": "NestJS backend API for payment system",
+  "description": "NestJS backend API for Impulsa",
   "private": true,
   "scripts": {
     "prebuild": "rimraf dist",

@@ -88,13 +88,13 @@ This document provides a comprehensive list of all services running in the local
 
 | Service           | Container Name       | Host Port | Internal Port | URL / Connection String                            | Description                        |
 | :---------------- | :------------------- | :-------- | :------------ | :------------------------------------------------- | :--------------------------------- |
-| **Frontend**      | `payment-frontend`   | **4200**  | 4200          | [http://localhost:4200](http://localhost:4200)     | Merchant Web Application (Angular) |
-| **Backend**       | `payment-backend`    | **3000**  | 3000          | [http://localhost:3000](http://localhost:3000)     | NestJS API Server                  |
-| **Backend Debug** | `payment-backend`    | **9229**  | 9229          | `localhost:9229`                                   | Node.js Debugger Port              |
-| **PostgreSQL**    | `payment-postgres`   | **5432**  | 5432          | `postgresql://dev:dev123@localhost:5432/paymentdb` | Main Database                      |
-| **Redis**         | `payment-redis`      | **6379**  | 6379          | `redis://localhost:6379`                           | Cache & Queue                      |
-| **Ollama**        | `payment-ollama`     | **11434** | 11434         | [http://localhost:11434](http://localhost:11434)   | Local LLM Service                  |
-| **MCP Server**    | `payment-mcp-server` | **8080**  | 8080          | [http://localhost:8080](http://localhost:8080)     | Model Context Protocol Server      |
+| **Frontend**      | `impulsa-web`        | **4200**  | 4200          | [http://localhost:4200](http://localhost:4200)     | Merchant Web Application (Angular) |
+| **Backend**       | `impulsa-api`        | **3000**  | 3000          | [http://localhost:3000](http://localhost:3000)     | NestJS API Server                  |
+| **Backend Debug** | `impulsa-api`        | **9229**  | 9229          | `localhost:9229`                                   | Node.js Debugger Port              |
+| **PostgreSQL**    | `impulsa-postgres`   | **5432**  | 5432          | `postgresql://dev:dev123@localhost:5432/impulsadb` | Main Database                      |
+| **Redis**         | `impulsa-redis`      | **6379**  | 6379          | `redis://localhost:6379`                           | Cache & Queue                      |
+| **Ollama**        | `impulsa-ollama`     | **11434** | 11434         | [http://localhost:11434](http://localhost:11434)   | Local LLM Service                  |
+| **MCP Server**    | `impulsa-mcp-server` | **8080**  | 8080          | [http://localhost:8080](http://localhost:8080)     | Model Context Protocol Server      |
 
 ---
 
@@ -121,8 +121,8 @@ This document provides a comprehensive list of all services running in the local
 - **Port:** `5432`
 - **User:** `dev`
 - **Password:** `dev123`
-- **Database:** `paymentdb`
-- **Connection String:** `postgresql://dev:dev123@localhost:5432/paymentdb`
+- **Database:** `impulsadb`
+- **Connection String:** `postgresql://dev:dev123@localhost:5432/impulsadb`
 - **Tools:** You can connect using DBeaver, TablePlus, or `psql`.
 
 ### 3.4. Redis
@@ -140,11 +140,11 @@ When services communicate with each other **inside** the Docker network, they MU
 
 | From Service   | To Service     | Use Hostname  | Port  | Example URL                                       |
 | :------------- | :------------- | :------------ | :---- | :------------------------------------------------ |
-| **Backend**    | **PostgreSQL** | `postgres`    | 5432  | `postgresql://dev:dev123@postgres:5432/paymentdb` |
+| **Backend**    | **PostgreSQL** | `postgres`    | 5432  | `postgresql://dev:dev123@postgres:5432/impulsadb` |
 | **Backend**    | **Redis**      | `redis`       | 6379  | `redis://redis:6379`                              |
 | **Frontend**   | **Backend**    | `localhost`\* | 3000  | `http://localhost:3000`                           |
 | **MCP Server** | **Ollama**     | `ollama`      | 11434 | `http://ollama:11434`                             |
-| **MCP Server** | **PostgreSQL** | `postgres`    | 5432  | `postgresql://dev:dev123@postgres:5432/paymentdb` |
+| **MCP Server** | **PostgreSQL** | `postgres`    | 5432  | `postgresql://dev:dev123@postgres:5432/impulsadb` |
 
 _\*Note: The Frontend runs in the browser (client-side), so it accesses the Backend via the host's `localhost:3000` unless using Server-Side Rendering (SSR) or a proxy._
 
@@ -161,7 +161,7 @@ _\*Note: The Frontend runs in the browser (client-side), so it accesses the Back
 ### 5.2. "Host Not Found" (Internal)
 
 - Ensure you are using the **Service Name** (e.g., `postgres`), not `localhost`, when configuring backend environment variables.
-- Check if services are on the same network (`payment-network`).
+- Check if services are on the same network (`impulsa-network`).
 
 ### 5.3. Assets 404 (Frontend)
 

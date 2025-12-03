@@ -79,7 +79,7 @@ _This section contains mandatory instructions for AI Agents (Copilot, Cursor, et
 
 ## 1. Executive Summary
 
-Establish clear, minimal, and functional documentation standards for the payment system project. All documentation must be accessible (viewable directly in GitHub/VSCode), minimal (no unnecessary decoration), functional (actionable information), and maintainable (easy to update).
+Establish clear, minimal, and functional documentation standards for the Impulsa project. All documentation must be accessible (viewable directly in GitHub/VSCode), minimal (no unnecessary decoration), functional (actionable information), and maintainable (easy to update).
 
 ## 2. Context & Motivation
 

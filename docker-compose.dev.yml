@@ -1,9 +1,9 @@
 services:
   postgres:
     image: postgres:16-alpine
-    container_name: payment-postgres
+    container_name: impulsa-postgres
     environment:
-      POSTGRES_DB: paymentdb
+      POSTGRES_DB: impulsadb
       POSTGRES_USER: dev
       POSTGRES_PASSWORD: dev123
     ports:
@@ -11,16 +11,16 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U dev -d paymentdb"]
+      test: ["CMD-SHELL", "pg_isready -U dev -d impulsadb"]
       interval: 10s
       timeout: 5s
       retries: 5
     networks:
-      - payment-network
+      - impulsa-network
 
   redis:
     image: redis:7-alpine
-    container_name: payment-redis
+    container_name: impulsa-redis
     ports:
       - "6379:6379"
     volumes:
@@ -32,7 +32,7 @@ services:
       timeout: 3s
       retries: 5
     networks:
-      - payment-network
+      - impulsa-network
 
   api:
     build:
@@ -49,7 +49,7 @@ services:
       - "3000:3000"
       - "9229:9229"
     environment:
-      DATABASE_URL: postgresql://dev:dev123@postgres:5432/paymentdb
+      DATABASE_URL: postgresql://dev:dev123@postgres:5432/impulsadb
       REDIS_URL: redis://redis:6379
       NODE_ENV: development
       JWT_SECRET: dev-secret-change-in-production
@@ -60,7 +60,7 @@ services:
       redis:
         condition: service_healthy
     networks:
-      - payment-network
+      - impulsa-network
 
   web:
     build:
@@ -76,29 +76,29 @@ services:
       - "4200:4200"
     command: sh -c "find apps/web/node_modules -mindepth 1 -delete && bun install && bun run --filter @impulsa/web start"
     networks:
-      - payment-network
+      - impulsa-network
 
   ollama:
     image: ollama/ollama:latest
-    container_name: payment-ollama
+    container_name: impulsa-ollama
     ports:
       - "11434:11434"
     volumes:
       - ollama_data:/root/.ollama
     networks:
-      - payment-network
+      - impulsa-network
 
   mcp-server:
     build:
       context: .
       dockerfile: services/mcp-server/Dockerfile
-    container_name: payment-mcp-server
+    container_name: impulsa-mcp-server
     working_dir: /app
     ports:
       - "8080:8080"
     environment:
       OLLAMA_URL: http://ollama:11434
-      DATABASE_URL: postgresql://dev:dev123@postgres:5432/paymentdb
+      DATABASE_URL: postgresql://dev:dev123@postgres:5432/impulsadb
       NODE_PATH: /app/node_modules
     depends_on:
       - ollama
@@ -108,7 +108,7 @@ services:
       - /app/node_modules
     command: sh -c "bun install && cd services/mcp-server && bun run dev"
     networks:
-      - payment-network
+      - impulsa-network
 
 volumes:
   postgres_data:
@@ -116,5 +116,5 @@ volumes:
   ollama_data:
 
 networks:
-  payment-network:
+  impulsa-network:
     driver: bridge

@@ -363,7 +363,7 @@ npx turbo link
 ```bash
 # Clone repository
 git clone <repo-url>
-cd payment-system
+cd impulsa
 
 # Install all dependencies
 bun install

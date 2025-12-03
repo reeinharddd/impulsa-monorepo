@@ -14,7 +14,7 @@
     </td>
     <td align="left" valign="middle">
       <h1 style="margin: 0; border-bottom: none;">Impulsa</h1>
-      <p style="margin: 0; color: #6e7681; font-size: 1.1em;">Local payment and business management platform for small merchants</p>
+      <p style="margin: 0; color: #6e7681; font-size: 1.1em;">Business management platform</p>
     </td>
   </tr>
 </table>
@@ -45,13 +45,11 @@ _This section contains mandatory instructions for AI Agents (Copilot, Cursor, et
 
 ## 1. Executive Summary
 
-**Impulsa** is a local payment and business management platform designed to modernize small businesses without expensive infrastructure. It features a single codebase supporting multiple countries (Mexico, Colombia, Argentina, Chile) by swapping only the payment processing layer.
-
-**Core Value:** "Not making them pay more, making them earn more."
+**Impulsa** is a business management platform designed to modernize operations. It features a modular architecture supporting multiple regions.
 
 ## 2. Context & Motivation
 
-Traditional small businesses lack access to professional financial tools and digital payment methods due to high costs and technical barriers. This project aims to democratize these tools through a low-friction, mobile-first platform that requires no app download for customers.
+This project aims to provide professional tools through a low-friction platform.
 
 ## 3. Core Content
 
@@ -59,8 +57,8 @@ Traditional small businesses lack access to professional financial tools and dig
 
 ```bash
 # Clone repository
-git clone https://github.com/yourusername/payment-system.git
-cd payment-system
+git clone https://github.com/reeinharddd/impulsa.git
+cd impulsa
 
 # Install dependencies
 bun install
