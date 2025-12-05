@@ -364,17 +364,18 @@ enum ProductStatus {
 
 ### 4.1. Framework & Core Libraries
 
-| Category             | Package                   | Version | Purpose                        |
-| :------------------- | :------------------------ | :------ | :----------------------------- |
-| **Framework**        | `@angular/core`           | 21+     | Core framework (bleeding edge) |
-| **State Management** | `@ngrx/signals`           | 18+     | Signal-based state             |
-| **Routing**          | `@angular/router`         | 21+     | SPA routing                    |
-| **HTTP**             | `@angular/common/http`    | 21+     | HTTP client                    |
-| **Forms**            | `@angular/forms`          | 21+     | Reactive forms                 |
-| **Styling**          | `tailwindcss`             | 4.0+    | Utility-first CSS              |
-| **Icons**            | `lucide-angular`          | Latest  | Consistent icon library        |
-| **Offline**          | `@angular/service-worker` | 21+     | PWA support                    |
-| **Storage**          | `dexie`                   | 4+      | IndexedDB wrapper              |
+| Category             | Package                   | Version | Purpose                         |
+| :------------------- | :------------------------ | :------ | :------------------------------ |
+| **Framework**        | `@angular/core`           | 21+     | Core framework (bleeding edge)  |
+| **State Management** | `@ngrx/signals`           | 18+     | Signal-based state              |
+| **Routing**          | `@angular/router`         | 21+     | SPA routing                     |
+| **HTTP**             | `@angular/common/http`    | 21+     | HTTP client                     |
+| **Forms**            | `@angular/forms`          | 21+     | Reactive forms                  |
+| **Styling**          | `tailwindcss`             | 4.0+    | Utility-first CSS               |
+| **Icons**            | `lucide-angular`          | Latest  | Consistent icon library         |
+| **Offline**          | `@angular/service-worker` | 21+     | PWA support                     |
+| **Storage**          | `dexie`                   | 4+      | IndexedDB wrapper               |
+| **Onboarding**       | `driver.js`               | 1.0+    | Guided user tours (Lightweight) |
 
 ### 4.2. Mandatory Angular Patterns
 
