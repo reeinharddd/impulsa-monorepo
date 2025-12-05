@@ -1,31 +1,31 @@
 ---
 # YAML Frontmatter - Metadata for Semantic Search & RAG
-document_type: "general"  # REQUIRED: Type identifier for MCP/RAG
-module: "[module-name]"  # REQUIRED: e.g., "onboarding", "architecture", "business"
-status: "approved"  # REQUIRED: draft | in-review | approved | deprecated
-version: "1.0.0"  # REQUIRED: Semantic versioning (Major.Minor.Patch)
-last_updated: "YYYY-MM-DD"  # REQUIRED: ISO date format
-author: "@username"  # REQUIRED: GitHub username or team
+document_type: "general" # REQUIRED: Type identifier for MCP/RAG
+module: "[module-name]" # REQUIRED: e.g., "onboarding", "architecture", "business"
+status: "approved" # REQUIRED: draft | in-review | approved | deprecated
+version: "1.0.0" # REQUIRED: Semantic versioning (Major.Minor.Patch)
+last_updated: "YYYY-MM-DD" # REQUIRED: ISO date format
+author: "@username" # REQUIRED: GitHub username or team
 
 # Keywords for semantic search (5-10 keywords)
 keywords:
-  - "[topic-1]"  # e.g., "getting-started", "architecture"
-  - "[topic-2]"  # e.g., "guide", "tutorial"
-  - "[topic-3]"  # Add relevant search terms
+  - "[topic-1]" # e.g., "getting-started", "architecture"
+  - "[topic-2]" # e.g., "guide", "tutorial"
+  - "[topic-3]" # Add relevant search terms
   - "documentation"
 
 # Related documentation
 related_docs:
-  database_schema: ""  # Path to related DB schema (if applicable)
-  api_design: ""  # Path to related API design (if applicable)
-  feature_design: ""  # Path to related feature design (if applicable)
-  ux_flow: ""  # Path to related UX flow (if applicable)
+  database_schema: "" # Path to related DB schema (if applicable)
+  api_design: "" # Path to related API design (if applicable)
+  feature_design: "" # Path to related feature design (if applicable)
+  ux_flow: "" # Path to related UX flow (if applicable)
 
 # Document-specific metadata (optional, customize as needed)
 doc_metadata:
-  audience: "developers"  # "developers" | "architects" | "business" | "all"
-  complexity: "beginner"  # "beginner" | "intermediate" | "advanced"
-  estimated_read_time: "5 min"  # e.g., "5 min", "15 min"
+  audience: "developers" # "developers" | "architects" | "business" | "all"
+  complexity: "beginner" # "beginner" | "intermediate" | "advanced"
+  estimated_read_time: "5 min" # e.g., "5 min", "15 min"
 ---
 
 <!-- AI-INSTRUCTION: START -->
@@ -126,6 +126,6 @@ High-level overview of the document purpose and scope.
 
 ## Appendix A: Change Log
 
-| Date       | Version | Author     | Changes          |
-| :--------- | :------ | :--------- | :--------------- |
-| YYYY-MM-DD | 1.0.0   | @username  | Initial creation |
+| Date       | Version | Author    | Changes          |
+| :--------- | :------ | :-------- | :--------------- |
+| YYYY-MM-DD | 1.0.0   | @username | Initial creation |

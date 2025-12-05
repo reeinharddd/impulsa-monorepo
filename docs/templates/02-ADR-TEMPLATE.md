@@ -1,36 +1,36 @@
 ---
 # YAML Frontmatter - Metadata for Semantic Search & RAG
-document_type: "adr"  # REQUIRED: Type identifier for MCP/RAG
-module: "architecture"  # REQUIRED: Module affected (e.g., "architecture", "infrastructure")
-status: "accepted"  # REQUIRED: proposed | accepted | rejected | deprecated | superseded
-version: "1.0.0"  # REQUIRED: Semantic versioning (Major.Minor.Patch)
-last_updated: "YYYY-MM-DD"  # REQUIRED: ISO date format
-author: "@username"  # REQUIRED: GitHub username or team
+document_type: "adr" # REQUIRED: Type identifier for MCP/RAG
+module: "architecture" # REQUIRED: Module affected (e.g., "architecture", "infrastructure")
+status: "accepted" # REQUIRED: proposed | accepted | rejected | deprecated | superseded
+version: "1.0.0" # REQUIRED: Semantic versioning (Major.Minor.Patch)
+last_updated: "YYYY-MM-DD" # REQUIRED: ISO date format
+author: "@username" # REQUIRED: GitHub username or team
 
 # Keywords for semantic search (5-10 keywords)
 keywords:
   - "adr"
   - "architecture"
   - "decision"
-  - "[topic]"  # e.g., "database", "api", "frontend", "sync"
-  - "[technology]"  # e.g., "postgresql", "nestjs", "angular"
-  - "[pattern]"  # e.g., "cqrs", "event-sourcing", "microservices"
+  - "[topic]" # e.g., "database", "api", "frontend", "sync"
+  - "[technology]" # e.g., "postgresql", "nestjs", "angular"
+  - "[pattern]" # e.g., "cqrs", "event-sourcing", "microservices"
 
 # Related documentation
 related_docs:
-  database_schema: ""  # Path to affected DB schema (if applicable)
-  api_design: ""  # Path to affected API design (if applicable)
-  feature_design: ""  # Path to affected feature design (if applicable)
-  previous_adr: ""  # Path to previous/superseded ADR (if applicable)
-  superseded_by: ""  # Path to ADR that supersedes this one (if deprecated)
+  database_schema: "" # Path to affected DB schema (if applicable)
+  api_design: "" # Path to affected API design (if applicable)
+  feature_design: "" # Path to affected feature design (if applicable)
+  previous_adr: "" # Path to previous/superseded ADR (if applicable)
+  superseded_by: "" # Path to ADR that supersedes this one (if deprecated)
 
 # ADR-specific metadata
 adr_metadata:
-  adr_number: 0  # Sequential number (e.g., 001, 002, 003)
-  decision_date: "YYYY-MM-DD"  # Date decision was made (if accepted)
-  impact_level: "high"  # "low" | "medium" | "high" | "critical"
-  affected_modules: []  # List of modules affected (e.g., ["inventory", "sales"])
-  stakeholders: []  # List of stakeholders involved (e.g., ["@Architect", "@Backend"])
+  adr_number: 0 # Sequential number (e.g., 001, 002, 003)
+  decision_date: "YYYY-MM-DD" # Date decision was made (if accepted)
+  impact_level: "high" # "low" | "medium" | "high" | "critical"
+  affected_modules: [] # List of modules affected (e.g., ["inventory", "sales"])
+  stakeholders: [] # List of stakeholders involved (e.g., ["@Architect", "@Backend"])
 ---
 
 <!-- AI-INSTRUCTION: START -->
@@ -133,7 +133,7 @@ Chosen option: **[Option 1]**, because [Justification].
 
 ## Appendix A: Change Log
 
-| Date       | Version | Author     | Changes                    |
-| :--------- | :------ | :--------- | :------------------------- |
-| YYYY-MM-DD | 1.0.0   | @username  | Initial ADR proposal       |
-| YYYY-MM-DD | 1.1.0   | @username  | Decision accepted          |
+| Date       | Version | Author    | Changes              |
+| :--------- | :------ | :-------- | :------------------- |
+| YYYY-MM-DD | 1.0.0   | @username | Initial ADR proposal |
+| YYYY-MM-DD | 1.1.0   | @username | Decision accepted    |

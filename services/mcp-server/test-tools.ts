@@ -28,7 +28,11 @@ searchService.initializeFuzzySearch();
 
 const stats = indexService.getStats();
 console.log(`✓ Indexed ${stats.totalDocuments} documents`);
-console.log(`✓ Available modules:`, Object.keys(stats.documentsByModule).slice(0, 5), "...\n");
+console.log(
+  `✓ Available modules:`,
+  Object.keys(stats.documentsByModule).slice(0, 5),
+  "...\n",
+);
 
 // Test 1: Query by Module
 console.log("2. Testing query_docs_by_module (module: 'payments')");
@@ -36,10 +40,17 @@ const moduleResult = queryDocsByModule(
   { module: "payments", includeRelated: true },
   indexService,
 );
-console.log(`✓ Found ${moduleResult.totalDocuments} documents for 'payments' module`);
+console.log(
+  `✓ Found ${moduleResult.totalDocuments} documents for 'payments' module`,
+);
 if (moduleResult.success) {
-  console.log(`  - Documents:`, moduleResult.documents?.slice(0, 2).map((d: any) => d.title));
-  console.log(`  - Related: ${moduleResult.relatedDocuments?.length || 0} docs\n`);
+  console.log(
+    `  - Documents:`,
+    moduleResult.documents?.slice(0, 2).map((d: any) => d.title),
+  );
+  console.log(
+    `  - Related: ${moduleResult.relatedDocuments?.length || 0} docs\n`,
+  );
 }
 
 // Test 2: Query by Type
@@ -50,7 +61,10 @@ const typeResult = queryDocsByType(
 );
 console.log(`✓ Found ${typeResult.totalDocuments} API design documents`);
 if (typeResult.success) {
-  console.log(`  - Documents:`, typeResult.documents?.slice(0, 2).map((d: any) => d.title));
+  console.log(
+    `  - Documents:`,
+    typeResult.documents?.slice(0, 2).map((d: any) => d.title),
+  );
   console.log();
 }
 
@@ -65,7 +79,9 @@ if (allDocs.length > 0) {
     indexService,
   );
   if (contextResult.success) {
-    console.log(`✓ Retrieved context with ${contextResult.totalRelatedDocuments} related docs`);
+    console.log(
+      `✓ Retrieved context with ${contextResult.totalRelatedDocuments} related docs`,
+    );
     console.log(
       `  - Related categories:`,
       Object.keys(contextResult.related).filter(
@@ -83,7 +99,10 @@ const searchResult = searchFullText(
   searchService,
 );
 console.log(`✓ Found ${searchResult.pagination.total} results`);
-console.log(`  - Top results:`, searchResult.results.slice(0, 3).map((r) => r.document.title));
+console.log(
+  `  - Top results:`,
+  searchResult.results.slice(0, 3).map((r) => r.document.title),
+);
 console.log(`  - Query time: ${searchResult.queryTime}ms`);
 console.log(`  - Aggregations:`, {
   types: Object.keys(searchResult.aggregations?.byType || {}),
@@ -93,7 +112,10 @@ console.log();
 
 // Test 5: Fuzzy Search
 console.log("6. Testing fuzzy search (query: 'paiment' - intentional typo)");
-const fuzzyResult = searchFullText({ query: "paiment", page: 1, limit: 3 }, searchService);
+const fuzzyResult = searchFullText(
+  { query: "paiment", page: 1, limit: 3 },
+  searchService,
+);
 console.log(`✓ Found ${fuzzyResult.pagination.total} results (fuzzy match)`);
 console.log(`  - Top match:`, fuzzyResult.results[0]?.document.title || "None");
 console.log();

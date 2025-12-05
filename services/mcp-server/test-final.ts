@@ -15,8 +15,8 @@ async function test() {
         arguments: {
           uri: "docs://technical/backend/database/06-PAYMENTS-SCHEMA.md",
           depth: 1,
-          includeContent: false
-        }
+          includeContent: false,
+        },
       },
     }),
   });
