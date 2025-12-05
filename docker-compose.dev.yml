@@ -106,7 +106,8 @@ services:
     volumes:
       - .:/app
       - /app/node_modules
-    command: sh -c "bun install && cd services/mcp-server && bun run dev"
+      - /app/services/mcp-server/node_modules
+    command: sh -c "cd services/mcp-server && find node_modules -mindepth 1 -delete && bun install && bun run dev"
     networks:
       - impulsa-network
 
