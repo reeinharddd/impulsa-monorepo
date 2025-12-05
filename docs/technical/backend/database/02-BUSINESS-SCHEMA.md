@@ -240,6 +240,63 @@ A named collection of permissions. Roles are scoped to the Business, meaning cus
 
 ---
 
+## 5. Performance & Indexing
+
+| Table      | Column       | Type   | Reason                                                            |
+| :--------- | :----------- | :----- | :---------------------------------------------------------------- |
+| `Business` | `ownerId`    | B-TREE | Fast lookup of "My Businesses" for the dashboard.                 |
+| `Business` | `slug`       | B-TREE | Fast lookup for public profiles (e.g., `impulsa.com/tacos-juan`). |
+| `Employee` | `userId`     | B-TREE | Finding all workplaces for a logged-in user.                      |
+| `Employee` | `businessId` | B-TREE | Filtering employees by company.                                   |
+
+---
+
+## 6. Data Integrity & Compliance (Fiscal Protection)
+
+### 6.1. Tax Compliance Validation
+
+To ensure we never issue an invalid invoice (which causes fines), we enforce strict format checks on Tax IDs per country.
+
+```sql
+ALTER TABLE business.Business ADD CONSTRAINT chk_tax_id_format
+CHECK (
+  (country = 'MX' AND taxId ~* '^[A-Z&Ñ]{3,4}\d{6}[A-V1-9][A-Z1-9]\d$') OR -- RFC Mexico
+  (country = 'CO' AND taxId ~* '^\d{9,10}$') OR -- NIT Colombia
+  (country = 'US') -- US logic
+);
+```
+
+### 6.2. Compliance Status Lock
+
+If a business fails a KYC check or is flagged for fraud, the database must physically block them from operating.
+
+```sql
+-- Trigger: Block operations if status is SUSPENDED
+CREATE FUNCTION check_business_active() RETURNS TRIGGER AS $$
+BEGIN
+  IF (SELECT status FROM business.Business WHERE id = NEW.businessId) != 'ACTIVE' THEN
+    RAISE EXCEPTION 'Business is suspended. Operation denied.';
+  END IF;
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+```
+
+### 6.3. Currency Consistency
+
+A business operating in Mexico MUST use MXN as the base currency to avoid exchange rate accounting errors.
+
+```sql
+ALTER TABLE business.Business ADD CONSTRAINT chk_country_currency
+CHECK (
+  (country = 'MX' AND currency = 'MXN') OR
+  (country = 'CO' AND currency = 'COP') OR
+  (country = 'US' AND currency = 'USD')
+);
+```
+
+---
+
 ## 4. Access Control (RBAC) & Usability Strategy
 
 ### 4.1. The "Small Business" Approach (Zero Config)

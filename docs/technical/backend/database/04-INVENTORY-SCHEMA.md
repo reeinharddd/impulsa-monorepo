@@ -1021,6 +1021,50 @@ CREATE INDEX idx_inventory_level_branch ON inventory.InventoryLevel(productId, b
 
 ---
 
+## 7. Data Integrity & Business Rules (Profit Protection)
+
+### 7.1. Price & Cost Logic
+
+To prevent "Selling at a Loss" or "Negative Inventory Value", we enforce strict mathematical rules.
+
+```sql
+-- Prices must be positive
+ALTER TABLE inventory.Product ADD CONSTRAINT chk_price_positive CHECK (price >= 0);
+ALTER TABLE inventory.Product ADD CONSTRAINT chk_cost_positive CHECK (costPrice >= 0);
+
+-- Warning Trigger: Prevent setting Price < Cost (Optional, usually a soft warning in UI, but hard block here for safety)
+CREATE FUNCTION check_profit_margin() RETURNS TRIGGER AS $$
+BEGIN
+  IF NEW.price < NEW.costPrice THEN
+    RAISE WARNING 'Product % is being sold below cost!', NEW.name;
+    -- RAISE EXCEPTION to strictly forbid it
+  END IF;
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+```
+
+### 7.2. Inventory Consistency
+
+Stock cannot be negative unless explicitly allowed by the business settings (e.g., "Pre-sale").
+
+```sql
+ALTER TABLE inventory.InventoryLevel ADD CONSTRAINT chk_stock_quantity
+CHECK (quantity >= 0 OR allow_negative = true);
+```
+
+### 7.3. SKU Uniqueness Scope
+
+A barcode (SKU) must be unique _within a business_, but different businesses can use the same barcode (e.g., "12345" for a generic item).
+
+```sql
+CREATE UNIQUE INDEX idx_unique_sku_per_business
+ON inventory.Product (businessId, sku)
+WHERE status != 'ARCHIVED';
+```
+
+---
+
 - Rejects: "Version mismatch. Expected 11, got 10."
 - **Device B:** Receives rejection, shows "Item sold out. Stock refreshed."
 

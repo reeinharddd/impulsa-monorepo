@@ -185,6 +185,17 @@ package "sales" #E8F5E9 {
     updatedAt : TIMESTAMP
   }
 
+  entity "SalePayment" as payment {
+    *id : UUID <<PK>>
+    --
+    *saleId : UUID <<FK>>
+    *method : ENUM (CASH, CARD, TRANSFER, OTHER)
+    amount : DECIMAL(19,4)
+    reference : VARCHAR(100)
+    metadata : JSONB
+    createdAt : TIMESTAMP
+  }
+
   entity "SaleItem" as item {
     *id : UUID <<PK>>
     --
@@ -210,6 +221,7 @@ register ||..o{ shift : "hosts"
 shift ||..o{ sale : "records"
 customer ||..o{ sale : "purchases"
 sale ||..o{ item : "contains"
+sale ||..o{ payment : "paid via"
 @enduml
 ```
 
@@ -287,7 +299,21 @@ The header of a transaction/ticket.
 | `total`         | DECIMAL(19,4) | Final amount.      | `subtotal - discount + tax`.                           |
 | `createdAt`     | TIMESTAMP     | Transaction time.  | UTC.                                                   |
 
-### 3.5. SaleItem (The Snapshot)
+### 3.5. SalePayment (Mixed Payments)
+
+Handles split payments (e.g., $50 Cash + $50 Card) and tracks the specific method used for each portion.
+
+| Attribute   | Type          | Description        | Rules & Constraints                                     |
+| :---------- | :------------ | :----------------- | :------------------------------------------------------ |
+| `id`        | UUID          | Unique identifier. | Primary Key.                                            |
+| `saleId`    | UUID          | Parent sale.       | Foreign Key to `Sale`.                                  |
+| `method`    | ENUM          | Payment type.      | `CASH`, `CARD`, `TRANSFER`, `OTHER`.                    |
+| `amount`    | DECIMAL(19,4) | Amount paid.       | Sum of all payments must equal `Sale.total` for `PAID`. |
+| `reference` | VARCHAR(100)  | External ref.      | Auth code (Card) or Transaction ID (Transfer).          |
+| `metadata`  | JSONB         | Extra details.     | `{ "cardLast4": "1234", "brand": "VISA" }`.             |
+| `createdAt` | TIMESTAMP     | Payment time.      | UTC.                                                    |
+
+### 3.6. SaleItem (The Snapshot)
 
 Stores the line items of a receipt.
 
@@ -301,3 +327,69 @@ Stores the line items of a receipt.
 | `productName` | VARCHAR       | Name at moment of sale.  | Preserves history if product is renamed.                            |
 | `quantity`    | DECIMAL(10,4) | Amount sold.             | Supports fractional units (kg).                                     |
 | `total`       | DECIMAL(19,4) | Line total.              | `(unitPrice * quantity) - discount`.                                |
+
+---
+
+## 4. Performance & Indexing
+
+| Table  | Column       | Type   | Reason                               |
+| :----- | :----------- | :----- | :----------------------------------- |
+| `Sale` | `saleNumber` | B-TREE | Fast lookup by ticket number.        |
+| `Sale` | `createdAt`  | BRIN   | Efficient date range reporting.      |
+| `Sale` | `customerId` | B-TREE | Customer purchase history.           |
+| `Sale` | `shiftId`    | B-TREE | Filtering sales by shift (Cash Cut). |
+
+---
+
+## 5. Data Integrity & Financial Safety
+
+### 5.1. Credit Limit Enforcement (Debt Protection)
+
+To prevent customers from buying more than they can pay, we use a strict database trigger. This protects us from "Bad Debt".
+
+```sql
+CREATE FUNCTION check_credit_limit() RETURNS TRIGGER AS $$
+DECLARE
+  current_debt DECIMAL;
+  credit_limit DECIMAL;
+BEGIN
+  -- Only check if sale is on CREDIT
+  IF NEW.paymentMethod = 'CREDIT' THEN
+    -- Get customer's current debt and limit
+    SELECT balance, creditLimit INTO current_debt, credit_limit
+    FROM sales.Customer WHERE id = NEW.customerId;
+
+    -- Check if new sale pushes them over limit
+    IF (current_debt + NEW.total) > credit_limit THEN
+      RAISE EXCEPTION 'Credit limit exceeded. Max: %, Current: %, Attempted: %',
+        credit_limit, current_debt, NEW.total;
+    END IF;
+  END IF;
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+```
+
+### 5.2. Shift Consistency (Anti-Fraud)
+
+A sale CANNOT be created if the cashier's shift is closed. This prevents "Ghost Sales" inserted after hours.
+
+```sql
+CREATE FUNCTION check_shift_open() RETURNS TRIGGER AS $$
+BEGIN
+  IF (SELECT status FROM sales.Shift WHERE id = NEW.shiftId) != 'OPEN' THEN
+    RAISE EXCEPTION 'Cannot create sale in a CLOSED shift.';
+  END IF;
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+```
+
+### 5.3. Math Consistency (The "Penny" Check)
+
+The total must ALWAYS equal the sum of items minus discounts plus tax.
+
+```sql
+ALTER TABLE sales.Sale ADD CONSTRAINT chk_sale_math
+CHECK (total = (subtotal - discountTotal + taxTotal));
+```

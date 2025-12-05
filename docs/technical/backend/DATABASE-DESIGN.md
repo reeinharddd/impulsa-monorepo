@@ -98,6 +98,28 @@ Use this checklist to track the maturity of the database design.
 
 These rules are mandatory for all database development in this project.
 
+### 1. The "Bulletproof" Data Integrity Standard
+
+We do not trust the application layer to maintain data integrity. The database is the final guardian.
+
+| Layer           | Mechanism           | Purpose                         | Example                             |
+| :-------------- | :------------------ | :------------------------------ | :---------------------------------- |
+| **Financial**   | `CHECK` Constraints | Prevent negative money/stock.   | `CHECK (balance >= 0)`              |
+| **Logic**       | `TRIGGER` Functions | Enforce complex business rules. | "User cannot buy if debt > limit"   |
+| **Security**    | `ENCRYPTION`        | Protect PII at rest.            | `kycData` is AES-256 encrypted.     |
+| **Audit**       | `IMMUTABILITY`      | Prevent fraud/tampering.        | `REVOKE DELETE` on Audit Logs.      |
+| **Consistency** | `IDEMPOTENCY`       | Prevent double-charging.        | `UNIQUE INDEX` on `idempotencyKey`. |
+
+### 2. General Rules
+
+```
+
+---
+
+## Database Design Principles & Rules (The Constitution)
+
+These rules are mandatory for all database development in this project.
+
 ### 1. Integrity & Safety
 
 - **Soft Deletes Only:** Destructive `DELETE` operations are forbidden in production. All tables must have a `deletedAt` column.
@@ -222,3 +244,4 @@ The `Business` entity determines the product experience via the `type` and `feat
 
 - If `type === 'RESTAURANT'`, the app loads the Table Management and Kitchen modules.
 - If `type === 'RETAIL'`, the app loads the Barcode Scanner and Quick POS modules.
+```

@@ -231,3 +231,58 @@ Manages Web Push subscriptions for PWA (Progressive Web App). Enables **Offline*
 | `endpoint`  | TEXT    | Browser push service URL.       | Unique per device/browser profile.                                                 |
 | `keys`      | JSONB   | Encryption keys (P256DH, Auth). | **Critical Security:** Used to encrypt the payload so only the device can read it. |
 | `userAgent` | VARCHAR | Device information.             | Used for debugging (e.g., "Chrome on Android").                                    |
+
+---
+
+## 4. Performance & Indexing
+
+| Table               | Column      | Type   | Reason                         |
+| :------------------ | :---------- | :----- | :----------------------------- |
+| `NotificationLog`   | `userId`    | B-TREE | "Show my notifications" query. |
+| `NotificationLog`   | `createdAt` | BRIN   | Archiving old logs.            |
+| `InAppNotification` | `isRead`    | B-TREE | Counting unread badges.        |
+
+---
+
+## 5. Data Integrity & Security (Anti-Spam)
+
+### 5.1. Template Variable Validation
+
+To prevent "Broken Emails" (e.g., "Hello {{undefined}}"), we enforce JSON Schema validation on the variables.
+
+```sql
+ALTER TABLE communication.NotificationTemplate ADD CONSTRAINT chk_variables_schema
+CHECK (jsonb_typeof(variables) = 'array'); -- Simple check, app does deep validation
+```
+
+### 5.2. Immutable Audit Logs
+
+Notification logs are legal proof of delivery (e.g., "We sent the invoice on Tuesday"). They must never be deleted.
+
+```sql
+-- REVOKE DELETE permissions
+REVOKE DELETE ON communication.NotificationLog FROM "app_user";
+```
+
+### 5.3. Rate Limiting (Database Level)
+
+To prevent a runaway loop from draining our SMS credits, we can use a trigger to block excessive sends to the same user in a short window.
+
+```sql
+CREATE FUNCTION check_spam_rate() RETURNS TRIGGER AS $$
+DECLARE
+  recent_count INT;
+BEGIN
+  -- Count messages to this user in last minute
+  SELECT COUNT(*) INTO recent_count
+  FROM communication.NotificationLog
+  WHERE userId = NEW.userId
+    AND createdAt > NOW() - INTERVAL '1 minute';
+
+  IF recent_count > 20 THEN
+    RAISE EXCEPTION 'Rate limit exceeded for user %', NEW.userId;
+  END IF;
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+```

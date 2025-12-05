@@ -114,7 +114,7 @@ package "payments" #E0F7FA {
     amount : DECIMAL(19,4)
     currency : CHAR(3)
     status : ENUM (PENDING, COMPLETED, FAILED, REFUNDED)
-    type : ENUM (CHARGE, REFUND)
+    type : ENUM (CHARGE, REFUND, P2P_TRANSFER)
     providerAdapter : VARCHAR(50)
     providerTransactionId : VARCHAR(255)
     providerData : JSONB
@@ -140,10 +140,38 @@ package "payments" #E0F7FA {
     status : ENUM (PENDING, COMPLETED)
     createdAt : TIMESTAMP
   }
+
+  entity "Wallet" as wallet {
+    *id : UUID <<PK>>
+    --
+    *userId : UUID <<FK>>
+    currency : CHAR(3)
+    balance : DECIMAL(19,4)
+    status : ENUM (ACTIVE, FROZEN)
+    updatedAt : TIMESTAMP
+  }
+
+  entity "PaymentRequest" as request {
+    *id : UUID <<PK>>
+    --
+    *requesterUserId : UUID <<FK>>
+    payerUserId : UUID <<FK>>
+    amount : DECIMAL(19,4)
+    currency : CHAR(3)
+    status : ENUM (PENDING, PAID, EXPIRED)
+    --
+    shortLink : VARCHAR(50)
+    qrCode : TEXT
+    description : VARCHAR(255)
+    expiresAt : TIMESTAMP
+    createdAt : TIMESTAMP
+  }
 }
 
 txn ||..o{ refund : "has"
 method ||..o{ txn : "facilitates"
+wallet ||..o{ txn : "funds"
+request ||..o{ txn : "triggers"
 @enduml
 ```
 
@@ -168,3 +196,109 @@ Configuration for accepted payment types.
 | Attribute | Type  | Description        | Rules & Constraints                     |
 | :-------- | :---- | :----------------- | :-------------------------------------- |
 | `config`  | JSONB | Provider settings. | e.g., `{ "publicKey": "pk_test_..." }`. |
+
+### 3.3. Wallet (P2P Balance)
+
+Stores the user's digital balance for P2P transfers and quick payments.
+
+| Attribute   | Type          | Description        | Rules & Constraints                            |
+| :---------- | :------------ | :----------------- | :--------------------------------------------- |
+| `id`        | UUID          | Unique identifier. | Primary Key.                                   |
+| `userId`    | UUID          | Owner.             | Foreign Key to `auth.User`.                    |
+| `currency`  | CHAR(3)       | ISO Currency.      | e.g., `MXN`, `COP`.                            |
+| `balance`   | DECIMAL(19,4) | Current funds.     | Cannot be negative (unless overdraft allowed). |
+| `status`    | ENUM          | Account state.     | `ACTIVE`, `FROZEN` (Fraud prevention).         |
+| `updatedAt` | TIMESTAMP     | Last change.       | Updated on every P2P transaction.              |
+
+### 3.4. PaymentRequest (P2P Link/QR)
+
+Allows users to request money from others (e.g., "Sell my console"). Generates a shareable Link or QR.
+
+| Attribute         | Type          | Description         | Rules & Constraints                              |
+| :---------------- | :------------ | :------------------ | :----------------------------------------------- |
+| `id`              | UUID          | Unique identifier.  | Primary Key.                                     |
+| `requesterUserId` | UUID          | Who gets paid.      | Foreign Key to `auth.User`.                      |
+| `payerUserId`     | UUID          | Who pays.           | Optional. If NULL, anyone with the link can pay. |
+| `amount`          | DECIMAL(19,4) | Requested amount.   | Fixed amount.                                    |
+| `status`          | ENUM          | Request state.      | `PENDING`, `PAID`, `EXPIRED`.                    |
+| `shortLink`       | VARCHAR(50)   | Shareable URL slug. | e.g., `pay.me/u/12345`.                          |
+| `qrCode`          | TEXT          | QR Data payload.    | For scanning app-to-app.                         |
+| `expiresAt`       | TIMESTAMP     | Expiration.         | Links should expire (e.g., 24h) for security.    |
+
+---
+
+## 4. Performance & Indexing
+
+| Table         | Column                  | Type   | Reason                                               |
+| :------------ | :---------------------- | :----- | :--------------------------------------------------- |
+| `Transaction` | `saleId`                | B-TREE | Linking payments to sales.                           |
+| `Transaction` | `providerTransactionId` | B-TREE | Reconciliation with bank reports.                    |
+| `Transaction` | `referenceId`           | B-TREE | Fast lookup by external ID (e.g., Stripe Charge ID). |
+
+---
+
+## 5. Data Integrity & Security (Zero Trust)
+
+### 5.1. Idempotency (Double Charge Prevention)
+
+The most critical rule in payments: **Never charge twice.**
+We enforce this via a unique index on the `idempotencyKey`.
+
+```sql
+-- If the API receives the same key twice, the DB throws a constraint violation.
+CREATE UNIQUE INDEX idx_transaction_idempotency
+ON payments.Transaction (idempotencyKey)
+WHERE idempotencyKey IS NOT NULL;
+```
+
+### 5.2. Refund Logic (Loss Prevention)
+
+A refund can NEVER exceed the original transaction amount.
+
+```sql
+CREATE FUNCTION check_refund_amount() RETURNS TRIGGER AS $$
+DECLARE
+  original_amount DECIMAL;
+  total_refunded DECIMAL;
+BEGIN
+  -- Get original transaction amount
+  SELECT amount INTO original_amount
+  FROM payments.Transaction WHERE id = NEW.originalTransactionId;
+
+  -- Get sum of all previous refunds
+  SELECT COALESCE(SUM(amount), 0) INTO total_refunded
+  FROM payments.Transaction
+  WHERE originalTransactionId = NEW.originalTransactionId
+    AND type = 'REFUND'
+    AND status = 'COMPLETED';
+
+  -- Check if new refund exceeds limit
+  IF (total_refunded + NEW.amount) > original_amount THEN
+    RAISE EXCEPTION 'Refund exceeds original amount. Max refundable: %', (original_amount - total_refunded);
+  END IF;
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+```
+
+### 5.3. Wallet Integrity (No Negative Balance)
+
+A user cannot spend money they don't have.
+
+```sql
+ALTER TABLE payments.Wallet ADD CONSTRAINT chk_wallet_balance_positive
+CHECK (balance >= 0);
+```
+
+### 5.4. State Machine Constraints
+
+Transactions cannot jump from `FAILED` to `COMPLETED`. They must follow a strict flow.
+
+```sql
+-- Valid transitions enforced by application logic, but DB can ensure finality
+ALTER TABLE payments.Transaction ADD CONSTRAINT chk_final_status
+CHECK (
+  (status = 'COMPLETED' OR status = 'FAILED') IS NOT FALSE -- Once final, cannot change?
+  -- (Actually, better handled by app state machine, but DB ensures valid ENUMs)
+);
+```

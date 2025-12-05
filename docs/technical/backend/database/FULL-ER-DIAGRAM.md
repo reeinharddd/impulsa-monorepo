@@ -419,6 +419,17 @@ package "sales" #E8F5E9 {
     updatedAt : TIMESTAMP
   }
 
+  entity "SalePayment" as sale_payment {
+    *id : UUID <<PK>>
+    --
+    *saleId : UUID <<FK>>
+    *method : ENUM (CASH, CARD, TRANSFER, OTHER)
+    amount : DECIMAL
+    reference : VARCHAR
+    metadata : JSONB
+    createdAt : TIMESTAMP
+  }
+
   entity "SaleItem" as sale_item {
     *id : UUID <<PK>>
     --
@@ -447,9 +458,13 @@ package "payments" #E0F7FA {
     branchId : UUID <<FK>>
     saleId : UUID <<FK>>
     amount : DECIMAL
-    status : ENUM
+    currency : CHAR(3)
+    status : ENUM (PENDING, COMPLETED, FAILED, REFUNDED)
+    type : ENUM (CHARGE, REFUND, P2P_TRANSFER)
     providerAdapter : VARCHAR
-    idempotencyKey : UUID
+    providerTransactionId : VARCHAR
+    providerData : JSONB
+    idempotencyKey : VARCHAR
     createdAt : TIMESTAMP
     updatedAt : TIMESTAMP
   }
@@ -460,7 +475,42 @@ package "payments" #E0F7FA {
     *businessId : UUID <<FK>>
     name : VARCHAR
     type : ENUM
-    deletedAt : TIMESTAMP
+    config : JSONB
+    isActive : BOOLEAN
+  }
+
+  entity "Refund" as refund {
+    *id : UUID <<PK>>
+    --
+    *transactionId : UUID <<FK>>
+    amount : DECIMAL
+    reason : VARCHAR
+    status : ENUM
+    createdAt : TIMESTAMP
+  }
+
+  entity "Wallet" as wallet {
+    *id : UUID <<PK>>
+    --
+    *userId : UUID <<FK>>
+    currency : CHAR(3)
+    balance : DECIMAL
+    status : ENUM
+    updatedAt : TIMESTAMP
+  }
+
+  entity "PaymentRequest" as pay_req {
+    *id : UUID <<PK>>
+    --
+    *requesterUserId : UUID <<FK>>
+    payerUserId : UUID <<FK>>
+    amount : DECIMAL
+    currency : CHAR(3)
+    status : ENUM
+    shortLink : VARCHAR
+    qrCode : TEXT
+    expiresAt : TIMESTAMP
+    createdAt : TIMESTAMP
   }
 }
 
@@ -527,11 +577,18 @@ employee ||..o{ sale : "performs"
 customer ||..o{ sale : "purchases"
 user ||..o{ customer : "linked to"
 sale ||..|{ sale_item : "contains"
+sale ||..o{ sale_payment : "paid via"
 product ||..o{ sale_item : "sold as"
 variant ||..o{ sale_item : "sold as"
 sale ||..o| txn : "paid with"
 business ||..o{ txn : "processes"
 branch ||..o{ txn : "processes"
+
+' Payments
+txn ||..o{ refund : "has"
+wallet ||..o{ txn : "funds"
+pay_req ||..o{ txn : "triggers"
+pay_method ||..o{ txn : "facilitates"
 
 ' Billing
 sale ||..o| invoice : "billed as"

@@ -355,3 +355,45 @@ To ensure high performance and prevent "blocks" (deadlocks/slow queries), the fo
 
 - **Registration:** The `UNIQUE` constraint on `User.email` and `User.phone` acts as the final idempotency guard. If the API receives two requests simultaneously, the database will reject the second one.
 - **Linking Providers:** The `UNIQUE (provider, providerId)` constraint prevents linking the same Google account to multiple users.
+
+---
+
+## 6. Data Integrity & Security Protocols (The "Bulletproof" Layer)
+
+### 6.1. PII Encryption Strategy (Data Privacy)
+
+To protect users in case of a database leak, specific columns MUST be encrypted at the application level before storage (using AES-256-GCM).
+
+| Table           | Column       | Strategy      | Reason                                     |
+| :-------------- | :----------- | :------------ | :----------------------------------------- |
+| `User`          | `kycData`    | **ENCRYPTED** | Contains ID photos, Tax IDs, Addresses.    |
+| `TwoFactorAuth` | `secret`     | **ENCRYPTED** | Prevents attacker from generating OTPs.    |
+| `UserIdentity`  | `credential` | **HASHED**    | Argon2id (One-way hash). Never reversible. |
+
+### 6.2. Immutable Audit Logs
+
+To prevent "Covering Tracks" after a hack or internal fraud, the `AuditLog` table must be append-only.
+
+```sql
+-- REVOKE DELETE/UPDATE permissions for the application user
+REVOKE DELETE, UPDATE ON auth.AuditLog FROM "app_user";
+
+-- Trigger to prevent tampering even by admins (optional)
+CREATE TRIGGER prevent_audit_tamper
+BEFORE UPDATE OR DELETE ON auth.AuditLog
+FOR EACH ROW EXECUTE FUNCTION system.raise_immutable_error();
+```
+
+### 6.3. Strict Format Constraints
+
+Prevent "Garbage In" that could lead to phishing or communication errors.
+
+```sql
+-- Email Format
+ALTER TABLE auth.User ADD CONSTRAINT chk_email_format
+CHECK (email ~* '^[A-Za-z0-9._+%-]+@[A-Za-z0-9.-]+[.][A-Za-z]+$');
+
+-- Phone Format (E.164)
+ALTER TABLE auth.User ADD CONSTRAINT chk_phone_format
+CHECK (phone ~* '^\+[1-9]\d{1,14}$');
+```
