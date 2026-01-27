@@ -1,0 +1,4 @@
+/* Custom styles specific to landing if needed, but mostly using Tailwind */
+:host {
+  display: block;
+}

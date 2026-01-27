@@ -1,0 +1,50 @@
+{
+  "COMMON": {
+    "APP_NAME": "Impulsa",
+    "BUTTONS": {
+      "LOGIN": "Iniciar Sesión",
+      "REGISTER": "Crear Cuenta",
+      "START_FREE": "Empieza Gratis",
+      "VIEW_DEMO": "Ver Demo"
+    }
+  },
+  "LANDING": {
+    "HERO": {
+      "TITLE_PREFIX": "Tus cobros,",
+      "TITLE_HIGHLIGHT": "más simples y rápidos",
+      "SUBTITLE": "La plataforma que transforma cómo gestionas tu negocio. Sin comisiones ocultas, sin complicaciones.",
+      "CTA_PRIMARY": "Empezar Ahora",
+      "CTA_SECONDARY": "Saber Más"
+    },
+    "FEATURES": {
+      "TITLE": "¿Por qué Impulsa?",
+      "FEATURE_1_TITLE": "Pagos al Instante",
+      "FEATURE_1_DESC": "Recibe pagos en tiempo real con nuestra integración directa.",
+      "FEATURE_2_TITLE": "Seguridad Total",
+      "FEATURE_2_DESC": "Tus datos protegidos con los más altos estándares de la industria.",
+      "FEATURE_3_TITLE": "Análisis Fácil",
+      "FEATURE_3_DESC": "Lleva el control de tus ventas con tableros intuitivos."
+    }
+  },
+  "AUTH": {
+    "LOGIN": {
+      "TITLE": "Bienvenido de nuevo",
+      "SUBTITLE": "Ingresa tus credenciales para acceder",
+      "EMAIL_LABEL": "Correo Electrónico",
+      "PASSWORD_LABEL": "Contraseña",
+      "SUBMIT_BUTTON": "Ingresar",
+      "NO_ACCOUNT": "¿No tienes cuenta?",
+      "REGISTER_LINK": "Regístrate aquí"
+    },
+    "REGISTER": {
+      "TITLE": "Crear Cuenta",
+      "SUBTITLE": "Únete a Impulsa hoy",
+      "NAME_LABEL": "Nombre Completo",
+      "EMAIL_LABEL": "Correo Electrónico",
+      "PASSWORD_LABEL": "Contraseña",
+      "SUBMIT_BUTTON": "Registrarse",
+      "HAS_ACCOUNT": "¿Ya tienes cuenta?",
+      "LOGIN_LINK": "Inicia sesión"
+    }
+  }
+}
