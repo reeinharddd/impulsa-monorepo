@@ -94,9 +94,39 @@ _This section contains mandatory instructions for AI Agents (Copilot, Cursor, et
 - **Meaning:** To push forward, to boost, to drive.
 - **Rationale:** Aligns with the core value proposition: "Not making them pay more, making them earn more." We are the force that pushes their business forward.
 
-### 3.2. Vision & Ideals (The "Why")
+### 3.3. Tone of Voice (The "Personality")
 
-#### "To ignite the potential of the overlooked economy."
+**Core Attribute: "The Accessible Expert"**
+
+We are NOT:
+
+- Overly informal or childish ("Hey buddy!", "Oops!").
+- Cold, robotic, or bureaucratic ("Transaction ID 4455 error").
+- Too technical ("Database sync failed").
+
+We ARE:
+
+- **Simple & Clear:** We use plain language. Understandable by a 15-year-old or a 70-year-old.
+- **Sober & Attractive:** Professional but modern. We inspire confidence without being boring.
+- **Direct:** We state exactly what happened or what needs to be done.
+
+**Examples:**
+
+- _Instead of:_ "Authentication failed. Invalid credentials."
+- _Use:_ "Check your email or password and try again."
+- _Instead of:_ "Inventory successfully updated."
+- _Use:_ "Stock updated."
+
+## 4. Visual Standards (The "Look")
+
+### 4.1. Design Philosophy: "Radical Clarity"
+
+- **For all ages:** High contrast, large text, obvious buttons. Simplicity is our accessibility feature.
+- **Sober & Attractive:**
+  - Avoid visual noise.
+  - Generous whitespace.
+  - Rounded corners (`rounded-xl`) for a modern but friendly feel.
+  - **Color usage:** Purple is for branding, but White/Gray is for content. Don't overuse color.
 
 We see a world where the size of your shop does not dictate the size of your opportunity. We are fighting against the financial exclusion that keeps millions of hard-working merchants in the shadows.
 

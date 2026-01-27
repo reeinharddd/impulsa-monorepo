@@ -111,21 +111,33 @@ All shared components reside in `libs/ui/src/lib/`.
 - `ui-sidebar`: Collapsible side navigation.
 - `ui-data-table`: Complex table with pagination and sorting.
 
-## Multilanguage Support (i18n)
+## Design Tokens (Tailwind CSS v4)
 
-All text must be translatable.
+We use Tailwind CSS v4 with native CSS variables for styling. Configuration is centrally managed in `src/styles.css` using the `@theme` directive.
 
-- **Library:** `@angular/localize` or `ngx-translate`.
-- **Pattern:** Use pipes `{{ 'KEY' | translate }}` or directives `translate="KEY"`.
-- **Files:** `src/assets/i18n/en.json`, `src/assets/i18n/es.json`.
+### Colors
 
-## Design Tokens (Tailwind CSS)
+Defined as CSS variables (e.g., `--color-brand-primary`):
 
-We use Tailwind CSS for styling, mapped to our design tokens.
+- **Primary:** `#4c1d95` (Deep Purple)
+- **Secondary:** `#10b981` (Emerald Green)
+- **Base:** `#cbc3e3` (Light Lavender)
+- **Accent:** `#f97316` (Orange)
+- **Surface:** `#f3f0ff` (Very Light Purple)
 
-- **Colors:** `brand-base`, `brand-primary`, `brand-secondary`.
-- **Spacing:** Standard Tailwind scale.
-- **Typography:** Inter font family.
+### Typography
+
+- **Font Family:** `Inter` (sans-serif)
+- **Weights:** 400 (Regular), 500 (Medium), 600 (SemiBold), 700 (Bold)
+
+## Internationalization (i18n)
+
+We use `@ngx-translate/core` for dynamic runtime translations.
+
+- **Stack:** `@ngx-translate/core` + `@ngx-translate/http-loader`
+- **Asset Location:** `public/assets/i18n/*.json`
+- **Pattern:** Use the `translate` pipe: `{{ 'MODULE.KEY' | translate }}`
+
 
 ## Workflow for New UI Features
 
