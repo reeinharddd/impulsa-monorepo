@@ -1,15 +1,16 @@
-
 PROMPT BASE — IMPULSA MVP (Angular 21) — ACTUALIZACIÓN 2025-12-26
 
-Usa este prompt tal cual para generar el proyecto inicial, scaffolding o asistencia de IA. Sigue estrictamente las prácticas y documentación del repositorio (docs/process/* y docs/templates/*). Cumple las reglas legales y de producto indicadas abajo.
+Usa este prompt tal cual para generar el proyecto inicial, scaffolding o asistencia de IA. Sigue estrictamente las prácticas y documentación del repositorio (docs/process/_ y docs/templates/_). Cumple las reglas legales y de producto indicadas abajo.
 
 CONTEXTO DEL PRODUCTO
+
 - Producto: Impulsa — cobros presenciales sin custodiar dinero; rail principal: transferencias bancarias (SPEI / CoDi).
 - NO custodia fondos, NO procesa pagos; facilita generación, presentación y confirmación de cobros entre banco a banco.
 - Público objetivo: comercios pequeños (inventario básico) y personas (cobros puntuales).
 - Registro define tipo de usuario: "business" o "person" y condiciona la UI.
 
 STACK OBLIGATORIO Y NORMAS REPOSITORY
+
 - Angular 21, TypeScript estricto.
 - Arquitectura modular (lazy-loaded feature modules), routing explícito.
 - Runtime: Bun (seguir package.json y scripts del repo).
@@ -18,16 +19,19 @@ STACK OBLIGATORIO Y NORMAS REPOSITORY
 - Convenciones de commit: Conventional Commits (ver docs/process/standards/TOOLING-STYLE-GUIDE.md).
 
 PRINCIPIOS DE PRODUCTO (mandatorios)
+
 - Desktop-first: Landing pública visible solo en desktop (no en mobile).
 - Mobile: acceso directo a login; redirigir a `/auth` en bootstrap si DeviceService detecta móvil.
 - UX legal copy obligatorio: mostrar “Impulsa no custodia fondos” y “El tiempo de confirmación depende del banco emisor”. Nunca mostrar “dinero acreditado” ni prometer instantaneidad.
 - No incluir facturación electrónica, roles avanzados, wallets internas, integraciones adquirentes, ni manejo de personal en el MVP.
 
 TIPOS DE USUARIO
+
 - Business: gestionar inventario mínimo, crear ventas seleccionando productos, cobrar total.
 - Person: sin inventario, generar cobros manuales por monto.
 
 SECCIONES OBLIGATORIAS (routing + componentes)
+
 - Landing (desktop only): qué es, para quién, problema que resuelve, CTA Registrarse / Acceder.
 - Auth: Login y Registro (registro define tipo de usuario).
 - Home post-login:
@@ -41,6 +45,7 @@ SECCIONES OBLIGATORIAS (routing + componentes)
 - Historial: lista cronológica simple (monto, estado, fecha).
 
 MODELO DE DATOS MÍNIMO (nombres sugeridos de archivos)
+
 - `core/models/enums.ts`
   - ChargeStatus: CREATED, PRESENTED, PAYMENT_SENT, CONFIRMED, FAILED, EXPIRED, CANCELED, ABANDONED
   - ChannelType: QR, LINK, NFC_PRESENTATION, PROXIMITY_SHARE
@@ -50,6 +55,7 @@ MODELO DE DATOS MÍNIMO (nombres sugeridos de archivos)
 - `core/models/payment-intent.model.ts` — PaymentIntent {id,amountCents,status,channels,reference,createdAt,note?,saleId?}
 
 REGLAS CLAVE DE DOMINIO (must implement & document)
+
 1. Orquestación vs persistencia
    - PaymentStateService: ORQUESTADOR. Debe:
      - Validar transiciones (permitidas).
@@ -83,6 +89,7 @@ REGLAS CLAVE DE DOMINIO (must implement & document)
    - Si en futuro se añade reserva, implementar como fase separada (reserva con expiración y liberación).
 
 IMPLEMENTACIÓN TÉCNICA RECOMENDADA (stubs / archivos)
+
 - `core/services/payment-state.service.ts`
   - Métodos: validateAndEmit(intent, to, meta?), timeout/expire helper, exposa validatedTransition$ (Observable/Signal).
   - No persistencia; mapeo ABANDONED→EXPIRED documentado si se desea.
@@ -107,6 +114,7 @@ IMPLEMENTACIÓN TÉCNICA RECOMENDADA (stubs / archivos)
   - Usar Vitest or @angular/build test config already in repo.
 
 UX / COMPORTAMIENTO (detallado)
+
 - Landing: visible solo en desktop.
 - Auth: Login/Registro con validaciones (TypeScript zod opt optional).
 - Home:
@@ -122,22 +130,26 @@ UX / COMPORTAMIENTO (detallado)
 - Mensajes legales visibles en pantallas de cobro.
 
 DOCUMENTACIÓN (obligatorio)
+
 - Guardar este PROMPT BASE en `docs/technical/frontend/prompt-base-impulsa-mvp.md` usando plantilla `00-GENERAL-DOC-TEMPLATE.md` o `01-FEATURE-DESIGN-TEMPLATE.md` según corresponda.
 - Añadir decisión sobre ABANDONED mapping, stock-only-on-confirmed, naming NFC en la sección de decisiones (Appendix A Change Log).
 - Actualizar frontmatter `last_updated` y versión semántica.
 
 LÍMITES DEL MVP (recordatorio)
+
 - NO integrar gateways de pago reales.
 - NO wallets, NO CFDI, NO roles avanzados.
 - No prometer acreditación instantánea.
 - No manipular dinero; mostrar copy legal.
 
 OBJETIVO DEL CÓDIGO
+
 - Mockups funcionales con flujos operativos que permiten navegación completa y pruebas de UX/estados.
 - Componentes reutilizables, código claro y extensible.
 - Evitar deuda técnica: separar orquestador (PaymentStateService) de repositorio (MockApiService).
 
 ENTREGABLES MÍNIMOS
+
 - Scaffolding Angular con módulos lazy-loaded: landing, auth, app-shell, business (inventory, sales), person (charge, history), shared, core.
 - Modelos en `core/models/*`.
 - `PaymentStateService` (orquestador) y `MockApiService` (persistente localStorage).
@@ -149,6 +161,7 @@ ENTREGABLES MÍNIMOS
 - README con pasos mínimos (instalación con Bun y comandos de run/build).
 
 NOTAS FINALES (disciplinas)
+
 - Nombrado semántico: usar `NFC_PRESENTATION` y `PROXIMITY_SHARE` en código y documentación.
 - PaymentStateService: NO persistir intents.
 - MockApiService: ser la fuente de verdad en MVP.

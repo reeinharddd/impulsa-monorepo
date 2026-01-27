@@ -58,38 +58,43 @@ mcp_tools:
 ## Checks
 
 ### TypeScript
+
 - [ ] No `any` types
 - [ ] Explicit return types on public methods
 - [ ] No unused imports
 - [ ] Proper error handling
 
 ### Architecture
+
 - [ ] Controllers are thin
 - [ ] Business logic in services
 - [ ] DTOs for all inputs
 
 ### Angular (if frontend)
+
 - [ ] Standalone components
 - [ ] OnPush change detection
 - [ ] Signals for state
 - [ ] @if/@for control flow
 
 ### Testing
+
 - [ ] Tests for new code
 - [ ] No skipped tests
 - [ ] Coverage maintained
 
 ### Documentation
+
 - [ ] Updated if needed
 - [ ] Correct template used
 
 ## Severity
 
-| Level | Action |
-|:------|:-------|
-| 🔴 Error | Must fix |
+| Level      | Action     |
+| :--------- | :--------- |
+| 🔴 Error   | Must fix   |
 | 🟡 Warning | Should fix |
-| 🔵 Info | Consider |
+| 🔵 Info    | Consider   |
 
 ## Reference
 

@@ -229,14 +229,14 @@ Allows users to request money from others (e.g., "Sell my console"). Generates a
 
 Tracks money returned to the customer.
 
-| Attribute               | Type          | Description             | Rules & Constraints                                  |
-| :---------------------- | :------------ | :---------------------- | :--------------------------------------------------- |
-| `id`                    | UUID          | Unique identifier.      | Primary Key.                                         |
-| `transactionId`         | UUID          | Original charge.        | Foreign Key to `Transaction`.                        |
-| `amount`                | DECIMAL(19,4) | Refunded amount.        | Must be <= original transaction amount.              |
-| `reason`                | VARCHAR       | Explanation.            | e.g., "Defective product", "Customer request".       |
-| `status`                | ENUM          | Processing state.       | `PENDING`, `COMPLETED`, `FAILED`.                    |
-| `createdAt`             | TIMESTAMP     | Timestamp.              | Immutable.                                           |
+| Attribute       | Type          | Description        | Rules & Constraints                            |
+| :-------------- | :------------ | :----------------- | :--------------------------------------------- |
+| `id`            | UUID          | Unique identifier. | Primary Key.                                   |
+| `transactionId` | UUID          | Original charge.   | Foreign Key to `Transaction`.                  |
+| `amount`        | DECIMAL(19,4) | Refunded amount.   | Must be <= original transaction amount.        |
+| `reason`        | VARCHAR       | Explanation.       | e.g., "Defective product", "Customer request". |
+| `status`        | ENUM          | Processing state.  | `PENDING`, `COMPLETED`, `FAILED`.              |
+| `createdAt`     | TIMESTAMP     | Timestamp.         | Immutable.                                     |
 
 ---
 
@@ -327,7 +327,7 @@ CHECK (
   "id": "txn_999",
   "saleId": "sale_1024",
   "businessId": "bus_123",
-  "amount": 150.00,
+  "amount": 150.0,
   "currency": "MXN",
   "type": "PAYMENT",
   "status": "COMPLETED",
@@ -347,13 +347,16 @@ CHECK (
   "id": "wall_888",
   "userId": "user_789",
   "currency": "MXN",
-  "balance": 500.00,
+  "balance": 500.0,
   "status": "ACTIVE",
   "updatedAt": "2023-10-27T10:00:00Z"
 }
 ```
 
-  (status = 'COMPLETED' OR status = 'FAILED') IS NOT FALSE -- Once final, cannot change?
-  -- (Actually, better handled by app state machine, but DB ensures valid ENUMs)
+(status = 'COMPLETED' OR status = 'FAILED') IS NOT FALSE -- Once final, cannot change?
+-- (Actually, better handled by app state machine, but DB ensures valid ENUMs)
 );
+
+```
+
 ```

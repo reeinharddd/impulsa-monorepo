@@ -138,7 +138,6 @@ We use `@ngx-translate/core` for dynamic runtime translations.
 - **Asset Location:** `public/assets/i18n/*.json`
 - **Pattern:** Use the `translate` pipe: `{{ 'MODULE.KEY' | translate }}`
 
-
 ## Workflow for New UI Features
 
 1.  **Identify Atoms:** What basic elements are needed?

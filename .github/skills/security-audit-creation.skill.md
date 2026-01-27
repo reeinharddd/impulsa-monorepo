@@ -65,40 +65,51 @@ mcp_tools:
 # [Feature/System] - Security Audit
 
 ## Audit Metadata
+
 - Date: YYYY-MM-DD
 - Auditor: @username
 - Scope: [description]
 - Classification: internal | confidential
 
 ## Executive Summary
+
 [High-level findings]
 
 ## Threat Model
+
 ### Assets
+
 - [asset]: [classification]
 
 ### Threat Actors
+
 - [actor]: [capability]
 
 ### Attack Vectors
+
 - [vector]: [mitigation]
 
 ## Findings
 
 ### Critical
-| ID | Title | Status | Remediation |
-|:---|:------|:-------|:------------|
+
+| ID  | Title | Status | Remediation |
+| :-- | :---- | :----- | :---------- |
 
 ### High
+
 ...
 
 ### Medium
+
 ...
 
 ### Low
+
 ...
 
 ## Compliance Status
+
 - [ ] OWASP Top 10
 - [ ] PCI-DSS (if applicable)
 - [ ] GDPR (if applicable)
@@ -109,18 +120,18 @@ mcp_tools:
 ```markdown
 ## OWASP Top 10 (2021)
 
-| # | Category | Status | Notes |
-|:--|:---------|:-------|:------|
-| A01 | Broken Access Control | ✅/⚠️/❌ | |
-| A02 | Cryptographic Failures | ✅/⚠️/❌ | |
-| A03 | Injection | ✅/⚠️/❌ | |
-| A04 | Insecure Design | ✅/⚠️/❌ | |
-| A05 | Security Misconfiguration | ✅/⚠️/❌ | |
-| A06 | Vulnerable Components | ✅/⚠️/❌ | |
-| A07 | Auth Failures | ✅/⚠️/❌ | |
-| A08 | Software/Data Integrity | ✅/⚠️/❌ | |
-| A09 | Security Logging | ✅/⚠️/❌ | |
-| A10 | SSRF | ✅/⚠️/❌ | |
+| #   | Category                  | Status   | Notes |
+| :-- | :------------------------ | :------- | :---- |
+| A01 | Broken Access Control     | ✅/⚠️/❌ |       |
+| A02 | Cryptographic Failures    | ✅/⚠️/❌ |       |
+| A03 | Injection                 | ✅/⚠️/❌ |       |
+| A04 | Insecure Design           | ✅/⚠️/❌ |       |
+| A05 | Security Misconfiguration | ✅/⚠️/❌ |       |
+| A06 | Vulnerable Components     | ✅/⚠️/❌ |       |
+| A07 | Auth Failures             | ✅/⚠️/❌ |       |
+| A08 | Software/Data Integrity   | ✅/⚠️/❌ |       |
+| A09 | Security Logging          | ✅/⚠️/❌ |       |
+| A10 | SSRF                      | ✅/⚠️/❌ |       |
 ```
 
 ## Finding Format
@@ -139,6 +150,7 @@ mcp_tools:
 [Potential damage]
 
 **Reproduction:**
+
 1. [step]
 2. [step]
 
@@ -146,6 +158,7 @@ mcp_tools:
 [How to fix]
 
 **Remediation Timeline:**
+
 - Target: YYYY-MM-DD
 - Owner: @username
 ```
@@ -154,5 +167,4 @@ mcp_tools:
 
 - [09-SECURITY-AUDIT-TEMPLATE.md](/docs/templates/09-SECURITY-AUDIT-TEMPLATE.md)
 - [SECURITY-ARCHITECTURE.md](/docs/technical/architecture/SECURITY-ARCHITECTURE.md)
-
 ````

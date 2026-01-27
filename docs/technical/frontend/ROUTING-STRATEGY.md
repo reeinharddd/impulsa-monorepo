@@ -63,12 +63,12 @@ doc_metadata:
 
 _This section contains mandatory instructions for AI Agents (Copilot, Cursor, etc.) interacting with this document._
 
-| Directive      | Instruction                                                                         |
-| :------------- | :---------------------------------------------------------------------------------- |
-| **Context**    | Defines the URL structure and navigation behavior for the frontend.                 |
-| **Constraint** | URLs MUST be semantic, lowercase, and hyphenated (`kebab-case`). No IDs in root.    |
-| **Pattern**    | `/:module/:resource/:action` (e.g., `/inventory/products/create`).                  |
-| **Rule**       | All modules MUST be lazy-loaded. No leaky abstractions in URLs.                     |
+| Directive      | Instruction                                                                      |
+| :------------- | :------------------------------------------------------------------------------- |
+| **Context**    | Defines the URL structure and navigation behavior for the frontend.              |
+| **Constraint** | URLs MUST be semantic, lowercase, and hyphenated (`kebab-case`). No IDs in root. |
+| **Pattern**    | `/:module/:resource/:action` (e.g., `/inventory/products/create`).               |
+| **Rule**       | All modules MUST be lazy-loaded. No leaky abstractions in URLs.                  |
 
 ---
 
@@ -87,14 +87,14 @@ _This section contains mandatory instructions for AI Agents (Copilot, Cursor, et
 
 We distinguish between Public and Private areas.
 
-| Segment | Purpose | Example | Guard |
-| :--- | :--- | :--- | :--- |
-| `/` | Landing Page (Marketing) | `impulsa.com/` | None |
-| `/auth` | Authentication (Login/Register) | `impulsa.com/auth/login` | PublicGuard |
-| `/onboarding` | New User Setup | `impulsa.com/onboarding/welcome` | AuthGuard |
-| `/*` (App) | Main Application Modules | `impulsa.com/dashboard` | AuthGuard |
+| Segment       | Purpose                         | Example                          | Guard       |
+| :------------ | :------------------------------ | :------------------------------- | :---------- |
+| `/`           | Landing Page (Marketing)        | `impulsa.com/`                   | None        |
+| `/auth`       | Authentication (Login/Register) | `impulsa.com/auth/login`         | PublicGuard |
+| `/onboarding` | New User Setup                  | `impulsa.com/onboarding/welcome` | AuthGuard   |
+| `/*` (App)    | Main Application Modules        | `impulsa.com/dashboard`          | AuthGuard   |
 
-*Note: We avoid the `/app` prefix to keep URLs shorter and cleaner for the main usage, unless technical constraints require it.*
+_Note: We avoid the `/app` prefix to keep URLs shorter and cleaner for the main usage, unless technical constraints require it._
 
 ### 2.2. Localization Strategy (i18n)
 
@@ -103,25 +103,27 @@ We use **URL-based Localization**. Angular builds separate apps for each locale.
 - **English (Default):** `domain.com/...`
 - **Spanish:** `domain.com/es/...` (or subdomains `es.domain.com`)
 
-*Decision:* Use path prefixes (`/es/`) for easiest infrastructure setup and SEO consolidation.
+_Decision:_ Use path prefixes (`/es/`) for easiest infrastructure setup and SEO consolidation.
 
 ### 2.3. Route Patterns
 
-| Pattern | Description | Example |
-| :--- | :--- | :--- |
-| `/` | Dashboard / Overview | `domain.com/dashboard` |
-| `/:module` | Module Root (List/Summary) | `domain.com/inventory` |
-| `/:module/:resource` | Specific Resource List | `domain.com/inventory/products` |
-| `/:module/:resource/:id` | Resource Detail | `domain.com/inventory/products/prod-123` |
-| `/:module/:resource/:id/edit` | Resource Edit | `domain.com/inventory/products/prod-123/edit` |
-| `/:module/:resource/new` | Resource Creation | `domain.com/inventory/products/new` |
+| Pattern                       | Description                | Example                                       |
+| :---------------------------- | :------------------------- | :-------------------------------------------- |
+| `/`                           | Dashboard / Overview       | `domain.com/dashboard`                        |
+| `/:module`                    | Module Root (List/Summary) | `domain.com/inventory`                        |
+| `/:module/:resource`          | Specific Resource List     | `domain.com/inventory/products`               |
+| `/:module/:resource/:id`      | Resource Detail            | `domain.com/inventory/products/prod-123`      |
+| `/:module/:resource/:id/edit` | Resource Edit              | `domain.com/inventory/products/prod-123/edit` |
+| `/:module/:resource/new`      | Resource Creation          | `domain.com/inventory/products/new`           |
 
 ## 3. Module Routing Map
 
 ### 3.1. Dashboard (`/dashboard`)
+
 - **Main View:** High-level metrics, alerts, quick actions.
 
 ### 3.2. Point of Sale (`/pos`)
+
 - **Focus:** Distraction-free interface.
 - **Sub-routes:**
   - `/pos` (The Terminal)
@@ -129,6 +131,7 @@ We use **URL-based Localization**. Angular builds separate apps for each locale.
   - `/pos/close` (Shift closing)
 
 ### 3.3. Inventory (`/inventory`)
+
 - **Main View:** Stock alerts and summary.
 - **Resources:**
   - `/inventory/products` (Catalog)
@@ -136,11 +139,13 @@ We use **URL-based Localization**. Angular builds separate apps for each locale.
   - `/inventory/suppliers` (Providers)
 
 ### 3.4. Orders (`/orders`)
+
 - **Focus:** Order management status pipeline.
 - `/orders` (Kanban/List)
 - `/orders/:id` (Detail)
 
 ### 3.5. Settings (`/settings`)
+
 - `/settings/profile`
 - `/settings/business`
 - `/settings/team`
@@ -156,29 +161,29 @@ Use **Standalone Components** and `loadComponent` / `loadChildren`.
 // app.routes.ts
 export const routes: Routes = [
   {
-    path: '',
-    redirectTo: 'dashboard',
-    pathMatch: 'full'
+    path: "",
+    redirectTo: "dashboard",
+    pathMatch: "full",
   },
   {
-    path: 'auth',
-    loadChildren: () => import('./features/auth/auth.routes')
+    path: "auth",
+    loadChildren: () => import("./features/auth/auth.routes"),
   },
   {
-    path: '',
+    path: "",
     component: MainLayoutComponent, // Shell
     canActivate: [AuthGuard],
     children: [
       {
-        path: 'dashboard',
-        loadComponent: () => import('./features/dashboard/dashboard.component')
+        path: "dashboard",
+        loadComponent: () => import("./features/dashboard/dashboard.component"),
       },
       {
-        path: 'inventory',
-        loadChildren: () => import('./features/inventory/inventory.routes')
-      }
-    ]
-  }
+        path: "inventory",
+        loadChildren: () => import("./features/inventory/inventory.routes"),
+      },
+    ],
+  },
 ];
 ```
 

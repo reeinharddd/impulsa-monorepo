@@ -66,12 +66,12 @@ handoff:
 
 ## MCP Tools
 
-| Tool | Purpose | When to Use |
-|:-----|:--------|:------------|
-| `mcp_payment-syste_query_docs_by_type` | Get all schema docs | Filter by "database-schema" |
-| `mcp_payment-syste_get_doc_context` | Load schema with relations | Understanding full context |
-| `prisma-migrate-dev` | Create migrations | After schema changes |
-| `mcp_sequentialthi_sequentialthinking` | Complex schema design | Multi-table relationships |
+| Tool                                   | Purpose                    | When to Use                 |
+| :------------------------------------- | :------------------------- | :-------------------------- |
+| `mcp_payment-syste_query_docs_by_type` | Get all schema docs        | Filter by "database-schema" |
+| `mcp_payment-syste_get_doc_context`    | Load schema with relations | Understanding full context  |
+| `prisma-migrate-dev`                   | Create migrations          | After schema changes        |
+| `mcp_sequentialthi_sequentialthinking` | Complex schema design      | Multi-table relationships   |
 
 ## Context Loading
 
@@ -90,22 +90,22 @@ read_file("/docs/templates/03-DATABASE-SCHEMA-TEMPLATE.md")
 3. **Design with `sequentialthinking`** - Plan relationships
 4. **Update schema.prisma** - Define models
 5. **Create migration** - `prisma-migrate-dev`
-6. **Document** - Create/update *-SCHEMA.md using template
+6. **Document** - Create/update \*-SCHEMA.md using template
 7. **Update ER diagram** - Modify FULL-ER-DIAGRAM.md
 
 ## Schema Modules
 
-| Module | Schema Doc | Tables |
-|:-------|:-----------|:-------|
-| Authentication | 01-AUTH-SCHEMA.md | User, Business, Role |
-| Business | 02-BUSINESS-SCHEMA.md | Merchant, Location |
-| Communication | 03-COMMUNICATION-SCHEMA.md | Notification, Template |
-| Inventory | 04-INVENTORY-SCHEMA.md | Product, Category, Stock |
-| Sales | 05-SALES-SCHEMA.md | Order, OrderItem, Cart |
-| Payments | 06-PAYMENTS-SCHEMA.md | Payment, Transaction |
-| Billing | 07-BILLING-SCHEMA.md | Invoice, TaxConfig |
-| CRM | 08-CRM-SCHEMA.md | Customer, Loyalty |
-| Analytics | 09-ANALYTICS-SCHEMA.md | Metrics, Reports |
+| Module         | Schema Doc                 | Tables                   |
+| :------------- | :------------------------- | :----------------------- |
+| Authentication | 01-AUTH-SCHEMA.md          | User, Business, Role     |
+| Business       | 02-BUSINESS-SCHEMA.md      | Merchant, Location       |
+| Communication  | 03-COMMUNICATION-SCHEMA.md | Notification, Template   |
+| Inventory      | 04-INVENTORY-SCHEMA.md     | Product, Category, Stock |
+| Sales          | 05-SALES-SCHEMA.md         | Order, OrderItem, Cart   |
+| Payments       | 06-PAYMENTS-SCHEMA.md      | Payment, Transaction     |
+| Billing        | 07-BILLING-SCHEMA.md       | Invoice, TaxConfig       |
+| CRM            | 08-CRM-SCHEMA.md           | Customer, Loyalty        |
+| Analytics      | 09-ANALYTICS-SCHEMA.md     | Metrics, Reports         |
 
 ## Prisma Conventions
 
@@ -143,6 +143,7 @@ model Example {
 ## Handoff
 
 After schema design, triggers:
+
 - **@Backend** - For service implementation
 - **schema-doc-sync.skill** - For doc updates
 

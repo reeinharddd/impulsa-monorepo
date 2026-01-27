@@ -17,16 +17,35 @@ describe('MockApiService', () => {
   });
 
   it('should create Product and retrieve it', () => {
-    const p = service.createProduct({ name: 'Test Prod', priceCents: 500, stock: 10, active: true });
+    const p = service.createProduct({
+      name: 'Test Prod',
+      priceCents: 500,
+      stock: 10,
+      active: true,
+    });
     expect(p.id).toBeDefined();
     expect(service.listProducts().length).toBeGreaterThan(0);
   });
 
   it('should decrement stock when Payment is CONFIRMED', () => {
     // 1. Setup Data
-    const product = service.createProduct({ name: 'Test', priceCents: 100, stock: 10, active: true });
-    const sale = service.createSale({ items: [{ product, quantity: 2 }], totalCents: 200, reference: 'SALE1' });
-    const intent = service.createPaymentIntent({ amountCents: 200, channels: [], reference: 'REF1', saleId: sale.id });
+    const product = service.createProduct({
+      name: 'Test',
+      priceCents: 100,
+      stock: 10,
+      active: true,
+    });
+    const sale = service.createSale({
+      items: [{ product, quantity: 2 }],
+      totalCents: 200,
+      reference: 'SALE1',
+    });
+    const intent = service.createPaymentIntent({
+      amountCents: 200,
+      channels: [],
+      reference: 'REF1',
+      saleId: sale.id,
+    });
 
     // Set status to PAYMENT_SENT manually or via flow
     // We cheat and update internal state or just rely on orchestrator validation?
@@ -42,7 +61,7 @@ describe('MockApiService', () => {
     paymentState.validateAndEmit(intentSent, ChargeStatus.CONFIRMED);
 
     // 3. Check Persistence
-    const updatedProd = service.listProducts().find(p => p.id === product.id);
+    const updatedProd = service.listProducts().find((p) => p.id === product.id);
     expect(updatedProd?.stock).toBe(8); // 10 - 2
 
     const updatedSale = service.getSale(sale.id);

@@ -27,8 +27,9 @@ These instructions apply to all TypeScript files in the API application.
 ## Code Patterns
 
 ### Controller Pattern
+
 ```typescript
-@Controller('resource')
+@Controller("resource")
 export class ResourceController {
   constructor(private readonly service: ResourceService) {}
 
@@ -40,6 +41,7 @@ export class ResourceController {
 ```
 
 ### Service Pattern
+
 ```typescript
 @Injectable()
 export class ResourceService {
@@ -50,7 +52,7 @@ export class ResourceService {
 
   async create(dto: CreateResourceDto): Promise<Resource> {
     const resource = await this.prisma.resource.create({ data: dto });
-    this.events.emit('resource.created', resource);
+    this.events.emit("resource.created", resource);
     return resource;
   }
 }

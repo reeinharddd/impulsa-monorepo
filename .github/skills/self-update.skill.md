@@ -65,16 +65,17 @@ mcp_tools:
 
 ## Watched Paths
 
-| Path | Component Type | Updates |
-|:-----|:---------------|:--------|
-| `.github/agents/*.agent.md` | Subagent | AGENTS.md routing, agents/README.md |
-| `.github/skills/*.skill.md` | Skill | skills/README.md, trigger tables |
-| `.github/instructions/*.instructions.md` | Instruction | instructions/README.md |
-| `docs/templates/*.md` | Template | Documentation workflow |
+| Path                                     | Component Type | Updates                             |
+| :--------------------------------------- | :------------- | :---------------------------------- |
+| `.github/agents/*.agent.md`              | Subagent       | AGENTS.md routing, agents/README.md |
+| `.github/skills/*.skill.md`              | Skill          | skills/README.md, trigger tables    |
+| `.github/instructions/*.instructions.md` | Instruction    | instructions/README.md              |
+| `docs/templates/*.md`                    | Template       | Documentation workflow              |
 
 ## Update Chains
 
 ### New Agent Added
+
 ```
 Security.agent.md created
     ↓
@@ -84,6 +85,7 @@ Security.agent.md created
 ```
 
 ### New Skill Added
+
 ```
 new-skill.skill.md created
     ↓
@@ -93,6 +95,7 @@ new-skill.skill.md created
 ```
 
 ### Agent Modified
+
 ```
 Backend.agent.md modified
     ↓
@@ -104,36 +107,43 @@ Backend.agent.md modified
 ## Auto-Update Fields
 
 ### In Agent/Skill Files
+
 ```yaml
-version: "1.0.0"      # Bump on changes
-last_updated: "YYYY-MM-DD"  # Set to today
+version: "1.0.0" # Bump on changes
+last_updated: "YYYY-MM-DD" # Set to today
 ```
 
 ### In README Files
+
 ```markdown
 | Agent | File | Domain | Primary MCP Tools |
+
 # Re-scan directory and rebuild table
 ```
 
 ### In AGENTS.md
+
 ```markdown
 ## Agent Routing
+
 | Keywords | Route To |
+
 # Re-scan agent keywords and rebuild
 ```
 
 ## Version Bumping Rules
 
-| Change Type | Version Bump |
-|:------------|:-------------|
-| Fix typo, comment | No bump |
-| Update tools, workflow | Patch (0.0.X) |
+| Change Type                  | Version Bump  |
+| :--------------------------- | :------------ |
+| Fix typo, comment            | No bump       |
+| Update tools, workflow       | Patch (0.0.X) |
 | Add section, change behavior | Minor (0.X.0) |
-| Breaking change | Major (X.0.0) |
+| Breaking change              | Major (X.0.0) |
 
 ## Consistency Checks
 
 After any update:
+
 - [ ] All agents in README table
 - [ ] All skills in README table
 - [ ] AGENTS.md routing matches agent keywords
@@ -147,9 +157,9 @@ When system changes, add to AGENTS.md changelog:
 ```markdown
 ## Change Log
 
-| Version | Date | Changes |
-|:--------|:-----|:--------|
-| 4.0.0 | 2026-01-26 | Added @Security, @DataArchitect, @SyncEngineer, @DevOps agents |
+| Version | Date       | Changes                                                        |
+| :------ | :--------- | :------------------------------------------------------------- |
+| 4.0.0   | 2026-01-26 | Added @Security, @DataArchitect, @SyncEngineer, @DevOps agents |
 ```
 
 ## Workflow
@@ -167,9 +177,9 @@ When system changes, add to AGENTS.md changelog:
 {
   "trigger": "Security.agent.md created",
   "updates": [
-    {"file": "agents/README.md", "action": "add_row"},
-    {"file": "AGENTS.md", "action": "add_routing"},
-    {"file": "copilot-instructions.md", "action": "add_to_mcp_table"}
+    { "file": "agents/README.md", "action": "add_row" },
+    { "file": "AGENTS.md", "action": "add_routing" },
+    { "file": "copilot-instructions.md", "action": "add_to_mcp_table" }
   ],
   "validation": "passed"
 }

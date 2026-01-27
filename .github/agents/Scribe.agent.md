@@ -71,11 +71,11 @@ handoff:
 
 ## MCP Tools
 
-| Tool | Purpose | When to Use |
-|:-----|:--------|:------------|
-| `mcp_payment-syste_search_full_text` | Search all docs | Find related documentation |
-| `mcp_payment-syste_query_docs_by_type` | Filter by doc type | Get all APIs, all schemas, etc. |
-| `mcp_payment-syste_get_doc_context` | Load doc with relations | Understand doc dependencies |
+| Tool                                   | Purpose                 | When to Use                     |
+| :------------------------------------- | :---------------------- | :------------------------------ |
+| `mcp_payment-syste_search_full_text`   | Search all docs         | Find related documentation      |
+| `mcp_payment-syste_query_docs_by_type` | Filter by doc type      | Get all APIs, all schemas, etc. |
+| `mcp_payment-syste_get_doc_context`    | Load doc with relations | Understand doc dependencies     |
 
 ## Context Loading
 
@@ -98,18 +98,18 @@ read_file("/docs/templates/[NN]-[TYPE]-TEMPLATE.md")
 
 ## Template Selection
 
-| Type | Template |
-|:-----|:---------|
-| General | 00-GENERAL-DOC |
-| Feature | 01-FEATURE-DESIGN |
-| ADR | 02-ADR |
-| Database | 03-DATABASE-SCHEMA |
-| API | 04-API-DESIGN |
-| Sync | 05-SYNC-STRATEGY |
-| UX | 06-UX-FLOW |
-| Testing | 07-TESTING-STRATEGY |
-| Deploy | 08-DEPLOYMENT-RUNBOOK |
-| Security | 09-SECURITY-AUDIT |
+| Type     | Template              |
+| :------- | :-------------------- |
+| General  | 00-GENERAL-DOC        |
+| Feature  | 01-FEATURE-DESIGN     |
+| ADR      | 02-ADR                |
+| Database | 03-DATABASE-SCHEMA    |
+| API      | 04-API-DESIGN         |
+| Sync     | 05-SYNC-STRATEGY      |
+| UX       | 06-UX-FLOW            |
+| Testing  | 07-TESTING-STRATEGY   |
+| Deploy   | 08-DEPLOYMENT-RUNBOOK |
+| Security | 09-SECURITY-AUDIT     |
 
 ## Commit Format
 

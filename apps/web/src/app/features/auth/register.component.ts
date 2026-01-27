@@ -7,6 +7,6 @@ import { TranslateModule } from '@ngx-translate/core';
   selector: 'app-register',
   standalone: true,
   imports: [CommonModule, RouterLink, TranslateModule],
-  templateUrl: './register.component.html'
+  templateUrl: './register.component.html',
 })
 export class RegisterComponent {}

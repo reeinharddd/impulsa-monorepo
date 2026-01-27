@@ -58,13 +58,13 @@ mcp_tools:
 
 ## Index Files
 
-| Directory | Index File | Purpose |
-|:----------|:-----------|:--------|
-| `docs/` | README.md | Main documentation hub |
-| `docs/technical/architecture/` | README.md | Architecture overview |
-| `docs/technical/backend/database/` | README.md | Schema index |
-| `docs/technical/frontend/` | README.md | Frontend docs index |
-| `docs/templates/` | README.md | Template guide |
+| Directory                          | Index File | Purpose                |
+| :--------------------------------- | :--------- | :--------------------- |
+| `docs/`                            | README.md  | Main documentation hub |
+| `docs/technical/architecture/`     | README.md  | Architecture overview  |
+| `docs/technical/backend/database/` | README.md  | Schema index           |
+| `docs/technical/frontend/`         | README.md  | Frontend docs index    |
+| `docs/templates/`                  | README.md  | Template guide         |
 
 ## Index Format
 
@@ -73,45 +73,49 @@ mcp_tools:
 
 ## Contents
 
-| Document | Type | Status | Description |
-|:---------|:-----|:-------|:------------|
+| Document            | Type           | Status   | Description       |
+| :------------------ | :------------- | :------- | :---------------- |
 | [Doc Name](path.md) | feature-design | approved | Brief description |
 ```
 
 ## Auto-Generated Sections
 
 ### From Frontmatter
+
 ```yaml
-document_type: "feature-design"  # → Type column
-status: "approved"               # → Status column
+document_type: "feature-design" # → Type column
+status: "approved" # → Status column
 # First line of content          # → Description
 ```
 
 ### Directory Tree
+
 ```markdown
 ## Structure
-
 ```
+
 docs/technical/backend/
 ├── DATABASE-DESIGN.md
 ├── database/
-│   ├── 01-AUTH-SCHEMA.md
-│   ├── 02-BUSINESS-SCHEMA.md
-│   └── ...
+│ ├── 01-AUTH-SCHEMA.md
+│ ├── 02-BUSINESS-SCHEMA.md
+│ └── ...
 └── features/
-    └── FEAT-001-AUTH-MODULE.md
+└── FEAT-001-AUTH-MODULE.md
+
 ```
+
 ```
 
 ## Update Actions
 
-| Action | Index Change |
-|:-------|:-------------|
-| File created | Add row to table |
-| File deleted | Remove row |
-| File renamed | Update link |
-| Status changed | Update status column |
-| Moved | Update path, possibly different index |
+| Action         | Index Change                          |
+| :------------- | :------------------------------------ |
+| File created   | Add row to table                      |
+| File deleted   | Remove row                            |
+| File renamed   | Update link                           |
+| Status changed | Update status column                  |
+| Moved          | Update path, possibly different index |
 
 ## Workflow
 
@@ -125,6 +129,7 @@ docs/technical/backend/
 ## GLOSSARY.md Sync
 
 When new terms are introduced:
+
 1. Check if term exists in GLOSSARY.md
 2. If not, add to appropriate section
 3. Maintain alphabetical order
@@ -132,6 +137,7 @@ When new terms are introduced:
 ## Cross-Reference Validation
 
 After index update:
+
 - [ ] All links resolve
 - [ ] No orphan files (not in any index)
 - [ ] Status badges accurate

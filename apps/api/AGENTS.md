@@ -71,7 +71,9 @@ export class ProductController {
 
   @Get()
   @ApiOperation({ summary: 'List products' })
-  findAll(@Query() query: ListProductsDto): Promise<PaginatedResponse<Product>> {
+  findAll(
+    @Query() query: ListProductsDto,
+  ): Promise<PaginatedResponse<Product>> {
     return this.productService.findAll(query);
   }
 
@@ -147,6 +149,7 @@ interface IPaymentProvider {
 ```
 
 **Supported Countries:**
+
 - 🇲🇽 Mexico: Conekta
 - 🇨🇴 Colombia: PayU
 - 🇦🇷 Argentina: MercadoPago
@@ -192,6 +195,7 @@ bun run --filter @impulsa/api test:e2e
 ```
 
 **Coverage targets:**
+
 - Services: 80%
 - Controllers: 70%
 - Critical paths: 95%

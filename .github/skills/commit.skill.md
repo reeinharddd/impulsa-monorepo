@@ -58,24 +58,24 @@ type(scope): description
 
 ## Types
 
-| Change | Type |
-|:-------|:-----|
-| New feature | `feat` |
-| Bug fix | `fix` |
-| Documentation | `docs` |
-| Refactor | `refactor` |
-| Tests | `test` |
-| Build/deps | `chore` |
+| Change        | Type       |
+| :------------ | :--------- |
+| New feature   | `feat`     |
+| Bug fix       | `fix`      |
+| Documentation | `docs`     |
+| Refactor      | `refactor` |
+| Tests         | `test`     |
+| Build/deps    | `chore`    |
 
 ## Scope Detection
 
-| Path | Scope |
-|:-----|:------|
-| `apps/api/**` | `api` |
-| `apps/web/**` | `web` |
-| `prisma/**` | `db` |
-| `docs/**` | `docs` |
-| `libs/ui/**` | `ui` |
+| Path          | Scope  |
+| :------------ | :----- |
+| `apps/api/**` | `api`  |
+| `apps/web/**` | `web`  |
+| `prisma/**`   | `db`   |
+| `docs/**`     | `docs` |
+| `libs/ui/**`  | `ui`   |
 
 ## Examples
 

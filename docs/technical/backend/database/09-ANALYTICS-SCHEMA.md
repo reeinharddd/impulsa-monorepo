@@ -75,13 +75,13 @@ schema_stats:
 
 _This section contains mandatory instructions for AI Agents (Copilot, Cursor, etc.) interacting with this document._
 
-| Directive      | Instruction                                                                                       |
-| :------------- | :------------------------------------------------------------------------------------------------ |
-| **Context**    | Stores pre-calculated aggregations to speed up dashboard loading and reporting.                   |
-| **Constraint** | **Read-Only:** These tables are populated by background jobs, NOT by direct user action.          |
-| **Pattern**    | **Materialized View:** Data is eventually consistent (e.g., updated every 5-15 minutes).          |
-| **Rule**       | **Retention:** Granular data (hourly) may be archived after 1 year; daily data is kept forever.   |
-| **Related**    | `apps/backend/src/modules/analytics/`                                                             |
+| Directive      | Instruction                                                                                     |
+| :------------- | :---------------------------------------------------------------------------------------------- |
+| **Context**    | Stores pre-calculated aggregations to speed up dashboard loading and reporting.                 |
+| **Constraint** | **Read-Only:** These tables are populated by background jobs, NOT by direct user action.        |
+| **Pattern**    | **Materialized View:** Data is eventually consistent (e.g., updated every 5-15 minutes).        |
+| **Rule**       | **Retention:** Granular data (hourly) may be archived after 1 year; daily data is kept forever. |
+| **Related**    | `apps/backend/src/modules/analytics/`                                                           |
 
 ---
 
@@ -180,67 +180,67 @@ package "analytics" #E1BEE7 {
 
 The "Heartbeat" of the business. One row per branch per day.
 
-| Attribute          | Type          | Description        | Rules & Constraints                                  |
-| :----------------- | :------------ | :----------------- | :--------------------------------------------------- |
-| `id`               | UUID          | Unique identifier. | Primary Key.                                         |
-| `businessId`       | UUID          | Tenant owner.      | Foreign Key to `business.Business`.                  |
-| `branchId`         | UUID          | Location.          | Foreign Key to `business.Branch`.                    |
-| `date`             | DATE          | The day.           | Unique Constraint `(branchId, date)`.                |
-| `totalRevenue`     | DECIMAL(19,4) | Sales total.       | Sum of `Sale.total` (Completed only).                |
-| `totalCost`        | DECIMAL(19,4) | COGS.              | Sum of `SaleItem.cost * quantity`.                   |
-| `grossProfit`      | DECIMAL(19,4) | Margin.            | `totalRevenue - totalCost`.                          |
-| `transactionCount` | INT           | Volume.            | Number of sales.                                     |
-| `averageTicket`    | DECIMAL(19,4) | KPI.               | `totalRevenue / transactionCount`.                   |
-| `updatedAt`        | TIMESTAMP     | Last calc.         |                                                      |
+| Attribute          | Type          | Description        | Rules & Constraints                   |
+| :----------------- | :------------ | :----------------- | :------------------------------------ |
+| `id`               | UUID          | Unique identifier. | Primary Key.                          |
+| `businessId`       | UUID          | Tenant owner.      | Foreign Key to `business.Business`.   |
+| `branchId`         | UUID          | Location.          | Foreign Key to `business.Branch`.     |
+| `date`             | DATE          | The day.           | Unique Constraint `(branchId, date)`. |
+| `totalRevenue`     | DECIMAL(19,4) | Sales total.       | Sum of `Sale.total` (Completed only). |
+| `totalCost`        | DECIMAL(19,4) | COGS.              | Sum of `SaleItem.cost * quantity`.    |
+| `grossProfit`      | DECIMAL(19,4) | Margin.            | `totalRevenue - totalCost`.           |
+| `transactionCount` | INT           | Volume.            | Number of sales.                      |
+| `averageTicket`    | DECIMAL(19,4) | KPI.               | `totalRevenue / transactionCount`.    |
+| `updatedAt`        | TIMESTAMP     | Last calc.         |                                       |
 
 ### 3.2. ProductPerformance
 
 Used for the "Top Products" report and inventory planning. Aggregated monthly.
 
-| Attribute          | Type          | Description        | Rules & Constraints                                  |
-| :----------------- | :------------ | :----------------- | :--------------------------------------------------- |
-| `id`               | UUID          | Unique identifier. | Primary Key.                                         |
-| `businessId`       | UUID          | Tenant owner.      | Foreign Key to `business.Business`.                  |
-| `productId`        | UUID          | The item.          | Foreign Key to `inventory.Product`.                  |
-| `period`           | VARCHAR(7)    | Month.             | Format `YYYY-MM`.                                    |
-| `unitsSold`        | DECIMAL(10,4) | Velocity.          | Total quantity sold.                                 |
-| `revenueGenerated` | DECIMAL(19,4) | Sales.             | Total revenue from this product.                     |
-| `profitGenerated`  | DECIMAL(19,4) | Profit.            | Revenue - Cost.                                      |
+| Attribute          | Type          | Description        | Rules & Constraints                 |
+| :----------------- | :------------ | :----------------- | :---------------------------------- |
+| `id`               | UUID          | Unique identifier. | Primary Key.                        |
+| `businessId`       | UUID          | Tenant owner.      | Foreign Key to `business.Business`. |
+| `productId`        | UUID          | The item.          | Foreign Key to `inventory.Product`. |
+| `period`           | VARCHAR(7)    | Month.             | Format `YYYY-MM`.                   |
+| `unitsSold`        | DECIMAL(10,4) | Velocity.          | Total quantity sold.                |
+| `revenueGenerated` | DECIMAL(19,4) | Sales.             | Total revenue from this product.    |
+| `profitGenerated`  | DECIMAL(19,4) | Profit.            | Revenue - Cost.                     |
 
 ### 3.3. HourlyTraffic
 
 Used for "Heatmaps" to help managers schedule staff during peak hours.
 
-| Attribute          | Type          | Description        | Rules & Constraints                                  |
-| :----------------- | :------------ | :----------------- | :--------------------------------------------------- |
-| `id`               | UUID          | Unique identifier. | Primary Key.                                         |
-| `date`             | DATE          | The day.           |                                                      |
-| `hour`             | INT           | Time slot.         | 0 to 23.                                             |
-| `transactionCount` | INT           | Busy-ness.         | Number of sales in this hour.                        |
+| Attribute          | Type | Description        | Rules & Constraints           |
+| :----------------- | :--- | :----------------- | :---------------------------- |
+| `id`               | UUID | Unique identifier. | Primary Key.                  |
+| `date`             | DATE | The day.           |                               |
+| `hour`             | INT  | Time slot.         | 0 to 23.                      |
+| `transactionCount` | INT  | Busy-ness.         | Number of sales in this hour. |
 
 ### 3.4. PaymentMethodStats
 
 Tracks how customers are paying (Cash vs Card vs Transfer).
 
-| Attribute     | Type          | Description        | Rules & Constraints                                  |
-| :------------ | :------------ | :----------------- | :--------------------------------------------------- |
-| `id`          | UUID          | Unique identifier. | Primary Key.                                         |
-| `businessId`  | UUID          | Tenant owner.      | Foreign Key to `business.Business`.                  |
-| `branchId`    | UUID          | Location.          | Foreign Key to `business.Branch`.                    |
-| `date`        | DATE          | The day.           |                                                      |
-| `method`      | ENUM          | Payment type.      | `CASH`, `CARD`, `TRANSFER`, `OTHER`.                 |
-| `totalAmount` | DECIMAL(19,4) | Sum of payments.   |                                                      |
-| `count`       | INT           | Number of txns.    |                                                      |
-| `updatedAt`   | TIMESTAMP     | Last calc.         |                                                      |
+| Attribute     | Type          | Description        | Rules & Constraints                  |
+| :------------ | :------------ | :----------------- | :----------------------------------- |
+| `id`          | UUID          | Unique identifier. | Primary Key.                         |
+| `businessId`  | UUID          | Tenant owner.      | Foreign Key to `business.Business`.  |
+| `branchId`    | UUID          | Location.          | Foreign Key to `business.Branch`.    |
+| `date`        | DATE          | The day.           |                                      |
+| `method`      | ENUM          | Payment type.      | `CASH`, `CARD`, `TRANSFER`, `OTHER`. |
+| `totalAmount` | DECIMAL(19,4) | Sum of payments.   |                                      |
+| `count`       | INT           | Number of txns.    |                                      |
+| `updatedAt`   | TIMESTAMP     | Last calc.         |                                      |
 
 ---
 
 ## 4. Performance & Indexing
 
-| Table             | Column              | Type   | Reason                                     |
-| :---------------- | :------------------ | :----- | :----------------------------------------- |
-| `DailySalesStats` | `(businessId, date)`| B-TREE | Fast range queries for "Last 30 Days".     |
-| `ProductStats`    | `(period, revenue)` | B-TREE | Fast sorting for "Top Selling Products".   |
+| Table             | Column               | Type   | Reason                                   |
+| :---------------- | :------------------- | :----- | :--------------------------------------- |
+| `DailySalesStats` | `(businessId, date)` | B-TREE | Fast range queries for "Last 30 Days".   |
+| `ProductStats`    | `(period, revenue)`  | B-TREE | Fast sorting for "Top Selling Products". |
 
 ---
 
@@ -259,35 +259,37 @@ All dates in `DailySalesStats` are stored based on the **Branch's Timezone**, no
 ## 6. Example Data & Usage Scenarios
 
 ### 6.1. Daily Sales Stats (Report)
+
 ```json
 {
   "id": "stats_20231027_br1",
   "businessId": "bus_123",
   "branchId": "br_centro",
   "date": "2023-10-27",
-  "totalRevenue": 15000.00,
-  "totalCost": 8000.00,
-  "grossProfit": 7000.00,
+  "totalRevenue": 15000.0,
+  "totalCost": 8000.0,
+  "grossProfit": 7000.0,
   "transactionCount": 150,
-  "averageTicket": 100.00,
+  "averageTicket": 100.0,
   "updatedAt": "2023-10-28T02:00:00Z"
 }
 ```
 
 ### 6.2. Product Performance (Top Seller)
+
 ```json
 {
   "id": "perf_coke_oct",
   "productId": "prod_coke",
   "period": "2023-10",
   "unitsSold": 500,
-  "revenueGenerated": 9000.00,
-  "profitGenerated": 2750.00
+  "revenueGenerated": 9000.0,
+  "profitGenerated": 2750.0
 }
 ```
 
 ## Appendix A: Change Log
 
-| Date       | Version | Author      | Changes          |
-| :--------- | :------ | :---------- | :--------------- |
-| 2025-12-05 | 1.0.0   | @Architect  | Initial creation |
+| Date       | Version | Author     | Changes          |
+| :--------- | :------ | :--------- | :--------------- |
+| 2025-12-05 | 1.0.0   | @Architect | Initial creation |

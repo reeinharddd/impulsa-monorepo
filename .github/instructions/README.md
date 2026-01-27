@@ -14,23 +14,23 @@ File Being Edited → Check applyTo Pattern → Load Instructions
 
 ## Available Instructions (6)
 
-| File | ApplyTo Pattern | Focus |
-|:-----|:----------------|:------|
-| [backend.instructions.md](backend.instructions.md) | `apps/api/**/*.ts` | NestJS patterns |
-| [frontend.instructions.md](frontend.instructions.md) | `apps/web/**/*.ts,html` | Angular 21+ |
-| [prisma.instructions.md](prisma.instructions.md) | `prisma/**,**/schema.prisma` | Database |
-| [docs.instructions.md](docs.instructions.md) | `docs/**/*.md` | Documentation |
-| [testing.instructions.md](testing.instructions.md) | `**/*.spec.ts,**/test/**` | Testing |
-| [business.instructions.md](business.instructions.md) | `docs/business/**/*.md` | Business docs |
+| File                                                 | ApplyTo Pattern              | Focus           |
+| :--------------------------------------------------- | :--------------------------- | :-------------- |
+| [backend.instructions.md](backend.instructions.md)   | `apps/api/**/*.ts`           | NestJS patterns |
+| [frontend.instructions.md](frontend.instructions.md) | `apps/web/**/*.ts,html`      | Angular 21+     |
+| [prisma.instructions.md](prisma.instructions.md)     | `prisma/**,**/schema.prisma` | Database        |
+| [docs.instructions.md](docs.instructions.md)         | `docs/**/*.md`               | Documentation   |
+| [testing.instructions.md](testing.instructions.md)   | `**/*.spec.ts,**/test/**`    | Testing         |
+| [business.instructions.md](business.instructions.md) | `docs/business/**/*.md`      | Business docs   |
 
 ## Instructions vs Subagents vs Skills
 
-| Aspect | Instructions | Subagents | Skills |
-|:-------|:-------------|:----------|:-------|
-| Trigger | File path match | User intent | Events |
-| Scope | Path-specific rules | Domain expertise | Single task |
-| Purpose | Enforce patterns | Complex work | Automation |
-| Context | Always loaded for path | On-demand | On-demand |
+| Aspect  | Instructions           | Subagents        | Skills      |
+| :------ | :--------------------- | :--------------- | :---------- |
+| Trigger | File path match        | User intent      | Events      |
+| Scope   | Path-specific rules    | Domain expertise | Single task |
+| Purpose | Enforce patterns       | Complex work     | Automation  |
+| Context | Always loaded for path | On-demand        | On-demand   |
 
 ## Instruction File Structure
 
@@ -39,9 +39,8 @@ Each instruction file has YAML frontmatter:
 ```yaml
 ---
 applyTo: "apps/api/**/*.ts"
-excludeAgent: "code-review"  # Optional: skip for certain agents
+excludeAgent: "code-review" # Optional: skip for certain agents
 ---
-
 # Backend Instructions
 
 Rules and patterns for this path...

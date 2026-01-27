@@ -58,17 +58,17 @@ mcp_tools:
 
 ## Schema → Doc Mapping
 
-| Schema Model | Doc File | Module |
-|:-------------|:---------|:-------|
-| User, Business, Role | 01-AUTH-SCHEMA.md | authentication |
-| Merchant, Location | 02-BUSINESS-SCHEMA.md | business |
-| Notification, Template | 03-COMMUNICATION-SCHEMA.md | communication |
-| Product, Category, Stock | 04-INVENTORY-SCHEMA.md | inventory |
-| Order, OrderItem, Cart | 05-SALES-SCHEMA.md | sales |
-| Payment, Transaction | 06-PAYMENTS-SCHEMA.md | payments |
-| Invoice, TaxConfig | 07-BILLING-SCHEMA.md | billing |
-| Customer, Loyalty | 08-CRM-SCHEMA.md | crm |
-| Metrics, Reports | 09-ANALYTICS-SCHEMA.md | analytics |
+| Schema Model             | Doc File                   | Module         |
+| :----------------------- | :------------------------- | :------------- |
+| User, Business, Role     | 01-AUTH-SCHEMA.md          | authentication |
+| Merchant, Location       | 02-BUSINESS-SCHEMA.md      | business       |
+| Notification, Template   | 03-COMMUNICATION-SCHEMA.md | communication  |
+| Product, Category, Stock | 04-INVENTORY-SCHEMA.md     | inventory      |
+| Order, OrderItem, Cart   | 05-SALES-SCHEMA.md         | sales          |
+| Payment, Transaction     | 06-PAYMENTS-SCHEMA.md      | payments       |
+| Invoice, TaxConfig       | 07-BILLING-SCHEMA.md       | billing        |
+| Customer, Loyalty        | 08-CRM-SCHEMA.md           | crm            |
+| Metrics, Reports         | 09-ANALYTICS-SCHEMA.md     | analytics      |
 
 ## Update Process
 
@@ -86,26 +86,26 @@ mcp_tools:
 ```markdown
 ### TableName
 
-| Column | Type | Constraints | Description |
-|:-------|:-----|:------------|:------------|
-| id | String | PK, CUID | Unique identifier |
-| createdAt | DateTime | NOT NULL, DEFAULT now() | Creation timestamp |
-| name | String | NOT NULL | Display name |
-| merchantId | String | FK → Merchant | Owner reference |
+| Column     | Type     | Constraints             | Description        |
+| :--------- | :------- | :---------------------- | :----------------- |
+| id         | String   | PK, CUID                | Unique identifier  |
+| createdAt  | DateTime | NOT NULL, DEFAULT now() | Creation timestamp |
+| name       | String   | NOT NULL                | Display name       |
+| merchantId | String   | FK → Merchant           | Owner reference    |
 ```
 
 ## Frontmatter Updates
 
 ```yaml
 # Auto-update these fields
-last_updated: "2026-01-26"  # Today's date
-version: "1.0.1"            # Bump patch
+last_updated: "2026-01-26" # Today's date
+version: "1.0.1" # Bump patch
 
 # Recalculate these
 schema_stats:
-  total_tables: 5           # Count models
-  total_columns: 45         # Count fields
-  total_indexes: 12         # Count @@index
+  total_tables: 5 # Count models
+  total_columns: 45 # Count fields
+  total_indexes: 12 # Count @@index
 ```
 
 ## ER Diagram Update
@@ -128,6 +128,7 @@ NewModel ||--o{ OtherModel : has
 ## Validation
 
 After sync:
+
 - [ ] Doc version incremented
 - [ ] last_updated is today
 - [ ] Table columns match schema

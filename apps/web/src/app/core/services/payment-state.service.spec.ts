@@ -12,12 +12,12 @@ describe('PaymentStateService', () => {
   });
 
   const mockIntent: PaymentIntent = {
-      id: 'test_123',
-      amountCents: 1000,
-      status: ChargeStatus.CREATED,
-      channels: [],
-      reference: 'REF123',
-      createdAt: new Date()
+    id: 'test_123',
+    amountCents: 1000,
+    status: ChargeStatus.CREATED,
+    channels: [],
+    reference: 'REF123',
+    createdAt: new Date(),
   };
 
   it('should be created', () => {
@@ -25,13 +25,13 @@ describe('PaymentStateService', () => {
   });
 
   it('should allow valid transition CREATED -> PRESENTED', (done) => {
-    service.validatedTransition$.subscribe(t => {
-        expect(t.from).toBe(ChargeStatus.CREATED);
-        expect(t.to).toBe(ChargeStatus.PRESENTED);
-        expect(t.intentId).toBe(mockIntent.id);
-        // done() might be tricky with types, let's just rely on subscribe execution
-        // or assertions inside.
-        // Modern approach:
+    service.validatedTransition$.subscribe((t) => {
+      expect(t.from).toBe(ChargeStatus.CREATED);
+      expect(t.to).toBe(ChargeStatus.PRESENTED);
+      expect(t.intentId).toBe(mockIntent.id);
+      // done() might be tricky with types, let's just rely on subscribe execution
+      // or assertions inside.
+      // Modern approach:
     });
 
     const success = service.validateAndEmit(mockIntent, ChargeStatus.PRESENTED);

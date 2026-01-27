@@ -256,17 +256,17 @@ A named collection of permissions. Roles are scoped to the Business, meaning cus
 
 Allows external systems (e.g., ERPs, Custom Apps) to access the API on behalf of the business.
 
-| Attribute     | Type         | Description                        | Rules & Constraints                                                                 |
-| :------------ | :----------- | :--------------------------------- | :---------------------------------------------------------------------------------- |
-| `id`          | UUID         | Unique identifier.                 | Primary Key.                                                                        |
-| `businessId`  | UUID         | The business context.              | Foreign Key.                                                                        |
-| `name`        | VARCHAR(50)  | Human-readable label.              | e.g., "SAP Integration", "Zapier".                                                  |
-| `keyHash`     | VARCHAR(255) | Hashed API Key.                    | **NEVER** store the raw key. Use bcrypt/argon2.                                     |
-| `permissions` | JSONB        | Allowed scopes.                    | e.g., `["INVENTORY_READ", "SALES_READ"]`.                                           |
-| `lastUsedAt`  | TIMESTAMP    | Audit trail.                       | Updated on every successful request.                                                |
-| `expiresAt`   | TIMESTAMP    | Validity limit.                    | Optional. If null, never expires.                                                   |
-| `isActive`    | BOOLEAN      | Revocation flag.                   | Default: `true`.                                                                    |
-| `createdAt`   | TIMESTAMP    | Creation date.                     |                                                                                     |
+| Attribute     | Type         | Description           | Rules & Constraints                             |
+| :------------ | :----------- | :-------------------- | :---------------------------------------------- |
+| `id`          | UUID         | Unique identifier.    | Primary Key.                                    |
+| `businessId`  | UUID         | The business context. | Foreign Key.                                    |
+| `name`        | VARCHAR(50)  | Human-readable label. | e.g., "SAP Integration", "Zapier".              |
+| `keyHash`     | VARCHAR(255) | Hashed API Key.       | **NEVER** store the raw key. Use bcrypt/argon2. |
+| `permissions` | JSONB        | Allowed scopes.       | e.g., `["INVENTORY_READ", "SALES_READ"]`.       |
+| `lastUsedAt`  | TIMESTAMP    | Audit trail.          | Updated on every successful request.            |
+| `expiresAt`   | TIMESTAMP    | Validity limit.       | Optional. If null, never expires.               |
+| `isActive`    | BOOLEAN      | Revocation flag.      | Default: `true`.                                |
+| `createdAt`   | TIMESTAMP    | Creation date.        |                                                 |
 
 ---
 
@@ -464,6 +464,6 @@ To support "Vibe Coding" and personalized interfaces:
 
 ## Appendix A: Change Log
 
-| Date       | Version | Author      | Changes          |
-| :--------- | :------ | :---------- | :--------------- |
-| 2025-12-05 | 1.0.0   | @Architect  | Initial creation |
+| Date       | Version | Author     | Changes          |
+| :--------- | :------ | :--------- | :--------------- |
+| 2025-12-05 | 1.0.0   | @Architect | Initial creation |

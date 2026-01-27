@@ -65,12 +65,12 @@ handoff:
 
 ## MCP Tools
 
-| Tool | Purpose | When to Use |
-|:-----|:--------|:------------|
-| `prisma-migrate-dev` | Create/apply migrations | After schema.prisma changes |
-| `mcp_payment-syste_query_docs_by_type` | Get API/DB docs | Understanding existing APIs |
-| `runTests` | Execute tests | After code changes |
-| `get_errors` | Check compile errors | After edits, debugging |
+| Tool                                   | Purpose                 | When to Use                 |
+| :------------------------------------- | :---------------------- | :-------------------------- |
+| `prisma-migrate-dev`                   | Create/apply migrations | After schema.prisma changes |
+| `mcp_payment-syste_query_docs_by_type` | Get API/DB docs         | Understanding existing APIs |
+| `runTests`                             | Execute tests           | After code changes          |
+| `get_errors`                           | Check compile errors    | After edits, debugging      |
 
 ## Context Loading
 
@@ -94,7 +94,7 @@ grep_search("@Controller", "apps/api/**/*.ts")
 
 ```typescript
 // Controller: Thin, routing only
-@Controller('resource')
+@Controller("resource")
 export class ResourceController {
   constructor(private readonly service: ResourceService) {}
 

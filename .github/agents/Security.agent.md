@@ -22,7 +22,17 @@ scope:
 auto_invoke:
   keywords:
     primary: [security, audit, vulnerability, compliance, owasp]
-    secondary: [encryption, authentication, authorization, penetration, threat, xss, sql-injection, csrf]
+    secondary:
+      [
+        encryption,
+        authentication,
+        authorization,
+        penetration,
+        threat,
+        xss,
+        sql-injection,
+        csrf,
+      ]
   file_patterns:
     - "**/SECURITY-*.md"
     - "docs/technical/security/**"
@@ -66,12 +76,12 @@ handoff:
 
 ## MCP Tools
 
-| Tool | Purpose | When to Use |
-|:-----|:--------|:------------|
-| `mcp_payment-syste_search_full_text` | Search security docs | Find existing security patterns |
-| `mcp_payment-syste_query_docs_by_type` | Get security audits | Load all security-audit docs |
-| `mcp_sequentialthi_sequentialthinking` | Threat modeling | Complex security analysis |
-| `grep_search` | Find vulnerabilities | Search for security anti-patterns |
+| Tool                                   | Purpose              | When to Use                       |
+| :------------------------------------- | :------------------- | :-------------------------------- |
+| `mcp_payment-syste_search_full_text`   | Search security docs | Find existing security patterns   |
+| `mcp_payment-syste_query_docs_by_type` | Get security audits  | Load all security-audit docs      |
+| `mcp_sequentialthi_sequentialthinking` | Threat modeling      | Complex security analysis         |
+| `grep_search`                          | Find vulnerabilities | Search for security anti-patterns |
 
 ## Context Loading
 
@@ -94,18 +104,21 @@ read_file("/docs/templates/09-SECURITY-AUDIT-TEMPLATE.md")
 ## Security Checklist
 
 ### Authentication
+
 - [ ] No hardcoded credentials
 - [ ] Secure password hashing (bcrypt)
 - [ ] JWT properly configured
 - [ ] Session management secure
 
 ### Data Protection
+
 - [ ] Input validation on all endpoints
 - [ ] SQL injection prevention (Prisma)
 - [ ] XSS prevention
 - [ ] CSRF protection
 
 ### Infrastructure
+
 - [ ] HTTPS enforced
 - [ ] Security headers set
 - [ ] Rate limiting configured

@@ -57,27 +57,27 @@ mcp_tools:
 
 ## Coverage Targets
 
-| Type | Min | Target |
-|:-----|:----|:-------|
-| Services | 80% | 90% |
-| Controllers | 70% | 80% |
-| Utils | 90% | 95% |
-| Critical | 95% | 100% |
+| Type        | Min | Target |
+| :---------- | :-- | :----- |
+| Services    | 80% | 90%    |
+| Controllers | 70% | 80%    |
+| Utils       | 90% | 95%    |
+| Critical    | 95% | 100%   |
 
 ## Test Selection
 
-| Code Change | Test Type |
-|:------------|:----------|
-| Service method | Unit test |
-| Controller | Integration |
-| Component | Component test |
-| User flow | E2E |
+| Code Change    | Test Type      |
+| :------------- | :------------- |
+| Service method | Unit test      |
+| Controller     | Integration    |
+| Component      | Component test |
+| User flow      | E2E            |
 
 ## Test Structure
 
 ```typescript
-describe('Unit', () => {
-  it('should [behavior] when [condition]', () => {
+describe("Unit", () => {
+  it("should [behavior] when [condition]", () => {
     // Arrange → Act → Assert
   });
 });

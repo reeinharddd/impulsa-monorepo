@@ -9,11 +9,13 @@ These instructions apply to Prisma schema and migration files.
 ## Schema Conventions
 
 ### Model Names
+
 - PascalCase for model names
 - Singular form (not plural)
 - Examples: `Product`, `Customer`, `OrderItem`
 
 ### Field Names
+
 - camelCase for field names
 - Descriptive and consistent
 - Examples: `createdAt`, `merchantId`, `totalAmount`
@@ -64,6 +66,7 @@ enum PaymentStatus {
 ## Migration Rules
 
 1. **Always use descriptive names**
+
    ```bash
    bunx prisma migrate dev --name add_loyalty_points_to_customer
    ```

@@ -75,13 +75,13 @@ schema_stats:
 
 _This section contains mandatory instructions for AI Agents (Copilot, Cursor, etc.) interacting with this document._
 
-| Directive      | Instruction                                                                                       |
-| :------------- | :------------------------------------------------------------------------------------------------ |
-| **Context**    | Manages customer data, loyalty points, and marketing segments.                                    |
-| **Constraint** | **Multi-Tenancy:** All entities MUST be scoped by `businessId`.                                   |
-| **Pattern**    | **Loyalty:** Points are transactional. Never update balance without a `LoyaltyTransaction`.       |
-| **Rule**       | **Privacy:** PII (Personally Identifiable Information) must be handled according to GDPR/CCPA.    |
-| **Related**    | `apps/backend/src/modules/crm/`                                                                   |
+| Directive      | Instruction                                                                                    |
+| :------------- | :--------------------------------------------------------------------------------------------- |
+| **Context**    | Manages customer data, loyalty points, and marketing segments.                                 |
+| **Constraint** | **Multi-Tenancy:** All entities MUST be scoped by `businessId`.                                |
+| **Pattern**    | **Loyalty:** Points are transactional. Never update balance without a `LoyaltyTransaction`.    |
+| **Rule**       | **Privacy:** PII (Personally Identifiable Information) must be handled according to GDPR/CCPA. |
+| **Related**    | `apps/backend/src/modules/crm/`                                                                |
 
 ---
 
@@ -212,69 +212,69 @@ Represents a client of the business. Can be a casual walk-in (unregistered) or a
 
 Defines the rules for a loyalty campaign.
 
-| Attribute     | Type         | Description        | Rules & Constraints                                    |
-| :------------ | :----------- | :----------------- | :----------------------------------------------------- |
-| `id`          | UUID         | Unique identifier. | Primary Key.                                           |
-| `businessId`  | UUID         | Tenant owner.      | Foreign Key to `business.Business`.                    |
-| `name`        | VARCHAR(100) | Program name.      | e.g., "Puntos Frecuentes 2025".                        |
-| `type`        | ENUM         | Strategy.          | `POINTS` (Earn/Burn), `CASHBACK` (%), `TIERS` (Level). |
-| `rules`       | JSONB        | Logic config.      | `{ "earnRate": 0.1, "minRedeem": 100 }`.               |
-| `isActive`    | BOOLEAN      | Status.            | Only one active program per type usually allowed.      |
-| `startDate`   | TIMESTAMP    | Validity start.    |                                                        |
-| `endDate`     | TIMESTAMP    | Validity end.      | Optional (ongoing).                                    |
+| Attribute    | Type         | Description        | Rules & Constraints                                    |
+| :----------- | :----------- | :----------------- | :----------------------------------------------------- |
+| `id`         | UUID         | Unique identifier. | Primary Key.                                           |
+| `businessId` | UUID         | Tenant owner.      | Foreign Key to `business.Business`.                    |
+| `name`       | VARCHAR(100) | Program name.      | e.g., "Puntos Frecuentes 2025".                        |
+| `type`       | ENUM         | Strategy.          | `POINTS` (Earn/Burn), `CASHBACK` (%), `TIERS` (Level). |
+| `rules`      | JSONB        | Logic config.      | `{ "earnRate": 0.1, "minRedeem": 100 }`.               |
+| `isActive`   | BOOLEAN      | Status.            | Only one active program per type usually allowed.      |
+| `startDate`  | TIMESTAMP    | Validity start.    |                                                        |
+| `endDate`    | TIMESTAMP    | Validity end.      | Optional (ongoing).                                    |
 
 ### 3.3. LoyaltyAccount
 
 The link between a customer and a program, holding their balance.
 
-| Attribute        | Type          | Description        | Rules & Constraints                                 |
-| :--------------- | :------------ | :----------------- | :-------------------------------------------------- |
-| `id`             | UUID          | Unique identifier. | Primary Key.                                        |
-| `businessId`     | UUID          | Tenant owner.      | Foreign Key to `business.Business`.                 |
-| `customerId`     | UUID          | The member.        | Foreign Key to `Customer`.                          |
-| `programId`      | UUID          | The campaign.      | Foreign Key to `LoyaltyProgram`.                    |
-| `balance`        | DECIMAL(19,4) | Current points.    | Can be negative if allowed by rules (rare).         |
-| `lifetimePoints` | DECIMAL(19,4) | Total earned.      | Used for Tier calculation (never decreases).        |
-| `tierLevel`      | VARCHAR(50)   | Current status.    | e.g., "GOLD", "PLATINUM".                           |
-| `joinedAt`       | TIMESTAMP     | Enrollment date.   |                                                     |
+| Attribute        | Type          | Description        | Rules & Constraints                          |
+| :--------------- | :------------ | :----------------- | :------------------------------------------- |
+| `id`             | UUID          | Unique identifier. | Primary Key.                                 |
+| `businessId`     | UUID          | Tenant owner.      | Foreign Key to `business.Business`.          |
+| `customerId`     | UUID          | The member.        | Foreign Key to `Customer`.                   |
+| `programId`      | UUID          | The campaign.      | Foreign Key to `LoyaltyProgram`.             |
+| `balance`        | DECIMAL(19,4) | Current points.    | Can be negative if allowed by rules (rare).  |
+| `lifetimePoints` | DECIMAL(19,4) | Total earned.      | Used for Tier calculation (never decreases). |
+| `tierLevel`      | VARCHAR(50)   | Current status.    | e.g., "GOLD", "PLATINUM".                    |
+| `joinedAt`       | TIMESTAMP     | Enrollment date.   |                                              |
 
 ### 3.4. LoyaltyTransaction
 
 An immutable record of every point change.
 
-| Attribute     | Type          | Description        | Rules & Constraints                                  |
-| :------------ | :------------ | :----------------- | :--------------------------------------------------- |
-| `id`          | UUID          | Unique identifier. | Primary Key.                                         |
-| `accountId`   | UUID          | The account.       | Foreign Key to `LoyaltyAccount`.                     |
-| `saleId`      | UUID          | Context.           | Foreign Key to `sales.Sale`. Optional (if manual).   |
-| `type`        | ENUM          | Action.            | `EARN` (+), `REDEEM` (-), `ADJUST` (+/-), `EXPIRE`.  |
-| `points`      | DECIMAL(19,4) | Amount.            | Positive or negative depending on type.              |
-| `description` | VARCHAR(255)  | Reason.            | e.g., "Purchase #1024", "Birthday Bonus".            |
-| `createdAt`   | TIMESTAMP     | Event time.        | UTC.                                                 |
+| Attribute     | Type          | Description        | Rules & Constraints                                 |
+| :------------ | :------------ | :----------------- | :-------------------------------------------------- |
+| `id`          | UUID          | Unique identifier. | Primary Key.                                        |
+| `accountId`   | UUID          | The account.       | Foreign Key to `LoyaltyAccount`.                    |
+| `saleId`      | UUID          | Context.           | Foreign Key to `sales.Sale`. Optional (if manual).  |
+| `type`        | ENUM          | Action.            | `EARN` (+), `REDEEM` (-), `ADJUST` (+/-), `EXPIRE`. |
+| `points`      | DECIMAL(19,4) | Amount.            | Positive or negative depending on type.             |
+| `description` | VARCHAR(255)  | Reason.            | e.g., "Purchase #1024", "Birthday Bonus".           |
+| `createdAt`   | TIMESTAMP     | Event time.        | UTC.                                                |
 
 ### 3.5. CustomerSegment
 
 Dynamic or static groups of customers for marketing purposes.
 
-| Attribute    | Type         | Description                  | Rules & Constraints                                 |
-| :----------- | :----------- | :--------------------------- | :-------------------------------------------------- |
-| `id`         | UUID         | Unique identifier.           | Primary Key.                                        |
-| `businessId` | UUID         | The owner.                   | Foreign Key to `business.Business`.                 |
-| `name`       | VARCHAR(100) | Segment name.                | e.g., "Big Spenders", "Inactive > 90 days".         |
-| `criteria`   | JSONB        | Logic for dynamic segments.  | `{ "minSpend": 1000, "lastVisitDays": 30 }`.        |
-| `isDynamic`  | BOOLEAN      | Auto-update flag.            | If `true`, calculated nightly. If `false`, manual.  |
-| `createdAt`  | TIMESTAMP    | Creation date.               |                                                     |
+| Attribute    | Type         | Description                 | Rules & Constraints                                |
+| :----------- | :----------- | :-------------------------- | :------------------------------------------------- |
+| `id`         | UUID         | Unique identifier.          | Primary Key.                                       |
+| `businessId` | UUID         | The owner.                  | Foreign Key to `business.Business`.                |
+| `name`       | VARCHAR(100) | Segment name.               | e.g., "Big Spenders", "Inactive > 90 days".        |
+| `criteria`   | JSONB        | Logic for dynamic segments. | `{ "minSpend": 1000, "lastVisitDays": 30 }`.       |
+| `isDynamic`  | BOOLEAN      | Auto-update flag.           | If `true`, calculated nightly. If `false`, manual. |
+| `createdAt`  | TIMESTAMP    | Creation date.              |                                                    |
 
 ---
 
 ## 4. Performance & Indexing
 
-| Table      | Column       | Type   | Reason                                     |
-| :--------- | :----------- | :----- | :----------------------------------------- |
-| `Customer` | `email`      | B-TREE | Fast lookup for login/receipts.            |
-| `Customer` | `phone`      | B-TREE | Fast lookup at POS (common identifier).    |
-| `Customer` | `taxId`      | B-TREE | Prevent duplicate fiscal entities.         |
-| `Loyalty`  | `customerId` | B-TREE | Quickly show points balance at checkout.   |
+| Table      | Column       | Type   | Reason                                   |
+| :--------- | :----------- | :----- | :--------------------------------------- |
+| `Customer` | `email`      | B-TREE | Fast lookup for login/receipts.          |
+| `Customer` | `phone`      | B-TREE | Fast lookup at POS (common identifier).  |
+| `Customer` | `taxId`      | B-TREE | Prevent duplicate fiscal entities.       |
+| `Loyalty`  | `customerId` | B-TREE | Quickly show points balance at checkout. |
 
 ---
 
@@ -317,6 +317,7 @@ $$ LANGUAGE plpgsql;
 ## 6. Example Data & Usage Scenarios
 
 ### 6.1. Customer (Regular)
+
 ```json
 {
   "id": "cust_555",
@@ -326,20 +327,21 @@ $$ LANGUAGE plpgsql;
   "phone": "+525512345678",
   "taxId": "XAXX010101000",
   "tags": ["VIP", "LOCAL"],
-  "creditLimit": 5000.00,
-  "currentDebt": 0.00,
+  "creditLimit": 5000.0,
+  "currentDebt": 0.0,
   "isActive": true
 }
 ```
 
 ### 6.2. Loyalty Account (Points)
+
 ```json
 {
   "id": "loy_acc_99",
   "customerId": "cust_555",
   "programId": "prog_points_2025",
-  "balance": 150.00,
-  "lifetimePoints": 1250.00,
+  "balance": 150.0,
+  "lifetimePoints": 1250.0,
   "tierLevel": "GOLD",
   "joinedAt": "2023-01-15T10:00:00Z"
 }
@@ -347,6 +349,6 @@ $$ LANGUAGE plpgsql;
 
 ## Appendix A: Change Log
 
-| Date       | Version | Author      | Changes          |
-| :--------- | :------ | :---------- | :--------------- |
-| 2025-12-05 | 1.0.0   | @Architect  | Initial creation |
+| Date       | Version | Author     | Changes          |
+| :--------- | :------ | :--------- | :--------------- |
+| 2025-12-05 | 1.0.0   | @Architect | Initial creation |

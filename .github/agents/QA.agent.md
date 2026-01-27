@@ -69,12 +69,12 @@ handoff:
 
 ## MCP Tools
 
-| Tool | Purpose | When to Use |
-|:-----|:--------|:------------|
-| `mcp_sequentialthi_sequentialthinking` | Analyze complex bugs | Multi-step debugging |
-| `runTests` | Execute test suite | After any code change |
-| `get_errors` | Get compile/lint errors | Diagnosing failures |
-| `test_failure` | Get test failure details | When tests fail |
+| Tool                                   | Purpose                  | When to Use           |
+| :------------------------------------- | :----------------------- | :-------------------- |
+| `mcp_sequentialthi_sequentialthinking` | Analyze complex bugs     | Multi-step debugging  |
+| `runTests`                             | Execute test suite       | After any code change |
+| `get_errors`                           | Get compile/lint errors  | Diagnosing failures   |
+| `test_failure`                         | Get test failure details | When tests fail       |
 
 ## Context Loading
 
@@ -126,11 +126,11 @@ describe('ServiceName', () => {
 
 ## Coverage Targets
 
-| Type | Minimum |
-|:-----|:--------|
-| Services | 80% |
-| Controllers | 70% |
-| Critical paths | 95% |
+| Type           | Minimum |
+| :------------- | :------ |
+| Services       | 80%     |
+| Controllers    | 70%     |
+| Critical paths | 95%     |
 
 ## References
 

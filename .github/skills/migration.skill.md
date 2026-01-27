@@ -54,16 +54,16 @@ mcp_tools:
 
 ## Risk Levels
 
-| Change | Risk | Action |
-|:-------|:-----|:-------|
-| Drop table | 🔴 Critical | Backup + approval |
-| Drop column | 🔴 Critical | Backup + approval |
-| Remove enum value | 🔴 Critical | Check usage |
-| Change column type | 🟠 High | Validate data |
-| Make nullable→required | 🟠 High | Check nulls |
-| Add required column | 🟡 Medium | Default needed |
-| Add optional column | 🟢 Low | Safe |
-| Add index | 🟢 Low | Safe |
+| Change                 | Risk        | Action            |
+| :--------------------- | :---------- | :---------------- |
+| Drop table             | 🔴 Critical | Backup + approval |
+| Drop column            | 🔴 Critical | Backup + approval |
+| Remove enum value      | 🔴 Critical | Check usage       |
+| Change column type     | 🟠 High     | Validate data     |
+| Make nullable→required | 🟠 High     | Check nulls       |
+| Add required column    | 🟡 Medium   | Default needed    |
+| Add optional column    | 🟢 Low      | Safe              |
+| Add index              | 🟢 Low      | Safe              |
 
 ## Migration Checklist
 

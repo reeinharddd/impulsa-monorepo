@@ -65,11 +65,11 @@ handoff:
 
 ## MCP Tools
 
-| Tool | Purpose | When to Use |
-|:-----|:--------|:------------|
-| `mcp_sequentialthi_sequentialthinking` | Step-by-step planning | Complex designs, multi-component systems |
-| `mcp_payment-syste_search_full_text` | Search all docs | Find existing patterns/decisions |
-| `mcp_payment-syste_get_doc_context` | Load doc with relations | Understand full design context |
+| Tool                                   | Purpose                 | When to Use                              |
+| :------------------------------------- | :---------------------- | :--------------------------------------- |
+| `mcp_sequentialthi_sequentialthinking` | Step-by-step planning   | Complex designs, multi-component systems |
+| `mcp_payment-syste_search_full_text`   | Search all docs         | Find existing patterns/decisions         |
+| `mcp_payment-syste_get_doc_context`    | Load doc with relations | Understand full design context           |
 
 ## Context Loading
 

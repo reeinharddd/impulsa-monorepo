@@ -24,7 +24,15 @@ scope:
 auto_invoke:
   keywords:
     primary: [offline, sync, synchronization, conflict, dexie]
-    secondary: [indexeddb, service-worker, pwa, eventual-consistency, queue, background-sync]
+    secondary:
+      [
+        indexeddb,
+        service-worker,
+        pwa,
+        eventual-consistency,
+        queue,
+        background-sync,
+      ]
   file_patterns:
     - "**/OFFLINE-*.md"
     - "**/*SYNC*.md"
@@ -68,12 +76,12 @@ handoff:
 
 ## MCP Tools
 
-| Tool | Purpose | When to Use |
-|:-----|:--------|:------------|
-| `mcp_payment-syste_query_docs_by_type` | Get sync strategies | Filter by "sync-strategy" |
-| `mcp_payment-syste_get_doc_context` | Load sync with relations | Full offline context |
-| `mcp_sequentialthi_sequentialthinking` | Conflict resolution | Complex sync scenarios |
-| `mcp_io_github_ups_get-library-docs` | Dexie.js docs | IndexedDB patterns |
+| Tool                                   | Purpose                  | When to Use               |
+| :------------------------------------- | :----------------------- | :------------------------ |
+| `mcp_payment-syste_query_docs_by_type` | Get sync strategies      | Filter by "sync-strategy" |
+| `mcp_payment-syste_get_doc_context`    | Load sync with relations | Full offline context      |
+| `mcp_sequentialthi_sequentialthinking` | Conflict resolution      | Complex sync scenarios    |
+| `mcp_io_github_ups_get-library-docs`   | Dexie.js docs            | IndexedDB patterns        |
 
 ## Context Loading
 
@@ -100,12 +108,12 @@ read_file("/docs/technical/architecture/adr/002-OFFLINE-STRATEGY.md")
 
 ### Data Classification
 
-| Category | Sync Type | Example |
-|:---------|:----------|:--------|
-| Critical | Bidirectional | Sales, Payments |
-| Reference | Pull-only | Products, Categories |
-| Local | Push-only | Audit logs |
-| Ephemeral | No sync | UI state |
+| Category  | Sync Type     | Example              |
+| :-------- | :------------ | :------------------- |
+| Critical  | Bidirectional | Sales, Payments      |
+| Reference | Pull-only     | Products, Categories |
+| Local     | Push-only     | Audit logs           |
+| Ephemeral | No sync       | UI state             |
 
 ### Conflict Resolution
 
@@ -118,18 +126,18 @@ const resolve = (local, remote) =>
 const merge = (local, remote) => ({
   ...remote,
   localChanges: local.changes,
-  conflictResolved: true
+  conflictResolved: true,
 });
 ```
 
 ## Offline Stack
 
-| Technology | Purpose |
-|:-----------|:--------|
-| **Dexie.js** | IndexedDB wrapper |
-| **Service Worker** | Network interception |
-| **Background Sync** | Deferred operations |
-| **Web Locks API** | Concurrency control |
+| Technology          | Purpose              |
+| :------------------ | :------------------- |
+| **Dexie.js**        | IndexedDB wrapper    |
+| **Service Worker**  | Network interception |
+| **Background Sync** | Deferred operations  |
+| **Web Locks API**   | Concurrency control  |
 
 ## Outputs
 
@@ -149,6 +157,7 @@ const merge = (local, remote) => ({
 ## Handoff
 
 After sync design:
+
 - **@Frontend** - For UI implementation
 - **@Backend** - For API sync endpoints
 

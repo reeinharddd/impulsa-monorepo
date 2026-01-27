@@ -374,23 +374,23 @@ CHECK (total = (subtotal - discountTotal + taxTotal));
   "shiftId": "shift_55",
   "saleNumber": 1024,
   "status": "COMPLETED",
-  "total": 150.00,
+  "total": 150.0,
   "subtotal": 129.31,
   "taxTotal": 20.69,
-  "discountTotal": 0.00,
+  "discountTotal": 0.0,
   "paymentMethod": "CASH",
   "items": [
     {
       "productId": "prod_coke",
       "quantity": 2,
-      "unitPrice": 18.00,
-      "total": 36.00
+      "unitPrice": 18.0,
+      "total": 36.0
     },
     {
       "productId": "prod_tshirt",
       "quantity": 1,
-      "unitPrice": 114.00,
-      "total": 114.00
+      "unitPrice": 114.0,
+      "total": 114.0
     }
   ],
   "createdAt": "2023-10-27T14:05:00Z"
@@ -406,10 +406,10 @@ CHECK (total = (subtotal - discountTotal + taxTotal));
   "userId": "user_cashier_1",
   "startTime": "2023-10-27T08:00:00Z",
   "endTime": "2023-10-27T16:00:00Z",
-  "startCash": 500.00,
-  "endCash": 2500.00,
-  "expectedCash": 2500.00,
-  "difference": 0.00,
+  "startCash": 500.0,
+  "endCash": 2500.0,
+  "expectedCash": 2500.0,
+  "difference": 0.0,
   "status": "CLOSED"
 }
 ```

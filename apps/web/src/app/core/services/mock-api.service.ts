@@ -7,7 +7,7 @@ import { User } from '../models/user.model';
 import { PaymentStateService, PaymentTransition } from './payment-state.service';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class MockApiService {
   private paymentState = inject(PaymentStateService);
@@ -17,7 +17,7 @@ export class MockApiService {
   readonly users = this._users.asReadonly();
 
   listUsers(): User[] {
-      return this._users();
+    return this._users();
   }
   private _products = signal<Product[]>(this.load('products', []));
   private _sales = signal<Sale[]>(this.load('sales', []));
@@ -36,7 +36,7 @@ export class MockApiService {
     effect(() => this.save('current_user', this._currentUser()));
 
     // Subscribe to orchestrator
-    this.paymentState.validatedTransition$.subscribe(transition => {
+    this.paymentState.validatedTransition$.subscribe((transition) => {
       this.handlePaymentTransition(transition);
     });
   }
@@ -47,33 +47,33 @@ export class MockApiService {
       id: `u_${Date.now()}_${Math.floor(Math.random() * 1000)}`,
       name,
       type,
-      email
+      email,
     };
-    this._users.update(users => [...users, newUser]);
+    this._users.update((users) => [...users, newUser]);
     this._currentUser.set(newUser);
     return newUser;
   }
 
   loginAs(userId: string): boolean {
-    const user = this._users().find(u => u.id === userId);
+    const user = this._users().find((u) => u.id === userId);
     if (user) {
-        this._currentUser.set(user);
-        return true;
+      this._currentUser.set(user);
+      return true;
     }
     return false;
   }
 
   logout(): void {
-      this._currentUser.set(null);
+    this._currentUser.set(null);
   }
 
   // --- Products ---
   createProduct(product: Omit<Product, 'id'>): Product {
     const newProduct: Product = {
       ...product,
-      id: `p_${Date.now()}_${Math.floor(Math.random() * 1000)}`
+      id: `p_${Date.now()}_${Math.floor(Math.random() * 1000)}`,
     };
-    this._products.update(products => [...products, newProduct]);
+    this._products.update((products) => [...products, newProduct]);
     return newProduct;
   }
 
@@ -82,9 +82,9 @@ export class MockApiService {
   }
 
   updateProduct(id: string, updates: Partial<Product>): void {
-      this._products.update(products =>
-        products.map(p => p.id === id ? { ...p, ...updates } : p)
-      );
+    this._products.update((products) =>
+      products.map((p) => (p.id === id ? { ...p, ...updates } : p)),
+    );
   }
 
   // --- Sales ---
@@ -93,14 +93,14 @@ export class MockApiService {
       ...sale,
       id: `s_${Date.now()}_${Math.floor(Math.random() * 1000)}`,
       createdAt: new Date(),
-      confirmed: false
+      confirmed: false,
     };
-    this._sales.update(sales => [...sales, newSale]);
+    this._sales.update((sales) => [...sales, newSale]);
     return newSale;
   }
 
   getSale(id: string): Sale | undefined {
-      return this._sales().find(s => s.id === id);
+    return this._sales().find((s) => s.id === id);
   }
 
   // --- Payment Intents ---
@@ -111,16 +111,16 @@ export class MockApiService {
       createdAt: new Date(),
       status: ChargeStatus.CREATED,
     };
-    this._paymentIntents.update(intents => [...intents, newIntent]);
+    this._paymentIntents.update((intents) => [...intents, newIntent]);
     return newIntent;
   }
 
   getPaymentIntent(id: string): PaymentIntent | undefined {
-      return this._paymentIntents().find(pi => pi.id === id);
+    return this._paymentIntents().find((pi) => pi.id === id);
   }
 
   listPaymentIntents(): PaymentIntent[] {
-      return this._paymentIntents();
+    return this._paymentIntents();
   }
 
   // --- Handling Transitions ---
@@ -128,13 +128,13 @@ export class MockApiService {
     const { intentId, to } = transition;
 
     // Update Payment Intent Status
-    this._paymentIntents.update(intents =>
-      intents.map(pi => pi.id === intentId ? { ...pi, status: to } : pi)
+    this._paymentIntents.update((intents) =>
+      intents.map((pi) => (pi.id === intentId ? { ...pi, status: to } : pi)),
     );
 
     // Side Effects based on Confirmed
     if (to === ChargeStatus.CONFIRMED) {
-      const intent = this._paymentIntents().find(pi => pi.id === intentId);
+      const intent = this._paymentIntents().find((pi) => pi.id === intentId);
       if (intent && intent.saleId) {
         this.confirmSale(intent.saleId);
       }
@@ -142,24 +142,24 @@ export class MockApiService {
   }
 
   private confirmSale(saleId: string): void {
-     // Mark Sale as Confirmed
-     this._sales.update(sales =>
-        sales.map(s => s.id === saleId ? { ...s, confirmed: true } : s)
-     );
+    // Mark Sale as Confirmed
+    this._sales.update((sales) =>
+      sales.map((s) => (s.id === saleId ? { ...s, confirmed: true } : s)),
+    );
 
-     // Decrement Stock
-     const sale = this._sales().find(s => s.id === saleId);
-     if (sale) {
-         this._products.update(products => {
-             return products.map(product => {
-                 const saleItem = sale.items.find(item => item.product.id === product.id);
-                 if (saleItem) {
-                     return { ...product, stock: product.stock - saleItem.quantity };
-                 }
-                 return product;
-             });
-         });
-     }
+    // Decrement Stock
+    const sale = this._sales().find((s) => s.id === saleId);
+    if (sale) {
+      this._products.update((products) => {
+        return products.map((product) => {
+          const saleItem = sale.items.find((item) => item.product.id === product.id);
+          if (saleItem) {
+            return { ...product, stock: product.stock - saleItem.quantity };
+          }
+          return product;
+        });
+      });
+    }
   }
 
   // --- LocalStorage Helpers ---

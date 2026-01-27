@@ -1515,8 +1515,8 @@ ORDER BY turnover_ratio DESC;
   "name": "Coca-Cola 600ml",
   "sku": "COKE-600",
   "barcode": "7501055300075",
-  "price": 18.00,
-  "costPrice": 12.50,
+  "price": 18.0,
+  "costPrice": 12.5,
   "type": "SIMPLE",
   "trackStock": true,
   "status": "ACTIVE"
@@ -1533,12 +1533,12 @@ ORDER BY turnover_ratio DESC;
   "variants": [
     {
       "sku": "TSHIRT-RED-S",
-      "price": 150.00,
+      "price": 150.0,
       "attributes": { "color": "Red", "size": "S" }
     },
     {
       "sku": "TSHIRT-RED-M",
-      "price": 150.00,
+      "price": 150.0,
       "attributes": { "color": "Red", "size": "M" }
     }
   ]

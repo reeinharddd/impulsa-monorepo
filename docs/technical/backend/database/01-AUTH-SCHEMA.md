@@ -303,15 +303,15 @@ Tracks active login sessions. This is the "State" of a logged-in user.
 
 Immutable record of security-critical actions.
 
-| Attribute   | Type      | Description                 | Rules & Constraints                                     |
-| :---------- | :-------- | :-------------------------- | :------------------------------------------------------ |
-| `id`        | UUID      | Unique identifier.          | Primary Key.                                            |
-| `userId`    | UUID      | Who performed the action.   | Foreign Key to `User`. Nullable (for system actions).   |
-| `action`    | VARCHAR   | Event type.                 | e.g., `LOGIN_SUCCESS`, `PASSWORD_CHANGE`, `MFA_ENABLE`. |
-| `resource`  | VARCHAR   | Target entity.              | e.g., `User:123`, `Business:456`.                       |
-| `metadata`  | JSONB     | Contextual details.         | `{ "browser": "Chrome", "reason": "User request" }`.    |
-| `ipAddress` | VARCHAR   | Origin IP.                  | IPv4 or IPv6.                                           |
-| `createdAt` | TIMESTAMP | Timestamp.                  | Immutable.                                              |
+| Attribute   | Type      | Description               | Rules & Constraints                                     |
+| :---------- | :-------- | :------------------------ | :------------------------------------------------------ |
+| `id`        | UUID      | Unique identifier.        | Primary Key.                                            |
+| `userId`    | UUID      | Who performed the action. | Foreign Key to `User`. Nullable (for system actions).   |
+| `action`    | VARCHAR   | Event type.               | e.g., `LOGIN_SUCCESS`, `PASSWORD_CHANGE`, `MFA_ENABLE`. |
+| `resource`  | VARCHAR   | Target entity.            | e.g., `User:123`, `Business:456`.                       |
+| `metadata`  | JSONB     | Contextual details.       | `{ "browser": "Chrome", "reason": "User request" }`.    |
+| `ipAddress` | VARCHAR   | Origin IP.                | IPv4 or IPv6.                                           |
+| `createdAt` | TIMESTAMP | Timestamp.                | Immutable.                                              |
 
 ---
 

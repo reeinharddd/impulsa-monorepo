@@ -62,22 +62,27 @@ mcp_tools:
 # [Feature] - UX Flow
 
 ## User Personas
+
 - Primary: [persona]
 - Secondary: [persona]
 
 ## Screens
+
 1. [Screen Name]
    - Purpose: ...
    - Key elements: ...
    - Interactions: ...
 
 ## User Journeys
+
 ### Happy Path
+
 1. User does X
 2. System responds with Y
 3. User sees Z
 
 ### Error Handling
+
 - Scenario: ...
 - Display: ...
 - Recovery: ...
@@ -91,6 +96,7 @@ mcp_tools:
 **Purpose:** [What this screen accomplishes]
 
 **Entry Points:**
+
 - From: [Previous screen]
 - Trigger: [User action]
 
@@ -100,6 +106,7 @@ mcp_tools:
 | [name] | button | [action] |
 
 **Exit Points:**
+
 - To: [Next screen]
 - Condition: [What triggers navigation]
 ```
@@ -116,5 +123,4 @@ mcp_tools:
 
 - [06-UX-FLOW-TEMPLATE.md](/docs/templates/06-UX-FLOW-TEMPLATE.md)
 - [VISUAL-IDENTITY.md](/docs/process/standards/VISUAL-IDENTITY.md)
-
 ````

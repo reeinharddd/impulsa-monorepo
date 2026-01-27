@@ -154,44 +154,44 @@ tax ||..o{ invoice : "applies to"
 
 The legal document representing a sale for tax purposes.
 
-| Attribute    | Type         | Description                  | Rules & Constraints                                 |
-| :----------- | :----------- | :--------------------------- | :-------------------------------------------------- |
-| `id`         | UUID         | Unique identifier.           | Primary Key.                                        |
-| `saleId`     | UUID         | The sale being invoiced.     | Foreign Key to `sales.Sale`.                        |
-| `businessId` | UUID         | The issuer.                  | Foreign Key to `business.Business`.                 |
-| `fiscalId`   | VARCHAR(255) | The official government ID.  | UUID (Mexico), CUFE (Colombia).                     |
-| `status`     | ENUM         | Lifecycle state.             | `DRAFT`, `PENDING`, `STAMPED`, `CANCELLED`.         |
-| `provider`   | ENUM         | The PAC/Authority used.      | `SAT`, `DIAN`, `AFIP`.                              |
-| `xmlUrl`     | VARCHAR(255) | Link to the signed XML.      | Stored in S3.                                       |
-| `pdfUrl`     | VARCHAR(255) | Link to the PDF representation.| Stored in S3.                                     |
-| `fiscalData` | JSONB        | Snapshot of receiver's data. | Stores the customer's tax info at time of stamping. |
-| `createdAt`  | TIMESTAMP    | Creation date.               |                                                     |
+| Attribute    | Type         | Description                     | Rules & Constraints                                 |
+| :----------- | :----------- | :------------------------------ | :-------------------------------------------------- |
+| `id`         | UUID         | Unique identifier.              | Primary Key.                                        |
+| `saleId`     | UUID         | The sale being invoiced.        | Foreign Key to `sales.Sale`.                        |
+| `businessId` | UUID         | The issuer.                     | Foreign Key to `business.Business`.                 |
+| `fiscalId`   | VARCHAR(255) | The official government ID.     | UUID (Mexico), CUFE (Colombia).                     |
+| `status`     | ENUM         | Lifecycle state.                | `DRAFT`, `PENDING`, `STAMPED`, `CANCELLED`.         |
+| `provider`   | ENUM         | The PAC/Authority used.         | `SAT`, `DIAN`, `AFIP`.                              |
+| `xmlUrl`     | VARCHAR(255) | Link to the signed XML.         | Stored in S3.                                       |
+| `pdfUrl`     | VARCHAR(255) | Link to the PDF representation. | Stored in S3.                                       |
+| `fiscalData` | JSONB        | Snapshot of receiver's data.    | Stores the customer's tax info at time of stamping. |
+| `createdAt`  | TIMESTAMP    | Creation date.                  |                                                     |
 
 ### 3.2. TaxProfile
 
 Configuration for taxes applicable to products or services.
 
-| Attribute    | Type         | Description                  | Rules & Constraints                                 |
-| :----------- | :----------- | :--------------------------- | :-------------------------------------------------- |
-| `id`         | UUID         | Unique identifier.           | Primary Key.                                        |
-| `businessId` | UUID         | The owner.                   | Foreign Key to `business.Business`.                 |
-| `name`       | VARCHAR(50)  | Internal name.               | e.g., "IVA 16%", "Exento".                          |
-| `rate`       | DECIMAL(5,2) | The percentage.              | e.g., `16.00`.                                      |
-| `code`       | VARCHAR(20)  | Government tax code.         | e.g., `002` for IVA in Mexico.                      |
-| `type`       | ENUM         | Tax category.                | `VAT` (Traslado), `RETENTION` (Retención).          |
+| Attribute    | Type         | Description          | Rules & Constraints                        |
+| :----------- | :----------- | :------------------- | :----------------------------------------- |
+| `id`         | UUID         | Unique identifier.   | Primary Key.                               |
+| `businessId` | UUID         | The owner.           | Foreign Key to `business.Business`.        |
+| `name`       | VARCHAR(50)  | Internal name.       | e.g., "IVA 16%", "Exento".                 |
+| `rate`       | DECIMAL(5,2) | The percentage.      | e.g., `16.00`.                             |
+| `code`       | VARCHAR(20)  | Government tax code. | e.g., `002` for IVA in Mexico.             |
+| `type`       | ENUM         | Tax category.        | `VAT` (Traslado), `RETENTION` (Retención). |
 
 ### 3.3. FiscalData
 
 Stores the tax information of the business (Issuer) or Customer (Receiver).
 
-| Attribute    | Type         | Description                  | Rules & Constraints                                 |
-| :----------- | :----------- | :--------------------------- | :-------------------------------------------------- |
-| `id`         | UUID         | Unique identifier.           | Primary Key.                                        |
-| `businessId` | UUID         | The owner.                   | Foreign Key to `business.Business`.                 |
-| `taxId`      | VARCHAR(50)  | RFC / NIT / CUIT.            | Must match country format regex.                    |
-| `legalName`  | VARCHAR(255) | Official registered name.    | Must match government records exactly.              |
-| `address`    | JSONB        | Fiscal address.              | `{ "zip": "06600", "street": "..." }`.              |
-| `regime`     | VARCHAR(50)  | Tax regime code.             | e.g., "601" (General de Ley).                       |
+| Attribute    | Type         | Description               | Rules & Constraints                    |
+| :----------- | :----------- | :------------------------ | :------------------------------------- |
+| `id`         | UUID         | Unique identifier.        | Primary Key.                           |
+| `businessId` | UUID         | The owner.                | Foreign Key to `business.Business`.    |
+| `taxId`      | VARCHAR(50)  | RFC / NIT / CUIT.         | Must match country format regex.       |
+| `legalName`  | VARCHAR(255) | Official registered name. | Must match government records exactly. |
+| `address`    | JSONB        | Fiscal address.           | `{ "zip": "06600", "street": "..." }`. |
+| `regime`     | VARCHAR(50)  | Tax regime code.          | e.g., "601" (General de Ley).          |
 
 ---
 
@@ -209,7 +209,7 @@ Stores the tax information of the business (Issuer) or Customer (Receiver).
   "series": "F",
   "number": 1001,
   "status": "ISSUED",
-  "total": 116.00,
+  "total": 116.0,
   "xmlUrl": "https://s3.aws.com/invoices/F-1001.xml",
   "pdfUrl": "https://s3.aws.com/invoices/F-1001.pdf",
   "issuedAt": "2023-10-27T14:10:00Z"

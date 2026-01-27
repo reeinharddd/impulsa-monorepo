@@ -70,18 +70,18 @@ Parse NestJS decorators to extract:
 
 ## Extraction Rules
 
-| Decorator | Extracted Info |
-|:----------|:---------------|
-| `@Controller(path)` | Base path |
-| `@Get/@Post/@Put/@Delete` | HTTP method |
-| `@Param/@Query/@Body` | Parameters |
-| `@UseGuards` | Authentication |
-| `@ApiOperation` | Description |
-| `@ApiResponse` | Response codes |
+| Decorator                 | Extracted Info |
+| :------------------------ | :------------- |
+| `@Controller(path)`       | Base path      |
+| `@Get/@Post/@Put/@Delete` | HTTP method    |
+| `@Param/@Query/@Body`     | Parameters     |
+| `@UseGuards`              | Authentication |
+| `@ApiOperation`           | Description    |
+| `@ApiResponse`            | Response codes |
 
 ## API Doc Format
 
-```markdown
+````markdown
 ### GET /api/v1/products/:id
 
 **Description:** Get product by ID
@@ -90,23 +90,26 @@ Parse NestJS decorators to extract:
 
 **Parameters:**
 
-| Name | In | Type | Required | Description |
-|:-----|:---|:-----|:---------|:------------|
-| id | path | string | Yes | Product ID |
+| Name | In   | Type   | Required | Description |
+| :--- | :--- | :----- | :------- | :---------- |
+| id   | path | string | Yes      | Product ID  |
 
 **Responses:**
 
-| Code | Description | Schema |
-|:-----|:------------|:-------|
-| 200 | Success | ProductResponseDto |
-| 404 | Not found | ErrorDto |
+| Code | Description | Schema             |
+| :--- | :---------- | :----------------- |
+| 200  | Success     | ProductResponseDto |
+| 404  | Not found   | ErrorDto           |
 
 **Example Request:**
+
 ```bash
 curl -X GET /api/v1/products/abc123 \
   -H "Authorization: Bearer {token}"
 ```
-```
+````
+
+````
 
 ## Frontmatter Template
 
@@ -129,7 +132,7 @@ api_metadata:
   auth_required: true
   rate_limited: true
 ---
-```
+````
 
 ## Workflow
 

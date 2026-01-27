@@ -67,18 +67,19 @@ related_docs:
 
 ## Relationship Types
 
-| Field | Points To | Reverse Field |
-|:------|:----------|:--------------|
-| `database_schema` | *-SCHEMA.md | `feature_design` |
-| `api_design` | *-API.md | `database_schema` |
-| `ux_flow` | *-UX.md | `api_design` |
-| `sync_strategy` | *-SYNC.md | `ux_flow` |
-| `feature_design` | FEAT-*.md | `database_schema` |
-| `adr` | NNN-*.md | `feature_design` |
+| Field             | Points To    | Reverse Field     |
+| :---------------- | :----------- | :---------------- |
+| `database_schema` | \*-SCHEMA.md | `feature_design`  |
+| `api_design`      | \*-API.md    | `database_schema` |
+| `ux_flow`         | \*-UX.md     | `api_design`      |
+| `sync_strategy`   | \*-SYNC.md   | `ux_flow`         |
+| `feature_design`  | FEAT-\*.md   | `database_schema` |
+| `adr`             | NNN-\*.md    | `feature_design`  |
 
 ## Sync Rules
 
 ### Adding Reference
+
 ```
 Doc A adds: related_docs.database_schema = "path/to/B.md"
     ↓
@@ -86,6 +87,7 @@ Doc B gets: related_docs.feature_design = "path/to/A.md"
 ```
 
 ### Removing Reference
+
 ```
 Doc A removes: related_docs.database_schema = ""
     ↓
@@ -93,6 +95,7 @@ Doc B removes: related_docs.feature_design = ""
 ```
 
 ### Renaming/Moving
+
 ```
 Doc B renamed: old_path → new_path
     ↓
@@ -111,6 +114,7 @@ All docs referencing old_path → update to new_path
 ## Validation
 
 After sync:
+
 ```yaml
 # Doc A references Doc B
 A.related_docs.database_schema: "B.md"
@@ -122,6 +126,7 @@ B.related_docs.feature_design: "A.md"
 ## Orphan Detection
 
 Find docs with broken references:
+
 - Reference points to non-existent file
 - Reference is not bidirectional
 - Document has no related_docs
@@ -130,15 +135,9 @@ Find docs with broken references:
 
 ```json
 {
-  "synced": [
-    {"from": "A.md", "to": "B.md", "field": "database_schema"}
-  ],
-  "orphans": [
-    {"doc": "C.md", "broken_ref": "deleted.md"}
-  ],
-  "missing_reverse": [
-    {"doc": "D.md", "refs": "E.md", "missing_in": "E.md"}
-  ]
+  "synced": [{ "from": "A.md", "to": "B.md", "field": "database_schema" }],
+  "orphans": [{ "doc": "C.md", "broken_ref": "deleted.md" }],
+  "missing_reverse": [{ "doc": "D.md", "refs": "E.md", "missing_in": "E.md" }]
 }
 ```
 

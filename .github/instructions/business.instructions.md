@@ -23,17 +23,17 @@ docs/business/
 
 ## Document Types
 
-| Type | Purpose | Audience |
-|:-----|:--------|:---------|
-| Brand | Visual identity, tone, messaging | Marketing, Design |
-| Strategy | Business model, positioning | Leadership, Product |
-| Market | Competitor analysis, opportunities | Product, Sales |
+| Type     | Purpose                            | Audience            |
+| :------- | :--------------------------------- | :------------------ |
+| Brand    | Visual identity, tone, messaging   | Marketing, Design   |
+| Strategy | Business model, positioning        | Leadership, Product |
+| Market   | Competitor analysis, opportunities | Product, Sales      |
 
 ## YAML Frontmatter (REQUIRED)
 
 ```yaml
 ---
-document_type: "business-strategy"  # or "brand-identity", "market-analysis"
+document_type: "business-strategy" # or "brand-identity", "market-analysis"
 module: "business"
 status: "draft"
 version: "1.0.0"
@@ -53,6 +53,7 @@ stakeholders:
 ## Content Guidelines
 
 ### DO
+
 - Use clear, non-technical language
 - Include market data with sources
 - Define business terms in GLOSSARY.md
@@ -60,6 +61,7 @@ stakeholders:
 - Include actionable recommendations
 
 ### DO NOT
+
 - Include implementation details (that's technical docs)
 - Use developer jargon
 - Mix technical architecture with business strategy
@@ -71,6 +73,7 @@ Business docs can LINK to technical docs for implementation:
 
 ```markdown
 For technical implementation, see:
+
 - [PRELIMINARY-DESIGN.md](/docs/technical/architecture/PRELIMINARY-DESIGN.md)
 ```
 

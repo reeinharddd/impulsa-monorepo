@@ -27,22 +27,18 @@ These instructions apply to all TypeScript and HTML files in the web application
 ## Template Rules
 
 ### Control Flow (Use These)
+
 ```html
 @if (condition) {
-  <element />
-}
-
-@for (item of items(); track item.id) {
-  <element />
-}
-
-@switch (value) {
-  @case ('a') { <a-element /> }
-  @default { <default-element /> }
-}
+<element />
+} @for (item of items(); track item.id) {
+<element />
+} @switch (value) { @case ('a') { <a-element /> } @default {
+<default-element /> } }
 ```
 
 ### Do NOT Use
+
 ```html
 <!-- FORBIDDEN -->
 <div *ngIf="condition">...</div>

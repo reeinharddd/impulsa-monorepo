@@ -55,18 +55,18 @@ mcp_tools:
 
 ## Template Selection
 
-| Type | Template | Path |
-|:-----|:---------|:-----|
-| General | 00-GENERAL | `docs/process/**` |
-| Feature | 01-FEATURE-DESIGN | `docs/technical/**/features/` |
-| ADR | 02-ADR | `docs/technical/architecture/adr/` |
-| Database | 03-DATABASE-SCHEMA | `docs/technical/backend/database/` |
-| API | 04-API-DESIGN | `docs/technical/backend/api/` |
-| Sync | 05-SYNC-STRATEGY | `docs/technical/architecture/` |
-| UX | 06-UX-FLOW | `docs/technical/frontend/ux-flows/` |
-| Testing | 07-TESTING-STRATEGY | `docs/technical/*/testing/` |
-| Deploy | 08-DEPLOYMENT-RUNBOOK | `docs/technical/infrastructure/` |
-| Security | 09-SECURITY-AUDIT | `docs/technical/security/` |
+| Type     | Template              | Path                                |
+| :------- | :-------------------- | :---------------------------------- |
+| General  | 00-GENERAL            | `docs/process/**`                   |
+| Feature  | 01-FEATURE-DESIGN     | `docs/technical/**/features/`       |
+| ADR      | 02-ADR                | `docs/technical/architecture/adr/`  |
+| Database | 03-DATABASE-SCHEMA    | `docs/technical/backend/database/`  |
+| API      | 04-API-DESIGN         | `docs/technical/backend/api/`       |
+| Sync     | 05-SYNC-STRATEGY      | `docs/technical/architecture/`      |
+| UX       | 06-UX-FLOW            | `docs/technical/frontend/ux-flows/` |
+| Testing  | 07-TESTING-STRATEGY   | `docs/technical/*/testing/`         |
+| Deploy   | 08-DEPLOYMENT-RUNBOOK | `docs/technical/infrastructure/`    |
+| Security | 09-SECURITY-AUDIT     | `docs/technical/security/`          |
 
 ## Required YAML
 

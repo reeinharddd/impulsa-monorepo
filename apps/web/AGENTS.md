@@ -64,7 +64,7 @@ apps/web/src/
 ```typescript
 @Component({
   selector: 'app-product-card',
-  standalone: true,  // Actually optional in Angular 21+ (default)
+  standalone: true, // Actually optional in Angular 21+ (default)
   imports: [CommonModule, RouterLink],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
@@ -72,7 +72,7 @@ apps/web/src/
       <h3 class="text-lg font-bold">{{ product().name }}</h3>
       <p class="text-gray-600">{{ product().price | currency }}</p>
     </div>
-  `
+  `,
 })
 export class ProductCardComponent {
   product = input.required<Product>();
@@ -108,14 +108,12 @@ products$ = this.store.select(selectProducts).pipe(
 ```html
 <!-- ✅ DO: Native control flow -->
 @if (loading()) {
-  <app-spinner />
-} @else {
-  @for (product of products(); track product.id) {
-    <app-product-card [product]="product" />
-  } @empty {
-    <p>No products found</p>
-  }
-}
+<app-spinner />
+} @else { @for (product of products(); track product.id) {
+<app-product-card [product]="product" />
+} @empty {
+<p>No products found</p>
+} }
 
 <!-- ❌ DON'T: Structural directives -->
 <div *ngIf="loading">...</div>
@@ -158,22 +156,26 @@ export const ProductStore = signalStore(
 
 ```html
 <!-- Mobile-first responsive design -->
-<div class="
+<div
+  class="
   flex flex-col gap-4
   md:flex-row md:gap-6
   lg:gap-8
-">
+"
+>
   <div class="w-full md:w-1/3">Sidebar</div>
   <div class="w-full md:w-2/3">Content</div>
 </div>
 
 <!-- State variants -->
-<button class="
+<button
+  class="
   bg-blue-600 text-white px-4 py-2 rounded
   hover:bg-blue-700
   focus:ring-2 focus:ring-blue-500
   disabled:opacity-50 disabled:cursor-not-allowed
-">
+"
+>
   Submit
 </button>
 ```
@@ -206,13 +208,12 @@ export const routes: Routes = [
   { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
   {
     path: 'dashboard',
-    loadComponent: () => import('./features/dashboard/dashboard.component')
-      .then(m => m.DashboardComponent),
+    loadComponent: () =>
+      import('./features/dashboard/dashboard.component').then((m) => m.DashboardComponent),
   },
   {
     path: 'products',
-    loadChildren: () => import('./features/products/products.routes')
-      .then(m => m.PRODUCT_ROUTES),
+    loadChildren: () => import('./features/products/products.routes').then((m) => m.PRODUCT_ROUTES),
   },
 ];
 ```
@@ -246,12 +247,12 @@ describe('ProductCardComponent', () => {
 
 ## Best Practices Summary
 
-| DO | DON'T |
-|:---|:------|
-| Use `input()`, `output()` | Use `@Input()`, `@Output()` |
-| Use `signal()`, `computed()` | Use complex RxJS |
-| Use `@if`, `@for`, `@switch` | Use `*ngIf`, `*ngFor` |
-| Use `inject()` | Use constructor injection |
+| DO                            | DON'T                        |
+| :---------------------------- | :--------------------------- |
+| Use `input()`, `output()`     | Use `@Input()`, `@Output()`  |
+| Use `signal()`, `computed()`  | Use complex RxJS             |
+| Use `@if`, `@for`, `@switch`  | Use `*ngIf`, `*ngFor`        |
+| Use `inject()`                | Use constructor injection    |
 | Use `OnPush` change detection | Use default change detection |
-| Use class bindings | Use `ngClass` |
-| Use Tailwind utilities | Use inline styles |
+| Use class bindings            | Use `ngClass`                |
+| Use Tailwind utilities        | Use inline styles            |

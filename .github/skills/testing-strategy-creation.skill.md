@@ -1,4 +1,4 @@
-````markdown
+`````markdown
 ---
 skill_id: testing-strategy-creation
 name: "Testing Strategy Creation"
@@ -63,21 +63,25 @@ mcp_tools:
 # [Feature] - Testing Strategy
 
 ## Scope
+
 - In scope: ...
 - Out of scope: ...
 
 ## Coverage Targets
-| Component | Target | Current |
-|:----------|:-------|:--------|
-| Services  | 80%    | -       |
-| Components| 70%    | -       |
+
+| Component  | Target | Current |
+| :--------- | :----- | :------ |
+| Services   | 80%    | -       |
+| Components | 70%    | -       |
 
 ## Test Types
+
 - Unit tests
 - Integration tests
 - E2E tests
 
 ## Critical Paths
+
 1. [Path description]
    - Tests: [test files]
    - Priority: High
@@ -92,13 +96,16 @@ mcp_tools:
 **Priority:** critical | high | medium | low
 
 **Preconditions:**
+
 - [condition]
 
 **Steps:**
+
 1. [action]
 2. [action]
 
 **Expected Result:**
+
 - [outcome]
 
 **Test File:** `path/to/test.spec.ts`
@@ -106,27 +113,36 @@ mcp_tools:
 
 ## Environment Requirements
 
-```markdown
+````markdown
 ## Test Environment
 
 **Dependencies:**
+
 - PostgreSQL (test database)
 - Redis (mock or real)
 
 **Setup:**
+
 ```bash
 bun run test:setup
 ```
+````
+`````
 
 **Teardown:**
+
 ```bash
 bun run test:teardown
 ```
+
 ```
 
 ## Reference
 
 - [07-TESTING-STRATEGY-TEMPLATE.md](/docs/templates/07-TESTING-STRATEGY-TEMPLATE.md)
 - [testing.instructions.md](../instructions/testing.instructions.md)
+```
 
-````
+```
+
+```

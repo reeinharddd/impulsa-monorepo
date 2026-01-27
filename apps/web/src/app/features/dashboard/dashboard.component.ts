@@ -7,7 +7,6 @@ import { Component } from '@angular/core';
   imports: [CommonModule],
   template: `
     <div class="space-y-6">
-
       <!-- Welcome Header -->
       <div class="flex flex-col gap-1">
         <h1 class="text-2xl font-bold text-gray-900">Hola, Juan 👋</h1>
@@ -16,7 +15,6 @@ import { Component } from '@angular/core';
 
       <!-- Stats Grid -->
       <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-
         <!-- Stat Card 1 -->
         <div class="rounded-xl bg-white p-6 shadow-sm ring-1 ring-gray-100">
           <div class="flex items-center justify-between">
@@ -24,7 +22,9 @@ import { Component } from '@angular/core';
               <span class="text-sm font-medium text-gray-500">Ventas Hoy</span>
               <span class="mt-1 text-2xl font-bold text-gray-900">$12,450</span>
             </div>
-            <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-green-50 text-green-600">
+            <div
+              class="flex h-10 w-10 items-center justify-center rounded-lg bg-green-50 text-green-600"
+            >
               <!-- Icon Placeholder -->
               <span class="font-bold">$</span>
             </div>
@@ -42,11 +42,13 @@ import { Component } from '@angular/core';
               <span class="text-sm font-medium text-gray-500">Pedidos</span>
               <span class="mt-1 text-2xl font-bold text-gray-900">24</span>
             </div>
-            <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-50 text-blue-600">
+            <div
+              class="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-50 text-blue-600"
+            >
               <span class="font-bold">#</span>
             </div>
           </div>
-           <div class="mt-4 flex items-center text-xs">
+          <div class="mt-4 flex items-center text-xs">
             <span class="font-medium text-orange-600">3 pendientes</span>
             <span class="ml-2 text-gray-400">de preparar</span>
           </div>
@@ -59,7 +61,9 @@ import { Component } from '@angular/core';
               <span class="text-sm font-medium text-gray-500">Inventario Bajo</span>
               <span class="mt-1 text-2xl font-bold text-gray-900">5</span>
             </div>
-            <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-orange-50 text-orange-600">
+            <div
+              class="flex h-10 w-10 items-center justify-center rounded-lg bg-orange-50 text-orange-600"
+            >
               <span class="font-bold">!</span>
             </div>
           </div>
@@ -67,10 +71,8 @@ import { Component } from '@angular/core';
             Ver productos
           </div>
         </div>
-
       </div>
-
     </div>
-  `
+  `,
 })
 export class DashboardComponent {}

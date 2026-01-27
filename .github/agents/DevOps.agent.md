@@ -26,7 +26,8 @@ scope:
 auto_invoke:
   keywords:
     primary: [deploy, docker, kubernetes, ci, cd, pipeline]
-    secondary: [infrastructure, container, nginx, ssl, environment, secrets, helm]
+    secondary:
+      [infrastructure, container, nginx, ssl, environment, secrets, helm]
   file_patterns:
     - "docker/**"
     - "Dockerfile*"
@@ -73,12 +74,12 @@ handoff:
 
 ## MCP Tools
 
-| Tool | Purpose | When to Use |
-|:-----|:--------|:------------|
-| `container-tools_get-config` | Get Docker config | Before container commands |
-| `run_in_terminal` | Execute commands | Docker, deployments |
-| `mcp_payment-syste_search_full_text` | Search infra docs | Find configurations |
-| `read_file` | Read configs | Dockerfile, compose files |
+| Tool                                 | Purpose           | When to Use               |
+| :----------------------------------- | :---------------- | :------------------------ |
+| `container-tools_get-config`         | Get Docker config | Before container commands |
+| `run_in_terminal`                    | Execute commands  | Docker, deployments       |
+| `mcp_payment-syste_search_full_text` | Search infra docs | Find configurations       |
+| `read_file`                          | Read configs      | Dockerfile, compose files |
 
 ## Context Loading
 
@@ -103,13 +104,13 @@ read_file("/docs/templates/08-DEPLOYMENT-RUNBOOK-TEMPLATE.md")
 
 ## Port Assignments
 
-| Service | Dev Port | Prod Port |
-|:--------|:---------|:----------|
-| API | 3000 | 3000 |
-| Web | 4200 | 80 |
-| PostgreSQL | 5432 | 5432 |
-| Redis | 6379 | 6379 |
-| Prisma Studio | 5555 | - |
+| Service       | Dev Port | Prod Port |
+| :------------ | :------- | :-------- |
+| API           | 3000     | 3000      |
+| Web           | 4200     | 80        |
+| PostgreSQL    | 5432     | 5432      |
+| Redis         | 6379     | 6379      |
+| Prisma Studio | 5555     | -         |
 
 ## Docker Commands
 
@@ -130,18 +131,21 @@ docker compose exec api sh
 ## Deployment Checklist
 
 ### Pre-deployment
+
 - [ ] All tests passing
 - [ ] Environment variables set
 - [ ] Database migrations ready
 - [ ] Rollback plan documented
 
 ### Deployment
+
 - [ ] Backup database
 - [ ] Apply migrations
 - [ ] Deploy containers
 - [ ] Health check
 
 ### Post-deployment
+
 - [ ] Verify functionality
 - [ ] Monitor logs
 - [ ] Update runbook
@@ -165,6 +169,7 @@ docker compose exec api sh
 ## Handoff
 
 After infrastructure setup:
+
 - **@Security** - For security review
 - **@QA** - For deployment verification
 

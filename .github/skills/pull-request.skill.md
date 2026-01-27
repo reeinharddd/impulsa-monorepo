@@ -84,12 +84,12 @@ Closes #[issue]
 
 ## Auto-Detection
 
-| Commit Type | PR Type |
-|:------------|:--------|
-| `feat` | New feature |
-| `fix` | Bug fix |
-| `docs` | Documentation |
-| `refactor` | Refactor |
+| Commit Type | PR Type       |
+| :---------- | :------------ |
+| `feat`      | New feature   |
+| `fix`       | Bug fix       |
+| `docs`      | Documentation |
+| `refactor`  | Refactor      |
 
 ## Reference
 

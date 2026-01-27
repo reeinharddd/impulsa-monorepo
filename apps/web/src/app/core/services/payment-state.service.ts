@@ -12,19 +12,27 @@ export interface PaymentTransition {
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class PaymentStateService {
-
   // Valid transitions map
   private readonly ALLOWED_TRANSITIONS: Record<ChargeStatus, ChargeStatus[]> = {
     [ChargeStatus.CREATED]: [ChargeStatus.PRESENTED, ChargeStatus.CANCELED, ChargeStatus.ABANDONED],
-    [ChargeStatus.PRESENTED]: [ChargeStatus.PAYMENT_SENT, ChargeStatus.EXPIRED, ChargeStatus.CANCELED, ChargeStatus.ABANDONED],
-    [ChargeStatus.PAYMENT_SENT]: [ChargeStatus.CONFIRMED, ChargeStatus.FAILED, ChargeStatus.EXPIRED], // Expired might happen if payment notification never comes? Or maybe not needed from sent.
+    [ChargeStatus.PRESENTED]: [
+      ChargeStatus.PAYMENT_SENT,
+      ChargeStatus.EXPIRED,
+      ChargeStatus.CANCELED,
+      ChargeStatus.ABANDONED,
+    ],
+    [ChargeStatus.PAYMENT_SENT]: [
+      ChargeStatus.CONFIRMED,
+      ChargeStatus.FAILED,
+      ChargeStatus.EXPIRED,
+    ], // Expired might happen if payment notification never comes? Or maybe not needed from sent.
     [ChargeStatus.CONFIRMED]: [], // Terminal
-    [ChargeStatus.FAILED]: [],    // Terminal for that attempt (could retry but new intent usually)
-    [ChargeStatus.EXPIRED]: [],   // Terminal
-    [ChargeStatus.CANCELED]: [],  // Terminal
+    [ChargeStatus.FAILED]: [], // Terminal for that attempt (could retry but new intent usually)
+    [ChargeStatus.EXPIRED]: [], // Terminal
+    [ChargeStatus.CANCELED]: [], // Terminal
     [ChargeStatus.ABANDONED]: [ChargeStatus.EXPIRED], // Mapping abandoned to expired for persistence if needed
   };
 
@@ -38,14 +46,18 @@ export class PaymentStateService {
 
     // Idempotency check
     if (from === to) {
-      console.warn(`[PaymentState] Idempotent transition attempted: ${from} -> ${to} for intent ${intent.id}`);
+      console.warn(
+        `[PaymentState] Idempotent transition attempted: ${from} -> ${to} for intent ${intent.id}`,
+      );
       return true; // Treat as success but don't emit change
     }
 
     // Validity check
     const allowed = this.ALLOWED_TRANSITIONS[from];
     if (!allowed || !allowed.includes(to)) {
-      console.error(`[PaymentState] Invalid transition attempted: ${from} -> ${to} for intent ${intent.id}`);
+      console.error(
+        `[PaymentState] Invalid transition attempted: ${from} -> ${to} for intent ${intent.id}`,
+      );
       return false;
     }
 
@@ -55,7 +67,7 @@ export class PaymentStateService {
       from,
       to,
       timestamp: new Date(),
-      meta
+      meta,
     };
 
     this._validatedTransitionSubject.next(transition);

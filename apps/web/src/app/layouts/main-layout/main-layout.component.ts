@@ -1,9 +1,9 @@
-import { CommonModule } from "@angular/common";
-import { Component, signal } from "@angular/core";
-import { RouterLink, RouterLinkActive, RouterOutlet } from "@angular/router";
+import { CommonModule } from '@angular/common';
+import { Component, signal } from '@angular/core';
+import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 
 @Component({
-  selector: "app-main-layout",
+  selector: 'app-main-layout',
   standalone: true,
   imports: [CommonModule, RouterOutlet, RouterLink, RouterLinkActive],
   template: `
@@ -29,16 +29,12 @@ import { RouterLink, RouterLinkActive, RouterOutlet } from "@angular/router";
             >
               I
             </div>
-            <span class="text-xl font-bold tracking-tight text-gray-900"
-              >Impulsa</span
-            >
+            <span class="text-xl font-bold tracking-tight text-gray-900">Impulsa</span>
           </div>
         </div>
 
         <!-- Build Info (Temporary for Dev) -->
-        <div
-          class="px-6 py-2 text-xs text-brand-secondary font-medium bg-green-50"
-        >
+        <div class="px-6 py-2 text-xs text-brand-secondary font-medium bg-green-50">
           Versión Alpha 0.1
         </div>
 
@@ -50,9 +46,7 @@ import { RouterLink, RouterLinkActive, RouterOutlet } from "@angular/router";
             class="flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-50 hover:text-gray-900"
           >
             <!-- Icon Mockup -->
-            <span
-              class="h-5 w-5 rounded-full border-2 border-current opacity-60"
-            ></span>
+            <span class="h-5 w-5 rounded-full border-2 border-current opacity-60"></span>
             Dashboard
           </a>
 
@@ -61,9 +55,7 @@ import { RouterLink, RouterLinkActive, RouterOutlet } from "@angular/router";
             routerLinkActive="bg-brand-surface text-brand-primary font-semibold"
             class="flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-50 hover:text-gray-900"
           >
-            <span
-              class="h-5 w-5 rounded-full border-2 border-current opacity-60"
-            ></span>
+            <span class="h-5 w-5 rounded-full border-2 border-current opacity-60"></span>
             Venta (POS)
           </a>
 
@@ -72,9 +64,7 @@ import { RouterLink, RouterLinkActive, RouterOutlet } from "@angular/router";
             routerLinkActive="bg-brand-surface text-brand-primary font-semibold"
             class="flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-50 hover:text-gray-900"
           >
-            <span
-              class="h-5 w-5 rounded-full border-2 border-current opacity-60"
-            ></span>
+            <span class="h-5 w-5 rounded-full border-2 border-current opacity-60"></span>
             Inventario
           </a>
 
@@ -83,41 +73,30 @@ import { RouterLink, RouterLinkActive, RouterOutlet } from "@angular/router";
             routerLinkActive="bg-brand-surface text-brand-primary font-semibold"
             class="flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-50 hover:text-gray-900"
           >
-            <span
-              class="h-5 w-5 rounded-full border-2 border-current opacity-60"
-            ></span>
+            <span class="h-5 w-5 rounded-full border-2 border-current opacity-60"></span>
             Pedidos
           </a>
 
-           <a
+          <a
             routerLink="/settings"
             routerLinkActive="bg-brand-surface text-brand-primary font-semibold"
             class="flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-50 hover:text-gray-900"
           >
-            <span
-              class="h-5 w-5 rounded-full border-2 border-current opacity-60"
-            ></span>
+            <span class="h-5 w-5 rounded-full border-2 border-current opacity-60"></span>
             Configuración
           </a>
-
         </nav>
 
         <!-- User Profile (Bottom) -->
-        <div
-          class="absolute bottom-0 left-0 w-full border-t border-gray-100 bg-white p-4"
-        >
-          <div
-            class="flex items-center gap-3 rounded-xl p-2 hover:bg-gray-50 cursor-pointer"
-          >
+        <div class="absolute bottom-0 left-0 w-full border-t border-gray-100 bg-white p-4">
+          <div class="flex items-center gap-3 rounded-xl p-2 hover:bg-gray-50 cursor-pointer">
             <div
               class="h-10 w-10 rounded-full bg-brand-surface text-brand-primary flex items-center justify-center font-bold"
             >
               JM
             </div>
             <div class="flex flex-col">
-              <span class="text-sm font-semibold text-gray-900"
-                >Juan Merchant</span
-              >
+              <span class="text-sm font-semibold text-gray-900">Juan Merchant</span>
               <span class="text-xs text-gray-500">Mi Negocio v1</span>
             </div>
           </div>
@@ -130,10 +109,7 @@ import { RouterLink, RouterLinkActive, RouterOutlet } from "@angular/router";
         <header
           class="flex h-16 items-center justify-between bg-white px-6 border-b border-gray-100 lg:hidden"
         >
-          <button
-            (click)="toggleSidebar()"
-            class="text-gray-600 focus:outline-none"
-          >
+          <button (click)="toggleSidebar()" class="text-gray-600 focus:outline-none">
             <span class="text-2xl">☰</span>
           </button>
           <span class="font-bold text-gray-900">Impulsa</span>

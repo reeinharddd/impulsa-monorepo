@@ -9,15 +9,15 @@ export const paymentIntentResolver: ResolveFn<PaymentIntent> = (route) => {
   const id = route.paramMap.get('id');
 
   if (!id) {
-     router.navigate(['/app']);
-     throw new Error('Payment ID required');
+    router.navigate(['/app']);
+    throw new Error('Payment ID required');
   }
 
   const intent = api.getPaymentIntent(id);
 
   if (!intent) {
-      router.navigate(['/app']); // Redirect if not found
-      throw new Error('Payment Intent not found');
+    router.navigate(['/app']); // Redirect if not found
+    throw new Error('Payment Intent not found');
   }
 
   return intent;

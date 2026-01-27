@@ -71,31 +71,39 @@ Format: `NNN-SHORT-TITLE.md`
 # ADR-NNN: [Title]
 
 ## Status
+
 [proposed | accepted | rejected | deprecated | superseded]
 
 ## Context
+
 [What is the issue that we're seeing that motivates this decision?]
 
 ## Decision
+
 [What is the change that we're proposing and/or doing?]
 
 ## Options Considered
 
 ### Option 1: [Name]
+
 **Pros:** ...
 **Cons:** ...
 
 ### Option 2: [Name]
+
 **Pros:** ...
 **Cons:** ...
 
 ## Rationale
+
 [Why was this option chosen?]
 
 ## Consequences
+
 [What becomes easier or more difficult?]
 
 ## Related ADRs
+
 [Links to related decisions]
 ```
 
@@ -128,13 +136,13 @@ adr_metadata:
 
 ## ADR Categories
 
-| Category | Keywords | Example |
-|:---------|:---------|:--------|
+| Category     | Keywords           | Example                   |
+| :----------- | :----------------- | :------------------------ |
 | Architecture | pattern, structure | Monolith vs Microservices |
-| Technology | framework, library | Angular vs React |
-| Data | database, storage | PostgreSQL vs MongoDB |
-| Security | auth, encryption | JWT vs Sessions |
-| Integration | api, protocol | REST vs GraphQL |
+| Technology   | framework, library | Angular vs React          |
+| Data         | database, storage  | PostgreSQL vs MongoDB     |
+| Security     | auth, encryption   | JWT vs Sessions           |
+| Integration  | api, protocol      | REST vs GraphQL           |
 
 ## Workflow
 

@@ -35,17 +35,18 @@ describe('ServiceName', () => {
 
 ## Coverage Requirements
 
-| Type | Minimum |
-|:-----|:--------|
-| Services | 80% |
-| Controllers | 70% |
-| Utils | 90% |
-| Components | 70% |
-| Critical paths | 95% |
+| Type           | Minimum |
+| :------------- | :------ |
+| Services       | 80%     |
+| Controllers    | 70%     |
+| Utils          | 90%     |
+| Components     | 70%     |
+| Critical paths | 95%     |
 
 ## Mocking
 
 ### Prisma (Backend)
+
 ```typescript
 import { mockDeep, DeepMockProxy } from 'jest-mock-extended';
 import { PrismaClient } from '@prisma/client';
@@ -55,8 +56,9 @@ prisma.model.findMany.mockResolvedValue([...]);
 ```
 
 ### Angular (Frontend)
+
 ```typescript
-fixture.componentRef.setInput('inputName', value);
+fixture.componentRef.setInput("inputName", value);
 fixture.detectChanges();
 ```
 

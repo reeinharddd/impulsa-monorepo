@@ -60,17 +60,17 @@ All documents MUST have:
 
 ```yaml
 ---
-document_type: "[type]"     # REQUIRED
-module: "[module]"          # REQUIRED
-status: "[status]"          # REQUIRED
-version: "X.Y.Z"            # REQUIRED
-last_updated: "YYYY-MM-DD"  # REQUIRED
-author: "@username"         # REQUIRED
+document_type: "[type]" # REQUIRED
+module: "[module]" # REQUIRED
+status: "[status]" # REQUIRED
+version: "X.Y.Z" # REQUIRED
+last_updated: "YYYY-MM-DD" # REQUIRED
+author: "@username" # REQUIRED
 
 keywords:
-  - "[keyword1]"            # REQUIRED (5-10)
+  - "[keyword1]" # REQUIRED (5-10)
 
-related_docs:               # REQUIRED (can be empty)
+related_docs: # REQUIRED (can be empty)
   database_schema: ""
   api_design: ""
   ux_flow: ""
@@ -79,18 +79,18 @@ related_docs:               # REQUIRED (can be empty)
 
 ## Document Types → Templates
 
-| document_type | Template | Extra Fields |
-|:--------------|:---------|:-------------|
-| `general` | 00-GENERAL | doc_metadata |
-| `feature-design` | 01-FEATURE | feature_metadata |
-| `adr` | 02-ADR | adr_metadata |
-| `database-schema` | 03-DATABASE | database, schema_stats |
-| `api-design` | 04-API | api_metadata |
-| `sync-strategy` | 05-SYNC | sync_metadata |
-| `ux-flow` | 06-UX | ux_metadata |
-| `testing-strategy` | 07-TESTING | testing_metadata |
-| `deployment-runbook` | 08-DEPLOYMENT | deployment_metadata |
-| `security-audit` | 09-SECURITY | security_metadata |
+| document_type        | Template      | Extra Fields           |
+| :------------------- | :------------ | :--------------------- |
+| `general`            | 00-GENERAL    | doc_metadata           |
+| `feature-design`     | 01-FEATURE    | feature_metadata       |
+| `adr`                | 02-ADR        | adr_metadata           |
+| `database-schema`    | 03-DATABASE   | database, schema_stats |
+| `api-design`         | 04-API        | api_metadata           |
+| `sync-strategy`      | 05-SYNC       | sync_metadata          |
+| `ux-flow`            | 06-UX         | ux_metadata            |
+| `testing-strategy`   | 07-TESTING    | testing_metadata       |
+| `deployment-runbook` | 08-DEPLOYMENT | deployment_metadata    |
+| `security-audit`     | 09-SECURITY   | security_metadata      |
 
 ## Status Values
 
@@ -113,6 +113,7 @@ status: "deprecated"  # No longer valid
 ## Auto-Fix Suggestions
 
 When validation fails, suggest:
+
 - Missing fields with defaults
 - Date format corrections
 - Path corrections for related_docs
@@ -123,10 +124,14 @@ When validation fails, suggest:
 {
   "valid": false,
   "errors": [
-    {"field": "last_updated", "message": "Invalid date format", "suggestion": "2026-01-26"}
+    {
+      "field": "last_updated",
+      "message": "Invalid date format",
+      "suggestion": "2026-01-26"
+    }
   ],
   "warnings": [
-    {"field": "keywords", "message": "Only 3 keywords, recommend 5-10"}
+    { "field": "keywords", "message": "Only 3 keywords, recommend 5-10" }
   ]
 }
 ```

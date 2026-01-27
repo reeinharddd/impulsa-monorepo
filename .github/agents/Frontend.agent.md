@@ -69,11 +69,11 @@ handoff:
 
 ## MCP Tools
 
-| Tool | Purpose | When to Use |
-|:-----|:--------|:------------|
-| `mcp_payment-syste_query_docs_by_type` | Get UX docs | Understanding flows/designs |
-| `mcp_io_github_ups_get-library-docs` | Angular docs | API reference lookup |
-| `get_errors` | Check compile errors | After template changes |
+| Tool                                   | Purpose              | When to Use                 |
+| :------------------------------------- | :------------------- | :-------------------------- |
+| `mcp_payment-syste_query_docs_by_type` | Get UX docs          | Understanding flows/designs |
+| `mcp_io_github_ups_get-library-docs`   | Angular docs         | API reference lookup        |
+| `get_errors`                           | Check compile errors | After template changes      |
 
 ## Context Loading
 
@@ -97,7 +97,7 @@ read_file("/libs/ui/src/index.ts")
 
 ```typescript
 @Component({
-  selector: 'app-example',
+  selector: "app-example",
   standalone: true,
   imports: [CommonModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -109,7 +109,7 @@ read_file("/libs/ui/src/index.ts")
         <item-card [item]="item" />
       }
     }
-  `
+  `,
 })
 export class ExampleComponent {
   items = input.required<Item[]>();

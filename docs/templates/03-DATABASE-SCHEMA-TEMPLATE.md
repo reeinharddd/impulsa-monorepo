@@ -168,17 +168,17 @@ table1 ||--o{ table2 : "has many"
 
 #### Schema: `[schema_name].[TableName]`
 
-| Column         | Type                | Nullable | Default              | Description                                                 | Rules & Constraints                                 |
-| :------------- | :------------------ | :------- | :------------------- | :---------------------------------------------------------- | :-------------------------------------------------- |
-| **id**         | `UUID`              | NOT NULL | `uuid_generate_v4()` | Primary key                                                 | Unique, Immutable                                   |
-| **businessId** | `UUID`              | NOT NULL | -                    | Foreign key to `business.Business` (multi-tenant isolation) | Must exist in `Business` table                      |
-| **name**       | `VARCHAR(255)`      | NOT NULL | -                    | [Field description]                                         | Min length 3 chars                                  |
-| **status**     | `ENUM`              | NOT NULL | `'ACTIVE'`           | Possible values: `ACTIVE`, `INACTIVE`, `ARCHIVED`           | Cannot transition from ARCHIVED to ACTIVE           |
-| **metadata**   | `JSONB`             | NULL     | `'{}'`               | Flexible key-value storage for extensibility                | Max size 10KB                                       |
-| **createdAt**  | `TIMESTAMP WITH TZ` | NOT NULL | `NOW()`              | Record creation timestamp                                   | Immutable                                           |
-| **updatedAt**  | `TIMESTAMP WITH TZ` | NOT NULL | `NOW()`              | Last update timestamp (auto-updated by trigger)             | Always >= createdAt                                 |
-| **deletedAt**  | `TIMESTAMP WITH TZ` | NULL     | `NULL`               | Soft delete timestamp                                       | If set, record is hidden                            |
-| **version**    | `BIGINT`            | NOT NULL | `1`                  | Optimistic locking version counter                          | Increments on every update                          |
+| Column         | Type                | Nullable | Default              | Description                                                 | Rules & Constraints                       |
+| :------------- | :------------------ | :------- | :------------------- | :---------------------------------------------------------- | :---------------------------------------- |
+| **id**         | `UUID`              | NOT NULL | `uuid_generate_v4()` | Primary key                                                 | Unique, Immutable                         |
+| **businessId** | `UUID`              | NOT NULL | -                    | Foreign key to `business.Business` (multi-tenant isolation) | Must exist in `Business` table            |
+| **name**       | `VARCHAR(255)`      | NOT NULL | -                    | [Field description]                                         | Min length 3 chars                        |
+| **status**     | `ENUM`              | NOT NULL | `'ACTIVE'`           | Possible values: `ACTIVE`, `INACTIVE`, `ARCHIVED`           | Cannot transition from ARCHIVED to ACTIVE |
+| **metadata**   | `JSONB`             | NULL     | `'{}'`               | Flexible key-value storage for extensibility                | Max size 10KB                             |
+| **createdAt**  | `TIMESTAMP WITH TZ` | NOT NULL | `NOW()`              | Record creation timestamp                                   | Immutable                                 |
+| **updatedAt**  | `TIMESTAMP WITH TZ` | NOT NULL | `NOW()`              | Last update timestamp (auto-updated by trigger)             | Always >= createdAt                       |
+| **deletedAt**  | `TIMESTAMP WITH TZ` | NULL     | `NULL`               | Soft delete timestamp                                       | If set, record is hidden                  |
+| **version**    | `BIGINT`            | NOT NULL | `1`                  | Optimistic locking version counter                          | Increments on every update                |
 
 #### Indexes
 

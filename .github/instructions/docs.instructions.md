@@ -10,18 +10,18 @@ These instructions apply to all Markdown documentation files.
 
 ALL documentation MUST use approved templates from `docs/templates/`:
 
-| Template | Use For |
-|:---------|:--------|
-| 00-GENERAL | Guides, overviews |
-| 01-FEATURE-DESIGN | Feature specs |
-| 02-ADR | Architecture decisions |
-| 03-DATABASE-SCHEMA | DB structure |
-| 04-API-DESIGN | REST endpoints |
-| 05-SYNC-STRATEGY | Offline/sync |
-| 06-UX-FLOW | User journeys |
-| 07-TESTING-STRATEGY | QA plans |
-| 08-DEPLOYMENT-RUNBOOK | Deploy procedures |
-| 09-SECURITY-AUDIT | Security reviews |
+| Template              | Use For                |
+| :-------------------- | :--------------------- |
+| 00-GENERAL            | Guides, overviews      |
+| 01-FEATURE-DESIGN     | Feature specs          |
+| 02-ADR                | Architecture decisions |
+| 03-DATABASE-SCHEMA    | DB structure           |
+| 04-API-DESIGN         | REST endpoints         |
+| 05-SYNC-STRATEGY      | Offline/sync           |
+| 06-UX-FLOW            | User journeys          |
+| 07-TESTING-STRATEGY   | QA plans               |
+| 08-DEPLOYMENT-RUNBOOK | Deploy procedures      |
+| 09-SECURITY-AUDIT     | Security reviews       |
 
 ## YAML Frontmatter (REQUIRED)
 
@@ -58,9 +58,9 @@ Every document needs:
 ```markdown
 ## Appendix A: Change Log
 
-| Date | Version | Author | Changes |
-|:-----|:--------|:-------|:--------|
-| YYYY-MM-DD | 1.0.0 | @author | Initial |
+| Date       | Version | Author  | Changes |
+| :--------- | :------ | :------ | :------ |
+| YYYY-MM-DD | 1.0.0   | @author | Initial |
 ```
 
 ## Markdown Standards
@@ -75,6 +75,7 @@ Every document needs:
 ## MCP Integration
 
 Documents are indexed by MCP server. To improve searchability:
+
 - Use clear section headings
 - Include relevant keywords
 - Link related documents in frontmatter
