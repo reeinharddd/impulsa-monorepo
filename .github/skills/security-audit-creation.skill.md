@@ -1,4 +1,3 @@
-````markdown
 ---
 skill_id: security-audit-creation
 name: "Security Audit Creation"
@@ -167,4 +166,3 @@ mcp_tools:
 
 - [09-SECURITY-AUDIT-TEMPLATE.md](/docs/templates/09-SECURITY-AUDIT-TEMPLATE.md)
 - [SECURITY-ARCHITECTURE.md](/docs/technical/architecture/SECURITY-ARCHITECTURE.md)
-````

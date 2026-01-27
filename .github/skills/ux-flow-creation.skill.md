@@ -1,4 +1,3 @@
-````markdown
 ---
 skill_id: ux-flow-creation
 name: "UX Flow Creation"
@@ -123,4 +122,3 @@ mcp_tools:
 
 - [06-UX-FLOW-TEMPLATE.md](/docs/templates/06-UX-FLOW-TEMPLATE.md)
 - [VISUAL-IDENTITY.md](/docs/process/standards/VISUAL-IDENTITY.md)
-````

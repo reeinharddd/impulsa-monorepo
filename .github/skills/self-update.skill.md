@@ -46,7 +46,7 @@ chain_before: []
 is_meta: true
 
 # Agent Association
-called_by: ["system"]
+called_by: ["@Architect", "@Scribe"]
 mcp_tools:
   - read_file
   - replace_string_in_file

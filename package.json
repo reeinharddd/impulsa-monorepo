@@ -27,6 +27,7 @@
     "format:check": "prettier --check \"**/*.{ts,tsx,js,jsx,json,md}\"",
     "typecheck": "turbo run typecheck",
     "validate": "turbo run lint typecheck test build",
+    "validate:agents": "bun run scripts/validate-agents-system.ts",
     "clean": "turbo run clean && rm -rf node_modules",
     "db:migrate": "bun run --filter @impulsa/api db:migrate",
     "db:seed": "bun run --filter @impulsa/api db:seed",
@@ -53,7 +54,8 @@
     "lint-staged": "^15.2.0",
     "prettier": "^3.1.1",
     "turbo": "^1.11.2",
-    "typescript": "^5.3.3"
+    "typescript": "^5.3.3",
+    "yaml": "^2.8.2"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [

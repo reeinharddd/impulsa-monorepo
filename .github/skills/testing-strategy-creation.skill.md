@@ -1,4 +1,3 @@
-`````markdown
 ---
 skill_id: testing-strategy-creation
 name: "Testing Strategy Creation"
@@ -127,7 +126,8 @@ mcp_tools:
 bun run test:setup
 ```
 ````
-`````
+
+````
 
 **Teardown:**
 
@@ -145,4 +145,4 @@ bun run test:teardown
 
 ```
 
-```
+````

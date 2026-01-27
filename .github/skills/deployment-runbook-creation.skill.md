@@ -1,4 +1,3 @@
-`````markdown
 ---
 skill_id: deployment-runbook-creation
 name: "Deployment Runbook Creation"
@@ -103,6 +102,7 @@ mcp_tools:
 bun run deploy:dev
 ```
 ````
+
 `````
 
 - Auto-deploys from `develop` branch
@@ -154,4 +154,4 @@ bun run deploy:prod
 
 ```
 
-```
+`````
