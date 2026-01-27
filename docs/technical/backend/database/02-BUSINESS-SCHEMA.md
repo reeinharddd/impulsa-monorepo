@@ -160,11 +160,25 @@ package "business" #ECEFF1 {
     isSystem : BOOLEAN
     createdAt : TIMESTAMP
   }
+
+  entity "BusinessApiKey" as api_key {
+    *id : UUID <<PK>>
+    --
+    *businessId : UUID <<FK>>
+    name : VARCHAR(50)
+    keyHash : VARCHAR(255)
+    permissions : JSONB
+    lastUsedAt : TIMESTAMP
+    expiresAt : TIMESTAMP
+    isActive : BOOLEAN
+    createdAt : TIMESTAMP
+  }
 }
 
 business ||..o{ branch : "owns"
 business ||..o{ employee : "employs"
 business ||..o{ role : "defines"
+business ||..o{ api_key : "authenticates via"
 role ||..o{ employee : "assigned to"
 branch ||..o{ employee : "workplace of"
 @enduml
@@ -178,65 +192,81 @@ branch ||..o{ employee : "workplace of"
 
 Represents the legal and commercial entity using the system. This is the root of the multi-tenancy isolation.
 
-| Attribute    | Type         | Required | Description                                       | Constraints / Notes                                                             |
-| :----------- | :----------- | :------- | :------------------------------------------------ | :------------------------------------------------------------------------------ |
-| `id`         | UUID         | **Yes**  | Unique identifier for the business.               | Primary Key.                                                                    |
-| `ownerId`    | UUID         | **Yes**  | Reference to the `User` who owns the account.     | Foreign Key to `auth.users`. The owner has implicit full access.                |
-| `name`       | VARCHAR(100) | **Yes**  | Commercial Name (Nombre Comercial).               | Example: "Tacos El Paisa". Visible on receipts header.                          |
-| `legalName`  | VARCHAR(150) | No       | Legal Name (Razón Social).                        | Example: "Alimentos del Norte S.A. de C.V.". Used for official invoices.        |
-| `taxId`      | VARCHAR(50)  | No       | Tax Identification Number.                        | RFC (MX), NIT (CO), CUIT (AR). Unique per country.                              |
-| `country`    | CHAR(2)      | **Yes**  | ISO 3166-1 alpha-2 country code.                  | **CRITICAL**. Determines tax rules, currency formatting, and payment providers. |
-| `currency`   | CHAR(3)      | **Yes**  | ISO 4217 currency code (e.g., MXN, COP).          | Default currency for all transactions.                                          |
-| `fiscalData` | JSONB        | No       | Country-specific fiscal details.                  | Stores regime (e.g., "RESICO" in MX), tax responsibilities. Flexible schema.    |
-| `branding`   | JSONB        | No       | UI Customization assets.                          | `{ "logoUrl": "...", "primaryColor": "#FF0000", "coverUrl": "..." }`.           |
-| `settings`   | JSONB        | No       | Global business configuration & Receipt defaults. | e.g., `{ "receiptHeader": "Gracias!", "allowNegativeStock": false }`.           |
-| `isActive`   | BOOLEAN      | **Yes**  | Soft delete / Suspension flag.                    | Default: `true`. If `false`, no one can log in to this business.                |
-| `createdAt`  | TIMESTAMP    | **Yes**  | Record creation date.                             | Default: `now()`.                                                               |
-| `updatedAt`  | TIMESTAMP    | **Yes**  | Last update date.                                 | Auto-updated.                                                                   |
+| Attribute    | Type         | Description                                       | Rules & Constraints                                                             |
+| :----------- | :----------- | :------------------------------------------------ | :------------------------------------------------------------------------------ |
+| `id`         | UUID         | Unique identifier for the business.               | Primary Key.                                                                    |
+| `ownerId`    | UUID         | Reference to the `User` who owns the account.     | Foreign Key to `auth.users`. The owner has implicit full access.                |
+| `name`       | VARCHAR(100) | Commercial Name (Nombre Comercial).               | Example: "Tacos El Paisa". Visible on receipts header.                          |
+| `legalName`  | VARCHAR(150) | Legal Name (Razón Social).                        | Example: "Alimentos del Norte S.A. de C.V.". Used for official invoices.        |
+| `taxId`      | VARCHAR(50)  | Tax Identification Number.                        | RFC (MX), NIT (CO), CUIT (AR). Unique per country.                              |
+| `country`    | CHAR(2)      | ISO 3166-1 alpha-2 country code.                  | **CRITICAL**. Determines tax rules, currency formatting, and payment providers. |
+| `currency`   | CHAR(3)      | ISO 4217 currency code (e.g., MXN, COP).          | Default currency for all transactions.                                          |
+| `fiscalData` | JSONB        | Country-specific fiscal details.                  | Stores regime (e.g., "RESICO" in MX), tax responsibilities. Flexible schema.    |
+| `branding`   | JSONB        | UI Customization assets.                          | `{ "logoUrl": "...", "primaryColor": "#FF0000", "coverUrl": "..." }`.           |
+| `settings`   | JSONB        | Global business configuration & Receipt defaults. | e.g., `{ "receiptHeader": "Gracias!", "allowNegativeStock": false }`.           |
+| `isActive`   | BOOLEAN      | Soft delete / Suspension flag.                    | Default: `true`. If `false`, no one can log in to this business.                |
+| `createdAt`  | TIMESTAMP    | Record creation date.                             | Default: `now()`.                                                               |
+| `updatedAt`  | TIMESTAMP    | Last update date.                                 | Auto-updated.                                                                   |
 
 ### 3.2. Branch (The Location)
 
 A physical store, warehouse, or logical point of sale. A business must have at least one branch (created automatically on signup).
 
-| Attribute      | Type         | Required | Description                                     | Constraints / Notes                                                                 |
-| :------------- | :----------- | :------- | :---------------------------------------------- | :---------------------------------------------------------------------------------- |
-| `id`           | UUID         | **Yes**  | Unique identifier for the branch.               | Primary Key.                                                                        |
-| `businessId`   | UUID         | **Yes**  | The business this branch belongs to.            | Foreign Key.                                                                        |
-| `name`         | VARCHAR(100) | **Yes**  | Internal name for the location.                 | Example: "Sucursal Centro", "Almacén Norte".                                        |
-| `code`         | VARCHAR(20)  | No       | Short code for internal reference.              | Example: "MTY-01". Useful for multi-branch inventory transfers.                     |
-| `isDefault`    | BOOLEAN      | **Yes**  | Primary location flag.                          | Default: `false`. One branch per business MUST be true. Used for "Single Store" UI. |
-| `timezone`     | VARCHAR(50)  | **Yes**  | IANA Timezone ID (e.g., `America/Mexico_City`). | **CRITICAL**. Determines "End of Day" calculation and shift closing times.          |
-| `address`      | JSONB        | No       | Structured address (street, city, zip).         | Used for printing on receipts.                                                      |
-| `phoneNumber`  | VARCHAR(20)  | No       | Contact phone for this specific location.       |                                                                                     |
-| `openingHours` | JSONB        | No       | Weekly schedule definition.                     | `{ "mon": { "open": "09:00", "close": "20:00" }, ... }`. Used for App/Maps display. |
-| `isActive`     | BOOLEAN      | **Yes**  | Operational status.                             | Default: `true`. Set to `false` if the store closes permanently.                    |
+| Attribute      | Type         | Description                                     | Rules & Constraints                                                                 |
+| :------------- | :----------- | :---------------------------------------------- | :---------------------------------------------------------------------------------- |
+| `id`           | UUID         | Unique identifier for the branch.               | Primary Key.                                                                        |
+| `businessId`   | UUID         | The business this branch belongs to.            | Foreign Key.                                                                        |
+| `name`         | VARCHAR(100) | Internal name for the location.                 | Example: "Sucursal Centro", "Almacén Norte".                                        |
+| `code`         | VARCHAR(20)  | Short code for internal reference.              | Example: "MTY-01". Useful for multi-branch inventory transfers.                     |
+| `isDefault`    | BOOLEAN      | Primary location flag.                          | Default: `false`. One branch per business MUST be true. Used for "Single Store" UI. |
+| `timezone`     | VARCHAR(50)  | IANA Timezone ID (e.g., `America/Mexico_City`). | **CRITICAL**. Determines "End of Day" calculation and shift closing times.          |
+| `address`      | JSONB        | Structured address (street, city, zip).         | Used for printing on receipts.                                                      |
+| `phoneNumber`  | VARCHAR(20)  | Contact phone for this specific location.       |                                                                                     |
+| `openingHours` | JSONB        | Weekly schedule definition.                     | `{ "mon": { "open": "09:00", "close": "20:00" }, ... }`. Used for App/Maps display. |
+| `isActive`     | BOOLEAN      | Operational status.                             | Default: `true`. Set to `false` if the store closes permanently.                    |
 
 ### 3.3. Employee (The Staff Link)
 
 Connects a global `User` (Identity) to a specific `Business` context. This allows one person (User) to work at multiple businesses (e.g., an accountant working for 5 different companies).
 
-| Attribute    | Type        | Required | Description                                     | Constraints / Notes                                                                |
-| :----------- | :---------- | :------- | :---------------------------------------------- | :--------------------------------------------------------------------------------- |
-| `id`         | UUID        | **Yes**  | Unique identifier for this employment relation. | Primary Key. Used in logs (e.g., "Sold by Employee ID...").                        |
-| `businessId` | UUID        | **Yes**  | The business context.                           | Foreign Key.                                                                       |
-| `userId`     | UUID        | **Yes**  | The human identity.                             | Foreign Key to `auth.users`.                                                       |
-| `roleId`     | UUID        | **Yes**  | The permission set assigned.                    | Foreign Key to `business.roles`.                                                   |
-| `branchId`   | UUID        | No       | Scope of access.                                | If `NULL`, employee has **Global Access** (HQ). If set, restricted to that Branch. |
-| `alias`      | VARCHAR(50) | No       | Display name for receipts/system.               | Example: "Cajero 1", "Juan P.". Overrides the User's real name on tickets.         |
-| `isActive`   | BOOLEAN     | **Yes**  | Employment status.                              | Default: `true`. Set to `false` when fired/quit (preserves history).               |
+| Attribute    | Type        | Description                                     | Rules & Constraints                                                                |
+| :----------- | :---------- | :---------------------------------------------- | :--------------------------------------------------------------------------------- |
+| `id`         | UUID        | Unique identifier for this employment relation. | Primary Key. Used in logs (e.g., "Sold by Employee ID...").                        |
+| `businessId` | UUID        | The business context.                           | Foreign Key.                                                                       |
+| `userId`     | UUID        | The human identity.                             | Foreign Key to `auth.users`.                                                       |
+| `roleId`     | UUID        | The permission set assigned.                    | Foreign Key to `business.roles`.                                                   |
+| `branchId`   | UUID        | Scope of access.                                | If `NULL`, employee has **Global Access** (HQ). If set, restricted to that Branch. |
+| `alias`      | VARCHAR(50) | Display name for receipts/system.               | Example: "Cajero 1", "Juan P.". Overrides the User's real name on tickets.         |
+| `isActive`   | BOOLEAN     | Employment status.                              | Default: `true`. Set to `false` when fired/quit (preserves history).               |
 
 ### 3.4. Role (The Policy Definition)
 
 A named collection of permissions. Roles are scoped to the Business, meaning custom roles created by the owner are available in all their branches.
 
-| Attribute     | Type         | Required | Description                        | Constraints / Notes                                                                 |
-| :------------ | :----------- | :------- | :--------------------------------- | :---------------------------------------------------------------------------------- |
-| `id`          | UUID         | **Yes**  | Unique identifier.                 | Primary Key.                                                                        |
-| `businessId`  | UUID         | **Yes**  | The business defining this role.   | Foreign Key.                                                                        |
-| `name`        | VARCHAR(50)  | **Yes**  | Human-readable name.               | Example: "Shift Manager", "Weekend Staff".                                          |
-| `description` | VARCHAR(255) | No       | Explanation of the role's purpose. | Helper text for the UI.                                                             |
-| `permissions` | JSONB        | **Yes**  | Array of permission strings.       | Example: `["SALES_CREATE", "CASH_OPEN"]`. Efficient for JWT inclusion.              |
-| `isSystem`    | BOOLEAN      | **Yes**  | Protection flag.                   | If `true`, this role cannot be modified or deleted (e.g., OWNER, CASHIER defaults). |
+| Attribute     | Type         | Description                        | Rules & Constraints                                                                 |
+| :------------ | :----------- | :--------------------------------- | :---------------------------------------------------------------------------------- |
+| `id`          | UUID         | Unique identifier.                 | Primary Key.                                                                        |
+| `businessId`  | UUID         | The business defining this role.   | Foreign Key.                                                                        |
+| `name`        | VARCHAR(50)  | Human-readable name.               | Example: "Shift Manager", "Weekend Staff".                                          |
+| `description` | VARCHAR(255) | Explanation of the role's purpose. | Helper text for the UI.                                                             |
+| `permissions` | JSONB        | Array of permission strings.       | Example: `["SALES_CREATE", "CASH_OPEN"]`. Efficient for JWT inclusion.              |
+| `isSystem`    | BOOLEAN      | Protection flag.                   | If `true`, this role cannot be modified or deleted (e.g., OWNER, CASHIER defaults). |
+
+### 3.5. BusinessApiKey (Machine Access)
+
+Allows external systems (e.g., ERPs, Custom Apps) to access the API on behalf of the business.
+
+| Attribute     | Type         | Description                        | Rules & Constraints                                                                 |
+| :------------ | :----------- | :--------------------------------- | :---------------------------------------------------------------------------------- |
+| `id`          | UUID         | Unique identifier.                 | Primary Key.                                                                        |
+| `businessId`  | UUID         | The business context.              | Foreign Key.                                                                        |
+| `name`        | VARCHAR(50)  | Human-readable label.              | e.g., "SAP Integration", "Zapier".                                                  |
+| `keyHash`     | VARCHAR(255) | Hashed API Key.                    | **NEVER** store the raw key. Use bcrypt/argon2.                                     |
+| `permissions` | JSONB        | Allowed scopes.                    | e.g., `["INVENTORY_READ", "SALES_READ"]`.                                           |
+| `lastUsedAt`  | TIMESTAMP    | Audit trail.                       | Updated on every successful request.                                                |
+| `expiresAt`   | TIMESTAMP    | Validity limit.                    | Optional. If null, never expires.                                                   |
+| `isActive`    | BOOLEAN      | Revocation flag.                   | Default: `true`.                                                                    |
+| `createdAt`   | TIMESTAMP    | Creation date.                     |                                                                                     |
 
 ---
 
@@ -347,19 +377,6 @@ Every new Business is initialized with these roles. They serve as templates but 
 
 ### 4.4. Implementation Strategy
 
-### 4.3. System Roles (Defaults)
-
-Every new Business is initialized with these roles. They serve as templates but can be cloned to create custom roles (e.g., "Senior Cashier").
-
-| Role Name    | Permissions (Set)                                                                                           | Description                                                           |
-| :----------- | :---------------------------------------------------------------------------------------------------------- | :-------------------------------------------------------------------- |
-| **OWNER**    | `*` (ALL)                                                                                                   | Full access. Cannot be deleted.                                       |
-| **MANAGER**  | `POS_*`, `SALES_*`, `CASH_*`, `INVENTORY_*`, `CATALOG_*`, `EMPLOYEE_MANAGE`, `DASHBOARD_VIEW`, `CUSTOMER_*` | Can run the business but cannot see Financials or delete the account. |
-| **CASHIER**  | `POS_ACCESS`, `SALES_CREATE`, `SALES_VOID`, `CASH_MANAGE`, `CATALOG_VIEW`, `CUSTOMER_VIEW`                  | Front-line staff. No access to costs, refunds, or reports.            |
-| **STOCKIST** | `INVENTORY_*`, `CATALOG_MANAGE`                                                                             | Warehouse manager. Can see costs but cannot sell.                     |
-
-### 4.4. Implementation Strategy
-
 1.  **Storage:** Permissions are stored as a JSON array `["A", "B"]` in the `Role` table.
 2.  **Caching:** When a user logs in, their permissions are cached in the JWT payload or Redis session to avoid DB lookups on every request.
 3.  **Guard:** The `PermissionsGuard` in NestJS checks if the user's active role contains the required string.
@@ -384,3 +401,69 @@ To support "Vibe Coding" and personalized interfaces:
     - **Global Defaults:** Stored in `Business.settings` (e.g., `receiptHeader`, `receiptFooter`).
     - **Branch Overrides:** The `Branch` entity can override address and phone.
     - **Logic:** `ReceiptData = Branch.Address + (Branch.Phone || Business.Phone) + (Business.ReceiptHeader)`.
+
+---
+
+## 7. Example Data & Usage Scenarios
+
+### 7.1. Business Entity (Restaurant)
+
+```json
+{
+  "id": "bus_123",
+  "name": "Tacos El Paisa",
+  "legalName": "Alimentos del Norte SA de CV",
+  "taxId": "ANO123456ABC",
+  "country": "MX",
+  "currency": "MXN",
+  "fiscalData": {
+    "regime": "601", // General de Ley Personas Morales
+    "zipCode": "64000"
+  },
+  "branding": {
+    "logoUrl": "https://cdn.impulsa.com/logos/bus_123.png",
+    "primaryColor": "#D32F2F"
+  },
+  "settings": {
+    "allowNegativeStock": false,
+    "printReceipts": true
+  }
+}
+```
+
+### 7.2. Branch Configuration (Monterrey)
+
+```json
+{
+  "id": "br_456",
+  "businessId": "bus_123",
+  "name": "Sucursal Centro",
+  "code": "MTY-01",
+  "timezone": "America/Monterrey",
+  "address": {
+    "street": "Av. Morelos 123",
+    "city": "Monterrey",
+    "zip": "64000"
+  }
+}
+```
+
+### 7.3. Business API Key (Integration)
+
+```json
+{
+  "id": "key_789",
+  "businessId": "bus_123",
+  "name": "Zapier Integration",
+  "keyHash": "$argon2id$v=19$m=65536,t=3,p=4$...",
+  "permissions": ["SALES_READ", "INVENTORY_READ"],
+  "lastUsedAt": "2023-10-27T10:00:00Z",
+  "isActive": true
+}
+```
+
+## Appendix A: Change Log
+
+| Date       | Version | Author      | Changes          |
+| :--------- | :------ | :---------- | :--------------- |
+| 2025-12-05 | 1.0.0   | @Architect  | Initial creation |

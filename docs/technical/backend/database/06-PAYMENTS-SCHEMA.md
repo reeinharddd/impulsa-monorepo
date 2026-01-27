@@ -225,6 +225,19 @@ Allows users to request money from others (e.g., "Sell my console"). Generates a
 | `qrCode`          | TEXT          | QR Data payload.    | For scanning app-to-app.                         |
 | `expiresAt`       | TIMESTAMP     | Expiration.         | Links should expire (e.g., 24h) for security.    |
 
+### 3.5. Refund
+
+Tracks money returned to the customer.
+
+| Attribute               | Type          | Description             | Rules & Constraints                                  |
+| :---------------------- | :------------ | :---------------------- | :--------------------------------------------------- |
+| `id`                    | UUID          | Unique identifier.      | Primary Key.                                         |
+| `transactionId`         | UUID          | Original charge.        | Foreign Key to `Transaction`.                        |
+| `amount`                | DECIMAL(19,4) | Refunded amount.        | Must be <= original transaction amount.              |
+| `reason`                | VARCHAR       | Explanation.            | e.g., "Defective product", "Customer request".       |
+| `status`                | ENUM          | Processing state.       | `PENDING`, `COMPLETED`, `FAILED`.                    |
+| `createdAt`             | TIMESTAMP     | Timestamp.              | Immutable.                                           |
+
 ---
 
 ## 4. Performance & Indexing
@@ -298,6 +311,48 @@ Transactions cannot jump from `FAILED` to `COMPLETED`. They must follow a strict
 -- Valid transitions enforced by application logic, but DB can ensure finality
 ALTER TABLE payments.Transaction ADD CONSTRAINT chk_final_status
 CHECK (
+  (status IN ('COMPLETED', 'FAILED', 'REFUNDED') AND updatedAt >= createdAt) OR
+  (status = 'PENDING')
+);
+```
+
+---
+
+## 6. Example Data & Usage Scenarios
+
+### 6.1. Transaction (Card Payment)
+
+```json
+{
+  "id": "txn_999",
+  "saleId": "sale_1024",
+  "businessId": "bus_123",
+  "amount": 150.00,
+  "currency": "MXN",
+  "type": "PAYMENT",
+  "status": "COMPLETED",
+  "method": "CARD",
+  "provider": "STRIPE",
+  "providerTransactionId": "ch_1234567890",
+  "fee": 5.55,
+  "net": 144.45,
+  "createdAt": "2023-10-27T14:05:00Z"
+}
+```
+
+### 6.2. Wallet (User Balance)
+
+```json
+{
+  "id": "wall_888",
+  "userId": "user_789",
+  "currency": "MXN",
+  "balance": 500.00,
+  "status": "ACTIVE",
+  "updatedAt": "2023-10-27T10:00:00Z"
+}
+```
+
   (status = 'COMPLETED' OR status = 'FAILED') IS NOT FALSE -- Once final, cannot change?
   -- (Actually, better handled by app state machine, but DB ensures valid ENUMs)
 );

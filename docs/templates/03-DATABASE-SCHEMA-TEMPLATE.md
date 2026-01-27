@@ -168,17 +168,17 @@ table1 ||--o{ table2 : "has many"
 
 #### Schema: `[schema_name].[TableName]`
 
-| Column         | Type                | Nullable | Default              | Description                                                 |
-| :------------- | :------------------ | :------- | :------------------- | :---------------------------------------------------------- |
-| **id**         | `UUID`              | NOT NULL | `uuid_generate_v4()` | Primary key                                                 |
-| **businessId** | `UUID`              | NOT NULL | -                    | Foreign key to `business.Business` (multi-tenant isolation) |
-| **name**       | `VARCHAR(255)`      | NOT NULL | -                    | [Field description]                                         |
-| **status**     | `ENUM`              | NOT NULL | `'ACTIVE'`           | Possible values: `ACTIVE`, `INACTIVE`, `ARCHIVED`           |
-| **metadata**   | `JSONB`             | NULL     | `'{}'`               | Flexible key-value storage for extensibility                |
-| **createdAt**  | `TIMESTAMP WITH TZ` | NOT NULL | `NOW()`              | Record creation timestamp                                   |
-| **updatedAt**  | `TIMESTAMP WITH TZ` | NOT NULL | `NOW()`              | Last update timestamp (auto-updated by trigger)             |
-| **deletedAt**  | `TIMESTAMP WITH TZ` | NULL     | `NULL`               | Soft delete timestamp                                       |
-| **version**    | `BIGINT`            | NOT NULL | `1`                  | Optimistic locking version counter                          |
+| Column         | Type                | Nullable | Default              | Description                                                 | Rules & Constraints                                 |
+| :------------- | :------------------ | :------- | :------------------- | :---------------------------------------------------------- | :-------------------------------------------------- |
+| **id**         | `UUID`              | NOT NULL | `uuid_generate_v4()` | Primary key                                                 | Unique, Immutable                                   |
+| **businessId** | `UUID`              | NOT NULL | -                    | Foreign key to `business.Business` (multi-tenant isolation) | Must exist in `Business` table                      |
+| **name**       | `VARCHAR(255)`      | NOT NULL | -                    | [Field description]                                         | Min length 3 chars                                  |
+| **status**     | `ENUM`              | NOT NULL | `'ACTIVE'`           | Possible values: `ACTIVE`, `INACTIVE`, `ARCHIVED`           | Cannot transition from ARCHIVED to ACTIVE           |
+| **metadata**   | `JSONB`             | NULL     | `'{}'`               | Flexible key-value storage for extensibility                | Max size 10KB                                       |
+| **createdAt**  | `TIMESTAMP WITH TZ` | NOT NULL | `NOW()`              | Record creation timestamp                                   | Immutable                                           |
+| **updatedAt**  | `TIMESTAMP WITH TZ` | NOT NULL | `NOW()`              | Last update timestamp (auto-updated by trigger)             | Always >= createdAt                                 |
+| **deletedAt**  | `TIMESTAMP WITH TZ` | NULL     | `NULL`               | Soft delete timestamp                                       | If set, record is hidden                            |
+| **version**    | `BIGINT`            | NOT NULL | `1`                  | Optimistic locking version counter                          | Increments on every update                          |
 
 #### Indexes
 
@@ -443,7 +443,36 @@ WHERE businessId = '123e4567-e89b-12d3-a456-426614174000'
 
 ---
 
-## 10. References
+## 10. Example Data & Usage Scenarios
+
+### 10.1. [Scenario Name]
+
+```json
+{
+  "id": "uuid_1",
+  "businessId": "uuid_biz",
+  "name": "Example Name",
+  "status": "ACTIVE",
+  "metadata": {
+    "key": "value"
+  }
+}
+```
+
+### 10.2. [Another Scenario]
+
+```json
+{
+  "id": "uuid_2",
+  "businessId": "uuid_biz",
+  "name": "Example 2",
+  "status": "INACTIVE"
+}
+```
+
+---
+
+## 11. References
 
 - [DATABASE-DESIGN.md](../DATABASE-DESIGN.md) - Master database design document
 - [Prisma Schema](../../../apps/backend/prisma/schema.prisma) - Prisma ORM definitions

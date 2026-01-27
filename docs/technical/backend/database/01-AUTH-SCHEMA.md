@@ -299,6 +299,87 @@ Tracks active login sessions. This is the "State" of a logged-in user.
 | `lastActiveAt` | TIMESTAMP | Last time the session was used. | Used for sliding expiration (e.g., expire after 30m idle). |
 | `revokedAt`    | TIMESTAMP | Timestamp of revocation.        | If present, the session is invalid.                        |
 
+### 3.6. AuditLog
+
+Immutable record of security-critical actions.
+
+| Attribute   | Type      | Description                 | Rules & Constraints                                     |
+| :---------- | :-------- | :-------------------------- | :------------------------------------------------------ |
+| `id`        | UUID      | Unique identifier.          | Primary Key.                                            |
+| `userId`    | UUID      | Who performed the action.   | Foreign Key to `User`. Nullable (for system actions).   |
+| `action`    | VARCHAR   | Event type.                 | e.g., `LOGIN_SUCCESS`, `PASSWORD_CHANGE`, `MFA_ENABLE`. |
+| `resource`  | VARCHAR   | Target entity.              | e.g., `User:123`, `Business:456`.                       |
+| `metadata`  | JSONB     | Contextual details.         | `{ "browser": "Chrome", "reason": "User request" }`.    |
+| `ipAddress` | VARCHAR   | Origin IP.                  | IPv4 or IPv6.                                           |
+| `createdAt` | TIMESTAMP | Timestamp.                  | Immutable.                                              |
+
+---
+
+## 4. Security & Compliance
+
+### 4.1. PII Protection
+
+- **Encryption:** `kycData` and `mfa.secret` are encrypted at rest using AES-256-GCM.
+- **Hashing:** Passwords are hashed using Argon2id with a minimum memory cost of 64MB.
+- **Anonymization:** `deletedAt` triggers a soft-delete. A separate background job anonymizes PII (email -> `deleted_uuid@anon.com`) after 30 days for GDPR compliance.
+
+### 4.2. Audit Logging
+
+All security-critical actions (Login, Password Change, MFA Toggle) MUST generate an `AuditLog` entry.
+
+- **Immutable:** The `AuditLog` table is append-only.
+- **Retention:** Logs are kept for 1 year (hot storage) and then archived to S3 (cold storage).
+
+---
+
+## 5. Example Data & Usage Scenarios
+
+### 5.1. User Profile (JSON Representation)
+
+```json
+{
+  "id": "018b7c3a-5c2d-7d8e-9f0a-1b2c3d4e5f6g",
+  "email": "juan.perez@example.com",
+  "phone": "+525512345678",
+  "kycLevel": 1,
+  "preferences": {
+    "theme": "dark",
+    "language": "es-MX",
+    "notifications": {
+      "email": true,
+      "push": false
+    }
+  },
+  "createdAt": "2023-10-25T10:00:00Z"
+}
+```
+
+### 5.2. User Identity (Google Login)
+
+```json
+{
+  "userId": "018b7c3a-5c2d-7d8e-9f0a-1b2c3d4e5f6g",
+  "provider": "GOOGLE",
+  "providerId": "1029384756",
+  "metadata": {
+    "name": "Juan Perez",
+    "picture": "https://lh3.googleusercontent.com/..."
+  },
+  "lastLogin": "2023-10-26T08:30:00Z"
+}
+```
+
+### 5.3. MFA Configuration (TOTP)
+
+```json
+{
+  "userId": "018b7c3a-5c2d-7d8e-9f0a-1b2c3d4e5f6g",
+  "type": "TOTP",
+  "isEnabled": true,
+  "backupCodes": ["$argon2id$...", "$argon2id$..."] // Hashed
+}
+```
+
 **Business Rules:**
 
 - **Token Rotation:** Refresh tokens are rotated on use. The old hash is invalidated.

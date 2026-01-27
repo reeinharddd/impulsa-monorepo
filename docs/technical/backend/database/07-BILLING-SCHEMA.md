@@ -152,17 +152,81 @@ tax ||..o{ invoice : "applies to"
 
 ### 3.1. Invoice
 
-The legal document.
+The legal document representing a sale for tax purposes.
 
-| Attribute    | Type    | Description                  | Rules & Constraints                                 |
-| :----------- | :------ | :--------------------------- | :-------------------------------------------------- |
-| `fiscalId`   | VARCHAR | The official government ID.  | UUID (Mexico), CUFE (Colombia).                     |
-| `fiscalData` | JSONB   | Snapshot of receiver's data. | Stores the customer's tax info at time of stamping. |
+| Attribute    | Type         | Description                  | Rules & Constraints                                 |
+| :----------- | :----------- | :--------------------------- | :-------------------------------------------------- |
+| `id`         | UUID         | Unique identifier.           | Primary Key.                                        |
+| `saleId`     | UUID         | The sale being invoiced.     | Foreign Key to `sales.Sale`.                        |
+| `businessId` | UUID         | The issuer.                  | Foreign Key to `business.Business`.                 |
+| `fiscalId`   | VARCHAR(255) | The official government ID.  | UUID (Mexico), CUFE (Colombia).                     |
+| `status`     | ENUM         | Lifecycle state.             | `DRAFT`, `PENDING`, `STAMPED`, `CANCELLED`.         |
+| `provider`   | ENUM         | The PAC/Authority used.      | `SAT`, `DIAN`, `AFIP`.                              |
+| `xmlUrl`     | VARCHAR(255) | Link to the signed XML.      | Stored in S3.                                       |
+| `pdfUrl`     | VARCHAR(255) | Link to the PDF representation.| Stored in S3.                                     |
+| `fiscalData` | JSONB        | Snapshot of receiver's data. | Stores the customer's tax info at time of stamping. |
+| `createdAt`  | TIMESTAMP    | Creation date.               |                                                     |
 
 ### 3.2. TaxProfile
 
-Configuration for taxes.
+Configuration for taxes applicable to products or services.
 
-| Attribute | Type    | Description          | Rules & Constraints            |
-| :-------- | :------ | :------------------- | :----------------------------- |
-| `code`    | VARCHAR | Government tax code. | e.g., `002` for IVA in Mexico. |
+| Attribute    | Type         | Description                  | Rules & Constraints                                 |
+| :----------- | :----------- | :--------------------------- | :-------------------------------------------------- |
+| `id`         | UUID         | Unique identifier.           | Primary Key.                                        |
+| `businessId` | UUID         | The owner.                   | Foreign Key to `business.Business`.                 |
+| `name`       | VARCHAR(50)  | Internal name.               | e.g., "IVA 16%", "Exento".                          |
+| `rate`       | DECIMAL(5,2) | The percentage.              | e.g., `16.00`.                                      |
+| `code`       | VARCHAR(20)  | Government tax code.         | e.g., `002` for IVA in Mexico.                      |
+| `type`       | ENUM         | Tax category.                | `VAT` (Traslado), `RETENTION` (Retención).          |
+
+### 3.3. FiscalData
+
+Stores the tax information of the business (Issuer) or Customer (Receiver).
+
+| Attribute    | Type         | Description                  | Rules & Constraints                                 |
+| :----------- | :----------- | :--------------------------- | :-------------------------------------------------- |
+| `id`         | UUID         | Unique identifier.           | Primary Key.                                        |
+| `businessId` | UUID         | The owner.                   | Foreign Key to `business.Business`.                 |
+| `taxId`      | VARCHAR(50)  | RFC / NIT / CUIT.            | Must match country format regex.                    |
+| `legalName`  | VARCHAR(255) | Official registered name.    | Must match government records exactly.              |
+| `address`    | JSONB        | Fiscal address.              | `{ "zip": "06600", "street": "..." }`.              |
+| `regime`     | VARCHAR(50)  | Tax regime code.             | e.g., "601" (General de Ley).                       |
+
+---
+
+## 6. Example Data & Usage Scenarios
+
+### 6.1. Invoice (Factura)
+
+```json
+{
+  "id": "inv_2023_001",
+  "businessId": "bus_123",
+  "saleId": "sale_1024",
+  "customerId": "cust_555",
+  "fiscalId": "A123456789",
+  "series": "F",
+  "number": 1001,
+  "status": "ISSUED",
+  "total": 116.00,
+  "xmlUrl": "https://s3.aws.com/invoices/F-1001.xml",
+  "pdfUrl": "https://s3.aws.com/invoices/F-1001.pdf",
+  "issuedAt": "2023-10-27T14:10:00Z"
+}
+```
+
+### 6.2. TaxProfile (Fiscal Config)
+
+```json
+{
+  "id": "tax_prof_1",
+  "businessId": "bus_123",
+  "taxId": "XAXX010101000",
+  "legalName": "Tacos El Paisa SA de CV",
+  "regime": "601 - General de Ley Personas Morales",
+  "zipCode": "06600",
+  "certificateNumber": "30001000000400002434",
+  "isActive": true
+}
+```

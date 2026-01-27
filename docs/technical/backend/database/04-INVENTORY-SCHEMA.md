@@ -1502,3 +1502,61 @@ JOIN cogs ON p.id = cogs.id
 JOIN avg_inventory ON p.id = avg_inventory.id
 ORDER BY turnover_ratio DESC;
 ```
+
+---
+
+## 10. Example Data & Usage Scenarios
+
+### 10.1. Product (Simple Item)
+
+```json
+{
+  "id": "prod_coke",
+  "name": "Coca-Cola 600ml",
+  "sku": "COKE-600",
+  "barcode": "7501055300075",
+  "price": 18.00,
+  "costPrice": 12.50,
+  "type": "SIMPLE",
+  "trackStock": true,
+  "status": "ACTIVE"
+}
+```
+
+### 10.2. Product (Variable Item - T-Shirt)
+
+```json
+{
+  "id": "prod_tshirt",
+  "name": "Cotton T-Shirt",
+  "type": "VARIABLE",
+  "variants": [
+    {
+      "sku": "TSHIRT-RED-S",
+      "price": 150.00,
+      "attributes": { "color": "Red", "size": "S" }
+    },
+    {
+      "sku": "TSHIRT-RED-M",
+      "price": 150.00,
+      "attributes": { "color": "Red", "size": "M" }
+    }
+  ]
+}
+```
+
+### 10.3. Stock Movement (Sale)
+
+```json
+{
+  "id": "mov_123",
+  "inventoryLevelId": "inv_level_456",
+  "type": "SALE",
+  "quantityChange": -1,
+  "quantityAfter": 99,
+  "reason": "Sale #1024",
+  "referenceType": "SALE",
+  "referenceId": "sale_1024",
+  "createdAt": "2023-10-27T14:00:00Z"
+}
+```

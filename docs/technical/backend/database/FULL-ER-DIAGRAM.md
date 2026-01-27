@@ -222,6 +222,105 @@ package "business" #ECEFF1 {
   }
 }
 
+' --- SCHEMA: CRM ---
+package "crm" #FFF3E0 {
+  entity "Customer" as customer {
+    *id : UUID <<PK>>
+    --
+    *businessId : UUID <<FK>>
+    userId : UUID <<FK>>
+    fullName : VARCHAR
+    email : VARCHAR
+    phone : VARCHAR
+    taxId : VARCHAR
+    address : JSONB
+    preferences : JSONB
+    notes : TEXT
+    creditLimit : DECIMAL
+    currentDebt : DECIMAL
+    tags : VARCHAR[]
+    isActive : BOOLEAN
+    createdAt : TIMESTAMP
+    updatedAt : TIMESTAMP
+  }
+
+  entity "LoyaltyProgram" as program {
+    *id : UUID <<PK>>
+    --
+    *businessId : UUID <<FK>>
+    name : VARCHAR
+    type : ENUM
+    rules : JSONB
+    isActive : BOOLEAN
+    startDate : TIMESTAMP
+    endDate : TIMESTAMP
+  }
+
+  entity "LoyaltyAccount" as account {
+    *id : UUID <<PK>>
+    --
+    *businessId : UUID <<FK>>
+    *customerId : UUID <<FK>>
+    *programId : UUID <<FK>>
+    balance : DECIMAL
+    lifetimePoints : DECIMAL
+    tierLevel : VARCHAR
+    joinedAt : TIMESTAMP
+    updatedAt : TIMESTAMP
+  }
+
+  entity "LoyaltyTransaction" as loy_tx {
+    *id : UUID <<PK>>
+    --
+    *accountId : UUID <<FK>>
+    *saleId : UUID <<FK>>
+    type : ENUM
+    points : DECIMAL
+    description : VARCHAR
+    createdAt : TIMESTAMP
+  }
+
+  entity "CustomerSegment" as segment {
+    *id : UUID <<PK>>
+    --
+    *businessId : UUID <<FK>>
+    name : VARCHAR
+    criteria : JSONB
+    isDynamic : BOOLEAN
+    createdAt : TIMESTAMP
+  }
+}
+
+' --- SCHEMA: ANALYTICS ---
+package "analytics" #E1BEE7 {
+  entity "DailySalesStats" as daily {
+    *id : UUID <<PK>>
+    --
+    *businessId : UUID <<FK>>
+    *branchId : UUID <<FK>>
+    *date : DATE
+    totalRevenue : DECIMAL
+    totalCost : DECIMAL
+    grossProfit : DECIMAL
+    transactionCount : INT
+    averageTicket : DECIMAL
+    updatedAt : TIMESTAMP
+  }
+
+  entity "ProductPerformance" as product_stats {
+    *id : UUID <<PK>>
+    --
+    *businessId : UUID <<FK>>
+    *branchId : UUID <<FK>>
+    *productId : UUID <<FK>>
+    *period : VARCHAR
+    unitsSold : DECIMAL
+    revenueGenerated : DECIMAL
+    profitGenerated : DECIMAL
+    updatedAt : TIMESTAMP
+  }
+}
+
 ' --- SCHEMA: COMMUNICATION ---
 package "communication" #F3E5F5 {
   entity "NotificationLog" as notif {
@@ -348,25 +447,6 @@ package "inventory" #FFF3E0 {
 
 ' --- SCHEMA: SALES ---
 package "sales" #E8F5E9 {
-  entity "Customer" as customer {
-    *id : UUID <<PK>>
-    --
-    *businessId : UUID <<FK>>
-    userId : UUID <<FK>>
-    fullName : VARCHAR
-    email : VARCHAR
-    phone : VARCHAR
-    taxId : VARCHAR
-    address : JSONB
-    preferences : JSONB
-    notes : TEXT
-    creditLimit : DECIMAL
-    currentDebt : DECIMAL
-    isActive : BOOLEAN
-    createdAt : TIMESTAMP
-    updatedAt : TIMESTAMP
-  }
-
   entity "CashRegister" as register {
     *id : UUID <<PK>>
     --
@@ -554,6 +634,14 @@ business ||..o{ notif : "generates"
 role ||..o{ employee : "assigned to"
 business ||..o{ role : "defines"
 
+' CRM
+business ||..o{ customer : "manages"
+user ||..o{ customer : "linked to"
+program ||..o{ account : "manages"
+customer ||..o{ account : "participates in"
+account ||..o{ loy_tx : "has history"
+customer }o..o{ segment : "belongs to"
+
 ' Communication
 template ||..o{ notif : "instantiates"
 
@@ -575,7 +663,6 @@ employee ||..o{ shift : "opens"
 shift ||..o{ sale : "includes"
 employee ||..o{ sale : "performs"
 customer ||..o{ sale : "purchases"
-user ||..o{ customer : "linked to"
 sale ||..|{ sale_item : "contains"
 sale ||..o{ sale_payment : "paid via"
 product ||..o{ sale_item : "sold as"

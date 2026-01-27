@@ -26,6 +26,7 @@ related_docs:
   feature_design: "docs/technical/backend/features/POS-CORE.md"
   ux_flow: "docs/technical/frontend/ux-flows/POS-SALES.md"
   sync_strategy: "docs/technical/architecture/OFFLINE-SYNC.md"
+  crm_schema: "docs/technical/backend/database/08-CRM-SCHEMA.md"
 
 # Database metadata
 database:
@@ -108,26 +109,13 @@ Key capabilities:
 hide circle
 skinparam linetype ortho
 
-package "sales" #E8F5E9 {
+package "crm" #FFF3E0 {
   entity "Customer" as customer {
     *id : UUID <<PK>>
-    --
-    *businessId : UUID <<FK>>
-    userId : UUID <<FK>>
-    fullName : VARCHAR(150)
-    email : VARCHAR(255)
-    phone : VARCHAR(20)
-    taxId : VARCHAR(50)
-    address : JSONB
-    preferences : JSONB
-    notes : TEXT
-    creditLimit : DECIMAL(19,4)
-    currentDebt : DECIMAL(19,4)
-    isActive : BOOLEAN
-    createdAt : TIMESTAMP
-    updatedAt : TIMESTAMP
   }
+}
 
+package "sales" #E8F5E9 {
   entity "CashRegister" as register {
     *id : UUID <<PK>>
     --
@@ -229,28 +217,7 @@ sale ||..o{ payment : "paid via"
 
 ## 3. Detailed Entity Definitions
 
-### 3.1. Customer
-
-Represents a client of the business. Can be a casual walk-in (unregistered) or a registered regular.
-
-| Attribute     | Type          | Description          | Rules & Constraints                                   |
-| :------------ | :------------ | :------------------- | :---------------------------------------------------- |
-| `id`          | UUID          | Unique identifier.   | Primary Key.                                          |
-| `businessId`  | UUID          | Tenant owner.        | Foreign Key to `business.Business`.                   |
-| `userId`      | UUID          | Global Identity.     | Foreign Key to `auth.User`. Optional (for App users). |
-| `fullName`    | VARCHAR(150)  | Client name.         | Required.                                             |
-| `email`       | VARCHAR(255)  | Contact email.       | Optional. Used for digital receipts.                  |
-| `phone`       | VARCHAR(20)   | Contact phone.       | Optional.                                             |
-| `taxId`       | VARCHAR(50)   | Fiscal ID.           | RFC/NIT. Required for invoices.                       |
-| `address`     | JSONB         | Billing/Shipping.    | `{ "street": "...", "zip": "..." }`.                  |
-| `preferences` | JSONB         | Comm settings.       | `{ "receiptChannel": "WHATSAPP", "language": "es" }`. |
-| `notes`       | TEXT          | Internal remarks.    | "Likes spicy food", "VIP".                            |
-| `creditLimit` | DECIMAL(19,4) | Max allowed debt.    | For "Fiado" (Store Credit).                           |
-| `currentDebt` | DECIMAL(19,4) | Outstanding balance. | Updated when sales are `UNPAID`.                      |
-| `isActive`    | BOOLEAN       | Status.              | Default `true`.                                       |
-| `createdAt`   | TIMESTAMP     | Creation date.       | UTC.                                                  |
-
-### 3.2. CashRegister
+### 3.1. CashRegister
 
 A physical or logical point of sale terminal.
 
@@ -292,7 +259,7 @@ The header of a transaction/ticket.
 | `branchId`      | UUID          | Location.          | Foreign Key to `business.Branch`.                      |
 | `shiftId`       | UUID          | Shift context.     | Foreign Key to `Shift`.                                |
 | `employeeId`    | UUID          | Seller.            | Foreign Key to `business.Employee`. Who made the sale. |
-| `customerId`    | UUID          | Client.            | Foreign Key to `Customer`. Optional.                   |
+| `customerId`    | UUID          | Client.            | Foreign Key to `crm.Customer`. Optional.               |
 | `saleNumber`    | INT           | Sequential ID.     | Per Business. Friendly ID (e.g., #1045).               |
 | `status`        | ENUM          | State.             | `COMPLETED`, `VOIDED` (Cancelled), `PENDING`.          |
 | `paymentStatus` | ENUM          | Payment state.     | `PAID`, `PARTIAL` (Layaway), `UNPAID` (Credit).        |
@@ -357,7 +324,7 @@ BEGIN
   IF NEW.paymentMethod = 'CREDIT' THEN
     -- Get customer's current debt and limit
     SELECT balance, creditLimit INTO current_debt, credit_limit
-    FROM sales.Customer WHERE id = NEW.customerId;
+    FROM crm.Customer WHERE id = NEW.customerId;
 
     -- Check if new sale pushes them over limit
     IF (current_debt + NEW.total) > credit_limit THEN
@@ -392,4 +359,57 @@ The total must ALWAYS equal the sum of items minus discounts plus tax.
 ```sql
 ALTER TABLE sales.Sale ADD CONSTRAINT chk_sale_math
 CHECK (total = (subtotal - discountTotal + taxTotal));
+```
+
+---
+
+## 6. Example Data & Usage Scenarios
+
+### 6.1. Sale (Standard Retail Transaction)
+
+```json
+{
+  "id": "sale_1024",
+  "businessId": "bus_123",
+  "shiftId": "shift_55",
+  "saleNumber": 1024,
+  "status": "COMPLETED",
+  "total": 150.00,
+  "subtotal": 129.31,
+  "taxTotal": 20.69,
+  "discountTotal": 0.00,
+  "paymentMethod": "CASH",
+  "items": [
+    {
+      "productId": "prod_coke",
+      "quantity": 2,
+      "unitPrice": 18.00,
+      "total": 36.00
+    },
+    {
+      "productId": "prod_tshirt",
+      "quantity": 1,
+      "unitPrice": 114.00,
+      "total": 114.00
+    }
+  ],
+  "createdAt": "2023-10-27T14:05:00Z"
+}
+```
+
+### 6.2. Shift (Cashier Session)
+
+```json
+{
+  "id": "shift_55",
+  "businessId": "bus_123",
+  "userId": "user_cashier_1",
+  "startTime": "2023-10-27T08:00:00Z",
+  "endTime": "2023-10-27T16:00:00Z",
+  "startCash": 500.00,
+  "endCash": 2500.00,
+  "expectedCash": 2500.00,
+  "difference": 0.00,
+  "status": "CLOSED"
+}
 ```

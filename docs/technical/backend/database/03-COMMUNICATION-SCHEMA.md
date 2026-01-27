@@ -286,3 +286,60 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 ```
+
+---
+
+## 6. Example Data & Usage Scenarios
+
+### 6.1. Notification Template (Welcome Email)
+
+```json
+{
+  "id": "tmpl_123",
+  "businessId": "bus_123",
+  "code": "WELCOME_EMAIL",
+  "channel": "EMAIL",
+  "subject": "Welcome to {{businessName}}, {{userName}}!",
+  "content": "<html><body><h1>Hi {{userName}}</h1><p>Thanks for joining us.</p></body></html>",
+  "variables": ["businessName", "userName"],
+  "isDefault": false
+}
+```
+
+### 6.2. Notification Log (Sent SMS)
+
+```json
+{
+  "id": "log_456",
+  "userId": "user_789",
+  "businessId": "bus_123",
+  "templateId": "tmpl_sms_otp",
+  "channel": "SMS",
+  "priority": "HIGH",
+  "status": "DELIVERED",
+  "provider": "Twilio",
+  "providerId": "SM1234567890abcdef",
+  "metadata": {
+    "segments": 1,
+    "cost": 0.05
+  },
+  "createdAt": "2023-10-27T10:00:00Z"
+}
+```
+
+### 6.3. In-App Notification (Order Ready)
+
+```json
+{
+  "id": "inapp_101",
+  "userId": "user_789",
+  "title": "Order #1024 Ready",
+  "body": "Your tacos are ready for pickup!",
+  "data": {
+    "orderId": "ord_1024",
+    "action": "VIEW_ORDER"
+  },
+  "isRead": false,
+  "createdAt": "2023-10-27T12:30:00Z"
+}
+```
