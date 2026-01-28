@@ -1,7 +1,6 @@
 ---
-skill_id: adr-creation
-name: "ADR Creation"
-description: "Generate Architecture Decision Records following the project template and numbering convention."
+name: adr-creation
+description: "Generate Architecture Decision Records following the project template and numbering convention. Use when documenting architecture decisions, technical choices, or when the user asks to create an ADR."
 event: architecture-decision
 auto_trigger: false
 version: "2.0.0"

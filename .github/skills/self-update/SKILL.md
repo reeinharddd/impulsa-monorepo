@@ -1,7 +1,6 @@
 ---
-skill_id: self-update
-name: "Self-Update Meta Skill"
-description: "Automatically update the AGENTS.md system when its components change. Keeps routing tables, README files, and documentation in sync."
+name: self-update
+description: "Update the AGENTS.md system when its components change. Use when modifying agents, skills, or instructions files."
 event: system-change
 auto_trigger: true
 priority: high
@@ -25,7 +24,7 @@ auto_invoke:
     - "instruction-modified"
   file_patterns:
     - ".github/agents/*.agent.md"
-    - ".github/skills/*.skill.md"
+    - ".github/skills/*/skill.md"
     - ".github/instructions/*.instructions.md"
     - "docs/templates/*.md"
   conditions:
@@ -68,7 +67,7 @@ mcp_tools:
 | Path                                     | Component Type | Updates                             |
 | :--------------------------------------- | :------------- | :---------------------------------- |
 | `.github/agents/*.agent.md`              | Subagent       | AGENTS.md routing, agents/README.md |
-| `.github/skills/*.skill.md`              | Skill          | skills/README.md, trigger tables    |
+| `.github/skills/*/skill.md`              | Skill          | skills/README.md, trigger tables    |
 | `.github/instructions/*.instructions.md` | Instruction    | instructions/README.md              |
 | `docs/templates/*.md`                    | Template       | Documentation workflow              |
 
@@ -87,7 +86,7 @@ Security.agent.md created
 ### New Skill Added
 
 ```
-new-skill.skill.md created
+new-skill/skill.md created
     ↓
 1. Update skills/README.md (add to table)
 2. Update trigger events table

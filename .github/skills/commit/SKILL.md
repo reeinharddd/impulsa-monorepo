@@ -1,7 +1,6 @@
 ---
-skill_id: commit
-name: "Commit Message Generation"
-description: "Generate consistent Conventional Commit messages from staged changes."
+name: commit
+description: "Generate Conventional Commit messages from staged changes. Use when committing code, generating commit messages, or when the user asks for a commit."
 event: pre-commit
 auto_trigger: true
 version: "2.0.0"

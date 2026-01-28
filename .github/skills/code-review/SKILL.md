@@ -1,7 +1,6 @@
 ---
-skill_id: code-review
-name: "Automated Code Review"
-description: "Perform automated code review against project standards and patterns."
+name: code-review
+description: "Perform automated code review against project standards and patterns. Use when reviewing code, checking for issues, or when the user asks for a code review."
 event: review-request
 auto_trigger: false
 version: "2.0.0"

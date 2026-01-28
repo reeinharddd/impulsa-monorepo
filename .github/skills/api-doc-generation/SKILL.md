@@ -1,7 +1,6 @@
 ---
-skill_id: api-doc-generation
-name: "API Documentation Generation"
-description: "Generate and update API documentation from NestJS controllers. Keeps API docs in sync with implementation."
+name: api-doc-generation
+description: "Generate and update API documentation from NestJS controllers. Use when modifying controllers, adding endpoints, or when the user asks about API documentation."
 event: controller-change
 auto_trigger: true
 version: "2.0.0"

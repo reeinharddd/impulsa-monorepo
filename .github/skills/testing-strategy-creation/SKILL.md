@@ -1,7 +1,6 @@
 ---
-skill_id: testing-strategy-creation
-name: "Testing Strategy Creation"
-description: "Generate comprehensive testing strategy documentation following the TESTING-STRATEGY template. Defines test plans, coverage targets, and test cases."
+name: testing-strategy-creation
+description: "Generate testing strategy documentation following the TESTING-STRATEGY template. Use when planning test strategies, defining coverage targets, or when the user asks for a test plan."
 event: testing-plan
 auto_trigger: false
 version: "1.0.0"

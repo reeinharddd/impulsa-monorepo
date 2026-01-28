@@ -1,19 +1,21 @@
 # AGENTS.md - Impulsa AI Orchestrator
 
-> **Version:** 5.0.0 | **Standard:** AGENTS.md v1 (LF Agentic AI Foundation)
+> **Version:** 5.2.0 | **Standard:** AGENTS.md v1 + Agent Skills
 
 ## Purpose
 
-This is the **root orchestrator** for AI agent interactions. It routes tasks to specialized subagents and invokes skills automatically. The system is **self-updating** - changes to agents/skills automatically sync documentation.
+This is the **root orchestrator** for AI agent interactions. It routes tasks to specialized subagents and invokes skills automatically.
+
+**Skills** (`.github/skills/*/SKILL.md`) are **auto-discovered** by Copilot based on the `description` field.
 
 ## Quick Reference
 
-| Component            | Location                                                | Purpose             |
-| :------------------- | :------------------------------------------------------ | :------------------ |
-| **Subagents (9)**    | [.github/agents/](.github/agents/README.md)             | Domain specialists  |
-| **Skills (17)**      | [.github/skills/](.github/skills/README.md)             | Automated tasks     |
-| **Instructions (6)** | [.github/instructions/](.github/instructions/README.md) | Path-specific rules |
-| **Standards**        | [docs/process/](docs/process/)                          | Development rules   |
+| Component            | Location                                                | Purpose                              |
+| :------------------- | :------------------------------------------------------ | :----------------------------------- |
+| **Skills (18)**      | [.github/skills/](.github/skills/README.md)             | Auto-discovered specialized tasks    |
+| **Subagents (9)**    | [.github/agents/](.github/agents/README.md)             | Domain specialists (via runSubagent) |
+| **Instructions (7)** | [.github/instructions/](.github/instructions/README.md) | Path-specific rules                  |
+| **Standards**        | [docs/process/](docs/process/)                          | Development rules                    |
 
 ## MCP Tools (Quick Ref)
 
@@ -112,6 +114,7 @@ bun run lint         # Lint code
 - Put logic in controllers
 - Use `any` type
 - Use NgModules (standalone only)
+- Use barrel files (index.ts) - use direct imports
 
 **ALWAYS:**
 
@@ -133,6 +136,8 @@ bun run lint         # Lint code
 
 | Version | Date       | Changes                                                                                                                     |
 | :------ | :--------- | :-------------------------------------------------------------------------------------------------------------------------- |
+| 5.2.0   | 2026-01-27 | Skills use SKILL.md convention; Auto-discovery via description field; Updated skill count to 18                             |
+| 5.1.0   | 2026-01-27 | Added NO barrel files constraint; Updated import rules across all documentation                                             |
 | 5.0.0   | 2026-01-26 | Complete YAML frontmatter (scope, triggers, auto_invoke); 4 new template skills; business.instructions.md                   |
 | 4.0.0   | 2026-01-26 | Added @Security, @DataArchitect, @SyncEngineer, @DevOps agents; Added 7 new skills for doc automation; Self-updating system |
 | 3.0.0   | 2026-01-26 | Modular architecture with component READMEs                                                                                 |

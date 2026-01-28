@@ -1,7 +1,6 @@
 ---
-skill_id: documentation
-name: "Documentation Generation"
-description: "Generate documentation using approved templates with proper structure and frontmatter."
+name: documentation
+description: "Generate documentation using approved templates with proper structure and frontmatter. Use when creating new docs, writing documentation, or when the user asks for documentation help."
 event: doc-creation
 auto_trigger: false
 version: "2.0.0"

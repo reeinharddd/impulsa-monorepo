@@ -1,7 +1,6 @@
 ---
-skill_id: security-audit-creation
-name: "Security Audit Creation"
-description: "Generate security audit documentation following the SECURITY-AUDIT template. Documents vulnerabilities, compliance status, and remediation plans."
+name: security-audit-creation
+description: "Generate security audit documentation following the SECURITY-AUDIT template. Use when performing security reviews, checking for vulnerabilities, or when the user asks for a security audit."
 event: security-review
 auto_trigger: false
 version: "1.0.0"

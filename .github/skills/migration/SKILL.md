@@ -1,7 +1,6 @@
 ---
-skill_id: migration
-name: "Migration Safety Validation"
-description: "Validate Prisma schema changes for safety and generate migration reports."
+name: migration
+description: "Validate Prisma schema changes for safety and generate migration reports. Use when modifying schema.prisma, creating database migrations, or when the user asks about migrations."
 event: schema-change
 auto_trigger: true
 version: "2.0.0"

@@ -1,17 +1,14 @@
 # Subagents System
 
-> **Version:** 1.0.0 | **Standard:** AGENTS.md v1
+> **Version:** 2.0.0 | **Standard:** AGENTS.md v1 + Agent Skills
 
 This directory contains specialized AI subagents that handle domain-specific tasks.
 
 ## Purpose
 
-Subagents are **domain specialists** that handle complex, multi-step work. Each agent has:
+Subagents are **domain specialists** that handle complex, multi-step work. Use them via the `runSubagent` tool with the agent name (e.g., `@Backend`, `@Frontend`).
 
-- Specific expertise (backend, frontend, etc.)
-- Allowed MCP tools
-- Constraints to follow
-- Workflow patterns
+**Note:** Skills (`.github/skills/*/SKILL.md`) are auto-discovered by Copilot. Subagents require explicit invocation via `runSubagent`.
 
 ## How Subagents Work
 
@@ -192,11 +189,17 @@ When a subagent completes its work, it provides a handoff summary:
 
 Subagents can invoke skills when needed:
 
-```yaml
-@Backend editing schema.prisma → triggers migration.skill.md
-@Scribe creating docs → triggers documentation.skill.md
-@QA after code changes → triggers testing.skill.md
-```
+| Agent          | Triggers Skills                              |
+| :------------- | :------------------------------------------- |
+| @Backend       | `migration`, `api-doc-generation`, `testing` |
+| @Frontend      | `i18n-translation`, `ux-flow-creation`       |
+| @DataArchitect | `migration`, `schema-doc-sync`               |
+| @Scribe        | `documentation`, `adr-creation`, `commit`    |
+| @QA            | `testing`, `testing-strategy-creation`       |
+| @Security      | `security-audit-creation`                    |
+| @DevOps        | `deployment-runbook-creation`                |
+
+Skills are loaded automatically based on their `description` field. See [Skills System](../skills/README.md).
 
 ## Related Documentation
 
@@ -206,4 +209,4 @@ Subagents can invoke skills when needed:
 
 ---
 
-_Each subagent file is self-contained. Only its context is loaded when invoked._
+_Use `runSubagent` tool with agent name (e.g., `@Backend`) for complex domain tasks._

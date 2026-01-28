@@ -12,16 +12,17 @@ File Being Edited → Check applyTo Pattern → Load Instructions
  apps/api/foo.ts    apps/api/**/*.ts     backend.instructions.md
 ```
 
-## Available Instructions (6)
+## Available Instructions (7)
 
-| File                                                 | ApplyTo Pattern              | Focus           |
-| :--------------------------------------------------- | :--------------------------- | :-------------- |
-| [backend.instructions.md](backend.instructions.md)   | `apps/api/**/*.ts`           | NestJS patterns |
-| [frontend.instructions.md](frontend.instructions.md) | `apps/web/**/*.ts,html`      | Angular 21+     |
-| [prisma.instructions.md](prisma.instructions.md)     | `prisma/**,**/schema.prisma` | Database        |
-| [docs.instructions.md](docs.instructions.md)         | `docs/**/*.md`               | Documentation   |
-| [testing.instructions.md](testing.instructions.md)   | `**/*.spec.ts,**/test/**`    | Testing         |
-| [business.instructions.md](business.instructions.md) | `docs/business/**/*.md`      | Business docs   |
+| File                                                 | ApplyTo Pattern              | Focus            |
+| :--------------------------------------------------- | :--------------------------- | :--------------- |
+| [backend.instructions.md](backend.instructions.md)   | `apps/api/**/*.ts`           | NestJS patterns  |
+| [frontend.instructions.md](frontend.instructions.md) | `apps/web/**/*.ts,html`      | Angular 21+      |
+| [tailwind.instructions.md](tailwind.instructions.md) | `apps/web/**/*.ts,html,css`  | Styling/Tailwind |
+| [prisma.instructions.md](prisma.instructions.md)     | `prisma/**,**/schema.prisma` | Database         |
+| [docs.instructions.md](docs.instructions.md)         | `docs/**/*.md`               | Documentation    |
+| [testing.instructions.md](testing.instructions.md)   | `**/*.spec.ts,**/test/**`    | Testing          |
+| [business.instructions.md](business.instructions.md) | `docs/business/**/*.md`      | Business docs    |
 
 ## Instructions vs Subagents vs Skills
 

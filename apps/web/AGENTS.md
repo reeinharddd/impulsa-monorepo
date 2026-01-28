@@ -24,6 +24,151 @@ bun run --filter @impulsa/web lint
 
 ---
 
+## Critical Rules (MUST FOLLOW)
+
+### 1. Zoneless Change Detection
+
+The app uses `provideZonelessChangeDetection()`. NEVER use browser APIs in constructors:
+
+```typescript
+// ✅ DO: Use afterNextRender for browser APIs
+import { afterNextRender, DestroyRef, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { fromEvent } from 'rxjs';
+
+export class MyComponent {
+  private destroyRef = inject(DestroyRef);
+
+  constructor() {
+    afterNextRender(() => {
+      fromEvent(window, 'scroll')
+        .pipe(takeUntilDestroyed(this.destroyRef))
+        .subscribe(this.handleScroll.bind(this));
+    });
+  }
+}
+
+// ❌ DON'T: Browser APIs in constructor
+constructor() {
+  window.addEventListener('scroll', this.handleScroll);  // Breaks SSR/zoneless
+}
+```
+
+### 2. Separate Templates (Large Components)
+
+For complex components (50+ lines of HTML), use separate template files:
+
+```typescript
+// ✅ DO: External template for complex UI
+@Component({
+  selector: 'app-dashboard-layout',
+  templateUrl: './dashboard-layout.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+
+// ✅ DO: Inline template for simple components (< 50 lines)
+@Component({
+  selector: 'ui-button',
+  template: `<button [class]="classes()"><ng-content /></button>`,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+```
+
+### 3. ALWAYS Check Shared Components First & Use Icon System
+
+Before creating ANY button, input, card, etc., check `@shared/components/`.
+
+**Icon System (ADR-003):** Icons MUST use `lucide-angular` and the `ui-icon` component. NEVER use string names.
+
+```typescript
+// ✅ DO: Use existing shared components
+import { ButtonComponent } from '@shared/components/atoms/button/button.component';
+import { LoadingButtonComponent } from '@shared/components/molecules/loading-button/loading-button.component';
+import { Home } from 'lucide-angular'; // Import icon object
+
+@Component({ ... })
+export class MyComponent {
+  protected readonly Home = Home; // Expose for template
+}
+
+// In template:
+<ui-button variant="primary" (clicked)="save()">{{ 'SAVE' | translate }}</ui-button>
+<ui-icon [name]="Home" />
+
+// ❌ DON'T: Create inline buttons or use string icons
+<button class="bg-blue-500 px-4 py-2" (click)="save()">Save</button>
+<ui-icon name="home" />
+```
+
+### 4. Domain-Based File Organization
+
+Organize models and services by business domain:
+
+```
+core/
+├── models/
+│   ├── auth/           # User, enums, roles
+│   │   ├── enums.ts
+│   │   ├── user.model.ts
+│   │   └── user-role.model.ts
+│   ├── navigation/     # Nav items, menus
+│   │   └── navigation.model.ts
+│   ├── payment/        # Payments, sales
+│   │   ├── payment-intent.model.ts
+│   │   └── sale.model.ts
+│   └── product/        # Products, inventory
+│       └── product.model.ts
+├── services/
+│   ├── auth/           # Auth-related services
+│   │   └── mock-api.service.ts
+│   ├── navigation/     # Navigation services
+│   │   └── navigation.service.ts
+│   ├── payment/        # Payment services
+│   │   └── payment-state.service.ts
+│   └── device/         # Device services
+│       └── device-detection.service.ts
+└── guards/
+    └── auth.guard.ts
+```
+
+### 5. No Unnecessary Comments
+
+Remove obvious or redundant comments. Code should be self-documenting:
+
+```typescript
+// ✅ DO: Self-documenting code (no comment needed)
+const isActive = computed(() => this.status() === 'active');
+
+// ✅ DO: Comment only non-obvious logic
+// Debounce scroll events to prevent excessive change detection cycles
+fromEvent(window, 'scroll').pipe(debounceTime(16));
+
+// ❌ DON'T: Obvious comments
+// Check if item is active
+const isActive = computed(() => this.status() === 'active');
+
+// ❌ DON'T: Section markers
+// =========================================
+// COMPUTED PROPERTIES
+// =========================================
+```
+
+### 6. ALL Text Must Use Translations
+
+Every user-facing string must use ngx-translate:
+
+```typescript
+// ✅ DO: Use translate pipe
+<button>{{ 'COMMON.BUTTONS.SAVE' | translate }}</button>
+<p>{{ 'NAV.HOME' | translate }}</p>
+
+// ❌ DON'T: Hardcoded strings
+<button>Save</button>
+<p>Home</p>
+```
+
+---
+
 ## Application Structure
 
 ```
@@ -38,9 +183,35 @@ apps/web/src/
 │   ├── core/                   # Core services, guards
 │   │   ├── auth/
 │   │   └── api/
-│   ├── shared/                 # Shared components, pipes
-│   │   ├── components/
-│   │   └── pipes/
+│   ├── shared/                 # Shared UI components (Atomic Design)
+│   │   └── components/
+│   │       ├── atoms/          # Independent, no dependencies on other atoms
+│   │       │   ├── button/     # Pure button (no loading state)
+│   │       │   ├── input/
+│   │       │   ├── badge/
+│   │       │   ├── icon/
+│   │       │   ├── spinner/
+│   │       │   ├── avatar/
+│   │       │   └── skeleton/
+│   │       ├── molecules/      # Combinations of atoms
+│   │       │   ├── loading-button/  # Button + Spinner (for loading states)
+│   │       │   ├── form-field/
+│   │       │   ├── search-bar/
+│   │       │   ├── card/
+│   │       │   ├── dropdown/
+│   │       │   ├── tabs/
+│   │       │   ├── toast/
+│   │       │   └── empty-state/
+│   │       ├── organisms/      # Complex UI sections
+│   │       │   ├── sidebar/
+│   │       │   ├── header/
+│   │       │   ├── data-table/
+│   │       │   └── modal/
+│   │       └── layouts/        # Page-level layouts
+│   │           ├── dashboard-layout/
+│   │           ├── auth-layout/
+│   │           ├── fullscreen-layout/
+│   │           └── print-layout/
 │   ├── features/               # Feature modules (lazy loaded)
 │   │   ├── dashboard/
 │   │   ├── products/
@@ -54,6 +225,38 @@ apps/web/src/
 │   └── stores/                 # Global signal stores
 └── environments/               # Environment configs
 ```
+
+---
+
+## Import Rules (NO Barrel Files)
+
+**CRITICAL:** Do NOT use barrel files (`index.ts`). Use direct, explicit imports.
+
+```typescript
+// ✅ DO: Direct imports - explicit and predictable
+import { ButtonComponent } from '@shared/components/atoms/button/button.component';
+import { CardComponent } from '@shared/components/molecules/card/card.component';
+import { SidebarComponent } from '@shared/components/organisms/sidebar/sidebar.component';
+
+// ❌ DON'T: Barrel imports - causes circular deps and opaque builds
+import { ButtonComponent, CardComponent } from '@shared/components';
+import { ButtonComponent } from '@shared';
+```
+
+**Why no barrels?**
+
+- Prevents circular dependency issues
+- Tree-shaking works reliably
+- IDE navigation is clear
+- Build output is predictable
+- Dependencies are explicit
+
+**Path aliases available:**
+
+- `@shared/*` → `src/app/shared/*`
+- `@core/*` → `src/app/core/*`
+- `@features/*` → `src/app/features/*`
+- `@env/*` → `src/environments/*`
 
 ---
 
@@ -256,3 +459,16 @@ describe('ProductCardComponent', () => {
 | Use `OnPush` change detection | Use default change detection |
 | Use class bindings            | Use `ngClass`                |
 | Use Tailwind utilities        | Use inline styles            |
+
+---
+
+## Change Log
+
+| Version | Date       | Changes                                                                                                                                     |
+| :------ | :--------- | :------------------------------------------------------------------------------------------------------------------------------------------ |
+| 2.0.0   | 2026-01-27 | Added Critical Rules section: zoneless, templates, shared components, domain folders, comments, translations; Reorganized models & services |
+| 1.0.0   | 2026-01-01 | Initial AGENTS.md for frontend app                                                                                                          |
+
+---
+
+_This file provides frontend-specific context. See root [AGENTS.md](/AGENTS.md) for project-wide rules._

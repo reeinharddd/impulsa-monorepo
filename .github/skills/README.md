@@ -1,64 +1,91 @@
 # Skills System
 
-> **Version:** 2.0.0 | **Standard:** AGENTS.md v1
+> **Version:** 4.0.0 | **Standard:** Agent Skills (agentskills.io)
 
-This directory contains atomic, reusable skills that automate repetitive tasks.
+This directory contains skills that are **automatically discovered** by GitHub Copilot.
 
-## Purpose
+## How Skills Work (Auto-Discovery)
 
-Skills are **automated micro-tasks** triggered by events. They:
+Skills are loaded automatically when Copilot determines they're relevant to your task based on the `description` field in each `SKILL.md` file.
 
-- Execute a single, focused task
-- Are triggered automatically by events
-- Require minimal context
-- Return structured output
+```
+User Request → Copilot Analyzes → Matches description → Loads SKILL.md
+                                                              ↓
+                                                      Instructions applied
+```
+
+**Key:** Write clear, specific `description` fields that explain:
+
+1. What the skill does
+2. **When** Copilot should use it
+
+## Directory Structure
+
+Each skill has its own folder containing:
+
+```
+skills/
+├── README.md                    ← This file
+├── commit/
+│   └── SKILL.md                 ← Skill definition (MUST be named SKILL.md)
+├── migration/
+│   ├── SKILL.md                 ← Skill definition
+│   └── examples/                ← Optional: examples, scripts
+└── ...
+```
 
 ## How Skills Work
 
 ```
 Event Trigger → Skill Invoked → Process Inputs → Return Output
      ↓              ↓                ↓               ↓
- pre-commit    commit.skill      staged_files   commit_message
+ pre-commit    commit/SKILL      staged_files   commit_message
 ```
 
-## Available Skills (17 Total)
+## Available Skills (18 Total)
 
 ### Core Skills (Workflow)
 
-| Skill     | File                                             | Trigger          | Auto | Purpose                       |
-| :-------- | :----------------------------------------------- | :--------------- | :--- | :---------------------------- |
-| Commit    | [commit.skill.md](commit.skill.md)               | `pre-commit`     | ✅   | Generate Conventional Commits |
-| PR        | [pull-request.skill.md](pull-request.skill.md)   | `pr-creation`    | ✅   | Generate PR descriptions      |
-| Review    | [code-review.skill.md](code-review.skill.md)     | `review-request` | ❌   | Automated code review         |
-| Migration | [migration.skill.md](migration.skill.md)         | `schema-change`  | ✅   | Validate DB migrations        |
-| Testing   | [testing.skill.md](testing.skill.md)             | `code-change`    | ❌   | Suggest tests needed          |
-| Docs      | [documentation.skill.md](documentation.skill.md) | `doc-creation`   | ❌   | Apply doc template            |
+| Skill     | Folder                                   | Trigger          | Auto | Purpose                       |
+| :-------- | :--------------------------------------- | :--------------- | :--- | :---------------------------- |
+| Commit    | [commit/](commit/SKILL.md)               | `pre-commit`     | ✅   | Generate Conventional Commits |
+| PR        | [pull-request/](pull-request/SKILL.md)   | `pr-creation`    | ✅   | Generate PR descriptions      |
+| Review    | [code-review/](code-review/SKILL.md)     | `review-request` | ❌   | Automated code review         |
+| Migration | [migration/](migration/SKILL.md)         | `schema-change`  | ✅   | Validate DB migrations        |
+| Testing   | [testing/](testing/SKILL.md)             | `code-change`    | ❌   | Suggest tests needed          |
+| Docs      | [documentation/](documentation/SKILL.md) | `doc-creation`   | ❌   | Apply doc template            |
+
+### Frontend Skills
+
+| Skill | Folder                                         | Trigger              | Auto | Purpose                   |
+| :---- | :--------------------------------------------- | :------------------- | :--- | :------------------------ |
+| i18n  | [i18n-translation/](i18n-translation/SKILL.md) | `component-creation` | ❌   | Ensure text is translated |
 
 ### Documentation Skills (Auto-Sync)
 
-| Skill        | File                                                               | Trigger                 | Auto | Purpose                   |
-| :----------- | :----------------------------------------------------------------- | :---------------------- | :--- | :------------------------ |
-| Frontmatter  | [frontmatter-validation.skill.md](frontmatter-validation.skill.md) | `doc-save`              | ✅   | Validate YAML frontmatter |
-| ADR          | [adr-creation.skill.md](adr-creation.skill.md)                     | `architecture-decision` | ❌   | Create ADR documents      |
-| Schema Sync  | [schema-doc-sync.skill.md](schema-doc-sync.skill.md)               | `schema-change`         | ✅   | Sync schema docs          |
-| API Docs     | [api-doc-generation.skill.md](api-doc-generation.skill.md)         | `controller-change`     | ✅   | Generate API docs         |
-| Index        | [doc-index-update.skill.md](doc-index-update.skill.md)             | `doc-change`            | ✅   | Update doc indexes        |
-| Related Docs | [related-docs-sync.skill.md](related-docs-sync.skill.md)           | `doc-update`            | ✅   | Sync related_docs refs    |
+| Skill        | Folder                                                     | Trigger                 | Auto | Purpose                   |
+| :----------- | :--------------------------------------------------------- | :---------------------- | :--- | :------------------------ |
+| Frontmatter  | [frontmatter-validation/](frontmatter-validation/SKILL.md) | `doc-save`              | ✅   | Validate YAML frontmatter |
+| ADR          | [adr-creation/](adr-creation/SKILL.md)                     | `architecture-decision` | ❌   | Create ADR documents      |
+| Schema Sync  | [schema-doc-sync/](schema-doc-sync/SKILL.md)               | `schema-change`         | ✅   | Sync schema docs          |
+| API Docs     | [api-doc-generation/](api-doc-generation/SKILL.md)         | `controller-change`     | ✅   | Generate API docs         |
+| Index        | [doc-index-update/](doc-index-update/SKILL.md)             | `doc-change`            | ✅   | Update doc indexes        |
+| Related Docs | [related-docs-sync/](related-docs-sync/SKILL.md)           | `doc-update`            | ✅   | Sync related_docs refs    |
 
 ### Template-Specific Skills
 
-| Skill            | File                                                                         | Trigger               | Auto | Purpose              |
-| :--------------- | :--------------------------------------------------------------------------- | :-------------------- | :--- | :------------------- |
-| UX Flow          | [ux-flow-creation.skill.md](ux-flow-creation.skill.md)                       | `ux-design`           | ❌   | Create UX flow docs  |
-| Testing Strategy | [testing-strategy-creation.skill.md](testing-strategy-creation.skill.md)     | `testing-plan`        | ❌   | Create test plans    |
-| Deploy Runbook   | [deployment-runbook-creation.skill.md](deployment-runbook-creation.skill.md) | `deployment-planning` | ❌   | Create runbooks      |
-| Security Audit   | [security-audit-creation.skill.md](security-audit-creation.skill.md)         | `security-review`     | ❌   | Create audit reports |
+| Skill            | Folder                                                               | Trigger               | Auto | Purpose              |
+| :--------------- | :------------------------------------------------------------------- | :-------------------- | :--- | :------------------- |
+| UX Flow          | [ux-flow-creation/](ux-flow-creation/SKILL.md)                       | `ux-design`           | ❌   | Create UX flow docs  |
+| Testing Strategy | [testing-strategy-creation/](testing-strategy-creation/SKILL.md)     | `testing-plan`        | ❌   | Create test plans    |
+| Deploy Runbook   | [deployment-runbook-creation/](deployment-runbook-creation/SKILL.md) | `deployment-planning` | ❌   | Create runbooks      |
+| Security Audit   | [security-audit-creation/](security-audit-creation/SKILL.md)         | `security-review`     | ❌   | Create audit reports |
 
 ### Meta Skills (Self-Updating)
 
-| Skill       | File                                         | Trigger         | Auto | Purpose                 |
-| :---------- | :------------------------------------------- | :-------------- | :--- | :---------------------- |
-| Self-Update | [self-update.skill.md](self-update.skill.md) | `system-change` | ✅   | Update AGENTS.md system |
+| Skill       | Folder                               | Trigger         | Auto | Purpose                 |
+| :---------- | :----------------------------------- | :-------------- | :--- | :---------------------- |
+| Self-Update | [self-update/](self-update/SKILL.md) | `system-change` | ✅   | Update AGENTS.md system |
 
 ## Trigger Events
 
@@ -92,62 +119,90 @@ Event Trigger → Skill Invoked → Process Inputs → Return Output
 
 ## Skill Configuration
 
-Each skill has YAML frontmatter:
+Each skill has YAML frontmatter following the [Agent Skills spec](https://agentskills.io/specification):
 
 ```yaml
 ---
-skill_id: "commit-message"
-description: "Generate Conventional Commit messages"
-version: "1.0.0"
-auto_invoke:
-  event: "pre-commit"
-  condition: "staged_files.length > 0"
-inputs:
-  - staged_files
-  - diff_summary
-output: "commit_message"
+name: commit
+description: "Generate Conventional Commit messages from staged changes. Use when committing code or generating commit messages."
 ---
+# Instructions for Copilot...
 ```
+
+### Required Fields
+
+| Field         | Required | Description                                                    |
+| :------------ | :------- | :------------------------------------------------------------- |
+| `name`        | Yes      | Must match folder name (lowercase, hyphens)                    |
+| `description` | Yes      | **Critical for auto-discovery**. Explain what & when to use it |
+
+### Optional Fields
+
+| Field      | Description                |
+| :--------- | :------------------------- |
+| `license`  | License for the skill      |
+| `metadata` | Additional key-value pairs |
+| `version`  | Skill version              |
 
 ## Event Types
 
-| Event            | When Triggered         | Skills                 |
-| :--------------- | :--------------------- | :--------------------- |
-| `pre-commit`     | Before git commit      | commit.skill.md        |
-| `pr-creation`    | Creating pull request  | pull-request.skill.md  |
-| `review-request` | PR review requested    | code-review.skill.md   |
-| `schema-change`  | schema.prisma modified | migration.skill.md     |
-| `code-change`    | \*.ts file modified    | testing.skill.md       |
-| `doc-creation`   | docs/\*\* file created | documentation.skill.md |
+| Event            | When Triggered         | Skill Folder   |
+| :--------------- | :--------------------- | :------------- |
+| `pre-commit`     | Before git commit      | commit/        |
+| `pr-creation`    | Creating pull request  | pull-request/  |
+| `review-request` | PR review requested    | code-review/   |
+| `schema-change`  | schema.prisma modified | migration/     |
+| `code-change`    | \*.ts file modified    | testing/       |
+| `doc-creation`   | docs/\*\* file created | documentation/ |
 
 ## Creating a New Skill
 
-1. Create `[name].skill.md` in this directory
-2. Include YAML frontmatter with:
-   - `skill_id`: unique identifier
-   - `auto_invoke.event`: trigger event
-   - `auto_invoke.condition`: when to run
-   - `inputs`: required context
-   - `output`: what skill produces
-3. Define the skill logic and rules
-4. Include examples
+1. Create a new folder `[skill-name]/` in this directory (lowercase, hyphens for spaces)
+2. Create `SKILL.md` inside the folder with YAML frontmatter:
+   - `name`: must match folder name (lowercase, hyphens)
+   - `description`: **critical** - what the skill does AND when to use it
+3. Write clear instructions in Markdown
+4. Include examples if helpful
+5. Optionally add supporting files (scripts, examples) in the same folder
+
+**Note:** Skill files MUST be named `SKILL.md` (uppercase).
+
+### Good Description Examples
+
+```yaml
+# Good - specific about when to use
+description: "Generate Conventional Commit messages from staged changes. Use when committing code or when the user asks for a commit message."
+
+# Good - includes keywords
+description: "Validate Prisma schema changes for safety. Use when schema.prisma is modified or when running database migrations."
+```
+
+### Bad Description Examples
+
+```yaml
+# Bad - too vague
+description: "Helps with commits."
+
+# Bad - no "when to use"
+description: "Generates commit messages."
+```
 
 ## Invocation by Subagents
 
 Subagents can explicitly invoke skills:
 
 ```markdown
-@Backend: "I'm modifying schema.prisma, invoking migration.skill.md"
-@Scribe: "Creating new doc, invoking documentation.skill.md"
+@Backend: "I'm modifying schema.prisma, invoking migration skill"
+@Scribe: "Creating new doc, invoking documentation skill"
 ```
 
 ## Related Documentation
 
-- [Subagents System](../agents/README.md)
-- [Path Instructions](../instructions/README.md)
-- [Conventional Commits](https://www.conventionalcommits.org/)
-- [Documentation Workflow](/docs/process/standards/DOCUMENTATION-WORKFLOW.md)
+- [Subagents System](../agents/README.md) - For complex domain work (use `runSubagent`)
+- [Path Instructions](../instructions/README.md) - File-pattern rules
+- [Agent Skills Spec](https://agentskills.io/specification) - Official format
+- [GitHub Docs](https://docs.github.com/en/copilot/concepts/agents/about-agent-skills) - Copilot skills
 
 ---
 
-_Skills are atomic and stateless. They process inputs and return outputs._
+_Skills are auto-discovered by Copilot based on the `description` field. Write clear descriptions!_

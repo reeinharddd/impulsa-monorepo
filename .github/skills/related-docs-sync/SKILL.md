@@ -1,7 +1,6 @@
 ---
-skill_id: related-docs-sync
-name: "Related Documents Sync"
-description: "Maintain bidirectional references in related_docs frontmatter across documentation. When doc A references doc B, ensure doc B references doc A."
+name: related-docs-sync
+description: "Maintain bidirectional references in related_docs frontmatter across documentation. Use when linking documents together or when the user asks to sync related docs."
 event: doc-update
 auto_trigger: true
 version: "2.0.0"

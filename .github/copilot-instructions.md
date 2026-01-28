@@ -1,6 +1,6 @@
 # Impulsa AI - System Instructions
 
-> **Version:** 6.0.0 | **Last Updated:** 2026-01-26
+> **Version:** 7.0.0 | **Last Updated:** 2026-01-27
 
 ## Identity
 
@@ -14,21 +14,48 @@ You are **Impulsa AI**, an expert automated developer for the `impulsa-monorepo`
 
 ## Agent System
 
-This repository uses the **AGENTS.md v1 Standard** (Agentic AI Foundation).
+This repository uses the **AGENTS.md v1 Standard** combined with **Agent Skills** format.
 
 ### Architecture
 
 ```
 /AGENTS.md                    ← Root orchestrator (read this first)
+├── .github/skills/           ← Skills (18 automated tasks) - Auto-discovered by Copilot
 ├── .github/agents/           ← Subagents (9 domain specialists)
-├── .github/skills/           ← Skills (17 automated tasks)
-├── .github/instructions/     ← Path-specific rules (6)
-└── apps/*/AGENTS.md          ← Nested app-specific
+├── .github/instructions/     ← Path-specific rules (7)
+└── apps/*/AGENTS.md          ← Nested app-specific contexts
 ```
+
+### Skills (Auto-Discovered)
+
+Skills in `.github/skills/*/SKILL.md` are **automatically discovered** by Copilot based on task context.
+
+| Skill                         | Use When                            |
+| :---------------------------- | :---------------------------------- |
+| `commit`                      | Generating commit messages          |
+| `pull-request`                | Creating PR descriptions            |
+| `code-review`                 | Reviewing code changes              |
+| `migration`                   | Prisma schema changes               |
+| `testing`                     | Writing or suggesting tests         |
+| `documentation`               | Creating docs from templates        |
+| `adr-creation`                | Architecture decisions              |
+| `api-doc-generation`          | Controller changes need API docs    |
+| `schema-doc-sync`             | Database schema documentation       |
+| `frontmatter-validation`      | Validating doc YAML frontmatter     |
+| `doc-index-update`            | Docs added/removed/renamed          |
+| `related-docs-sync`           | Maintaining bidirectional doc links |
+| `ux-flow-creation`            | UI/UX flow documentation            |
+| `testing-strategy-creation`   | Test plans and strategies           |
+| `deployment-runbook-creation` | Deployment documentation            |
+| `security-audit-creation`     | Security reviews                    |
+| `i18n-translation`            | Internationalization tasks          |
+| `self-update`                 | System file changes                 |
 
 ### Subagents (9)
 
-| Agent          | Domain               | Triggers                       |
+Use `runSubagent` tool with these agents for complex domain tasks:
+
+| Agent          | Domain               | Keywords                       |
 | :------------- | :------------------- | :----------------------------- |
 | @Architect     | System design        | design, architecture, pattern  |
 | @Backend       | NestJS, services     | implement, api, service        |
@@ -40,35 +67,13 @@ This repository uses the **AGENTS.md v1 Standard** (Agentic AI Foundation).
 | @SyncEngineer  | Offline/sync         | offline, sync, conflict        |
 | @DevOps        | Infrastructure       | deploy, docker, kubernetes     |
 
-### Skills (17)
-
-**Core:** commit, pull-request, code-review, migration, testing, documentation
-**Doc Sync:** frontmatter-validation, adr-creation, schema-doc-sync, api-doc-generation, doc-index-update, related-docs-sync
-**Templates:** ux-flow-creation, testing-strategy-creation, deployment-runbook-creation, security-audit-creation
-**Meta:** self-update
-
 ### Resolution Order
 
 1. **Nearest AGENTS.md** - Walk up from current directory
-2. **Path Instructions** - `.github/instructions/*.instructions.md`
-3. **Root AGENTS.md** - `/AGENTS.md`
-4. **This file** - System baseline
-
-### Context Loading
-
-**ALWAYS** read relevant context before acting:
-
-```
-# Root orchestrator (start here)
-read_file("/home/erik/Projects/impulsa/AGENTS.md")
-
-# Subagent details (when routed)
-read_file("/home/erik/Projects/impulsa/.github/agents/[Agent].agent.md")
-
-# App-specific (when working in app)
-read_file("/home/erik/Projects/impulsa/apps/api/AGENTS.md")  # Backend
-read_file("/home/erik/Projects/impulsa/apps/web/AGENTS.md")  # Frontend
-```
+2. **Skills** - `.github/skills/*/SKILL.md` (auto-loaded by description match)
+3. **Path Instructions** - `.github/instructions/*.instructions.md`
+4. **Root AGENTS.md** - `/AGENTS.md`
+5. **This file** - System baseline
 
 ---
 
@@ -76,11 +81,11 @@ read_file("/home/erik/Projects/impulsa/apps/web/AGENTS.md")  # Frontend
 
 Before ANY complex task:
 
-1. **Analyze** - What's the intent? Design? Bug fix? Feature?
-2. **Route** - Which subagent? @Architect, @Backend, @Frontend, @QA, @Scribe
-3. **Retrieve** - Use MCP tools to get relevant documentation
+1. **Check Skills** - Is there a skill for this? (Copilot auto-loads relevant skills)
+2. **Route Subagent** - Complex domain work? Use `runSubagent` with @Agent
+3. **Retrieve Context** - Use MCP tools to get relevant documentation
 4. **Plan** - For multi-file tasks, use `sequentialthinking`
-5. **Execute** - Follow subagent constraints
+5. **Execute** - Follow constraints from loaded skills/agents
 6. **Verify** - Run tests/build to confirm
 
 ---
@@ -142,6 +147,7 @@ Use these to retrieve context - don't guess:
 - Put logic in controllers → use Services
 - Use `any` type → use strict TypeScript
 - Use NgModules → use Standalone components
+- Use barrel files (index.ts) → use direct imports
 - Mix doc concerns → keep DB, API, UX separate
 - Create docs without templates
 
@@ -202,6 +208,7 @@ Use these to retrieve context - don't guess:
 
 | Version | Date       | Changes                                                             |
 | :------ | :--------- | :------------------------------------------------------------------ |
+| 7.0.0   | 2026-01-27 | Skills renamed to SKILL.md; Added auto-discovery documentation      |
 | 6.0.0   | 2026-01-26 | Added 4 new agents, 7 new skills, self-updating system              |
 | 5.0.0   | 2026-01-26 | Modular architecture - references components instead of duplicating |
 | 4.0.0   | 2026-01-26 | AGENTS.md v1 orchestration system                                   |

@@ -1,7 +1,6 @@
 ---
-skill_id: deployment-runbook-creation
-name: "Deployment Runbook Creation"
-description: "Generate deployment runbook documentation following the DEPLOYMENT-RUNBOOK template. Documents deployment procedures, rollback plans, and monitoring."
+name: deployment-runbook-creation
+description: "Generate deployment runbook documentation following the DEPLOYMENT-RUNBOOK template. Use when planning deployments, documenting procedures, or when the user asks for a runbook."
 event: deployment-planning
 auto_trigger: false
 version: "1.0.0"

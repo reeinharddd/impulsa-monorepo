@@ -1,7 +1,6 @@
 ---
-skill_id: doc-index-update
-name: "Documentation Index Update"
-description: "Maintain table of contents and index files across documentation. Auto-updates when docs are added, removed, or renamed."
+name: doc-index-update
+description: "Maintain table of contents and index files across documentation. Use when adding, removing, or renaming documentation files."
 event: doc-change
 auto_trigger: true
 version: "2.0.0"

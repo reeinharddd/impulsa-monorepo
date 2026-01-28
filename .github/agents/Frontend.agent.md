@@ -96,17 +96,28 @@ read_file("/libs/ui/src/index.ts")
 ## Code Pattern
 
 ```typescript
+import {
+  ChangeDetectionStrategy,
+  Component,
+  input,
+  output,
+  signal,
+} from "@angular/core";
+import { ButtonComponent } from "@shared/components/atoms/button/button.component";
+import { CardComponent } from "@shared/components/molecules/card/card.component";
+
 @Component({
   selector: "app-example",
-  standalone: true,
-  imports: [CommonModule],
+  imports: [ButtonComponent, CardComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     @if (loading()) {
-      <spinner />
+      <ui-spinner size="lg" />
     } @else {
       @for (item of items(); track item.id) {
-        <item-card [item]="item" />
+        <ui-card [title]="item.name">
+          <ui-button (clicked)="select(item)">Select</ui-button>
+        </ui-card>
       }
     }
   `,
@@ -115,15 +126,44 @@ export class ExampleComponent {
   items = input.required<Item[]>();
   loading = signal(false);
   selected = output<Item>();
+
+  select(item: Item) {
+    this.selected.emit(item);
+  }
 }
+```
+
+## Import Rules (CRITICAL)
+
+**NO BARREL FILES** - Use direct, explicit imports only.
+
+```typescript
+// ✅ DO: Direct imports
+import { ButtonComponent } from "@shared/components/atoms/button/button.component";
+import { CardComponent } from "@shared/components/molecules/card/card.component";
+
+// ❌ DON'T: Barrel imports (index.ts)
+import { ButtonComponent } from "@shared/components";
+```
+
+## Shared Components (Atomic Design)
+
+```
+@shared/components/
+├── atoms/          # button, input, icon, spinner, badge, avatar, skeleton
+├── molecules/      # form-field, search-bar, card, dropdown, tabs, toast, empty-state
+├── organisms/      # sidebar, header, data-table, modal
+└── layouts/        # dashboard-layout, auth-layout, fullscreen-layout, print-layout
 ```
 
 ## Constraints
 
 - NO NgModules (Standalone only)
 - NO *ngIf/*ngFor (use @if/@for)
+- NO barrel files (index.ts) - direct imports only
 - NO heavy RxJS (Signals preferred)
 - MUST use OnPush change detection
+- MUST use Atomic Design components when available
 
 ## References
 

@@ -1,7 +1,6 @@
 ---
-skill_id: schema-doc-sync
-name: "Schema Documentation Sync"
-description: "Automatically update database schema documentation when Prisma schema changes. Maintains consistency between code and docs."
+name: schema-doc-sync
+description: "Update database schema documentation when Prisma schema changes. Use after modifying schema.prisma or when the user asks to sync database documentation."
 event: schema-change
 auto_trigger: true
 version: "2.0.0"

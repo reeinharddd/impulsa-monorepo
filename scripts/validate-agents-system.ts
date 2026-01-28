@@ -3,9 +3,9 @@
  * AGENTS.md System Validator
  *
  * Validates the integrity, consistency, and effectiveness of:
- * - Subagents (.github/agents/*.agent.md)
- * - Skills (.github/skills/*.skill.md)
- * - Instructions (.github/instructions/*.instructions.md)
+ * - Subagents (.github/agents/<name>.agent.md)
+ * - Skills (.github/skills/<name>/skill.md)
+ * - Instructions (.github/instructions/<name>.instructions.md)
  * - Root orchestrator (AGENTS.md)
  *
  * Usage: bun run scripts/validate-agents-system.ts
@@ -641,24 +641,31 @@ async function main() {
   // Validate Skills
   console.log('\n⚡ Validating Skills...\n');
   try {
-    const skillFiles = (await readdir(SKILLS_DIR)).filter(
-      (f) => f.endsWith('.skill.md') && f !== 'README.md'
-    );
-    for (const file of skillFiles) {
-      const result = await validateSkill(join(SKILLS_DIR, file));
-      results.push(result);
-      totalErrors += result.errors.length;
-      totalWarnings += result.warnings.length;
+    // Skills are now in folders: skills/<skill-name>/skill.md
+    const skillDirs = (await readdir(SKILLS_DIR, { withFileTypes: true }))
+      .filter((dirent) => dirent.isDirectory())
+      .map((dirent) => dirent.name);
 
-      const status =
-        result.errors.length > 0
-          ? '❌'
-          : result.warnings.length > 0
-            ? '⚠️'
-            : '✅';
-      console.log(`  ${status} ${file}`);
-      result.errors.forEach((e) => console.log(`     ❌ ${e}`));
-      result.warnings.forEach((w) => console.log(`     ⚠️  ${w}`));
+    for (const dir of skillDirs) {
+      const skillFile = join(SKILLS_DIR, dir, "skill.md");
+      try {
+        const result = await validateSkill(skillFile);
+        results.push(result);
+        totalErrors += result.errors.length;
+        totalWarnings += result.warnings.length;
+
+        const status =
+          result.errors.length > 0
+            ? "❌"
+            : result.warnings.length > 0
+              ? "⚠️"
+              : "✅";
+        console.log(`  ${status} ${dir}/skill.md`);
+        result.errors.forEach((e) => console.log(`     ❌ ${e}`));
+        result.warnings.forEach((w) => console.log(`     ⚠️  ${w}`));
+      } catch {
+        console.log(`  ⚠️  ${dir}/ - No skill.md found`);
+      }
     }
   } catch {
     console.log('  ❌ Failed to read skills directory');

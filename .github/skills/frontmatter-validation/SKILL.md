@@ -1,7 +1,6 @@
 ---
-skill_id: frontmatter-validation
-name: "Frontmatter Validation"
-description: "Validate YAML frontmatter in documentation against template requirements. Ensures consistency across all docs."
+name: frontmatter-validation
+description: "Validate YAML frontmatter in documentation against template requirements. Use when creating or editing docs, or when the user asks to check frontmatter."
 event: doc-save
 auto_trigger: true
 version: "2.0.0"

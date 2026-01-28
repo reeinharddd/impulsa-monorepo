@@ -3,8 +3,8 @@
 document_type: "general"
 module: "frontend"
 status: "approved"
-version: "1.0.0"
-last_updated: "2025-11-27"
+version: "3.0.0"
+last_updated: "2026-01-27"
 author: "@Frontend"
 
 # Keywords for semantic search
@@ -18,6 +18,8 @@ keywords:
   - "molecules"
   - "organisms"
   - "accessibility"
+  - "lucide"
+  - "icons"
 
 # Related documentation
 related_docs:
@@ -25,6 +27,7 @@ related_docs:
   api_design: ""
   feature_design: ""
   ux_flow: ""
+  adr: "docs/technical/architecture/adr/003-ICON-SYSTEM.md"
 
 # Document-specific metadata
 doc_metadata:
@@ -82,34 +85,115 @@ _This section contains mandatory instructions for AI Agents (Copilot, Cursor, et
 
 We break down interfaces into five distinct levels:
 
-1.  **Atoms:** Basic building blocks (Buttons, Inputs, Icons).
-2.  **Molecules:** Groups of atoms functioning together (Search Bar, Form Field).
-3.  **Organisms:** Complex UI sections (Header, Product Card, Sidebar).
-4.  **Templates:** Page-level layout structure without content.
-5.  **Pages:** Specific instances of templates with real content.
+1. **Atoms:** Basic building blocks (Buttons, Inputs, Icons). **MUST be independent - no imports from other atoms.**
+2. **Molecules:** Groups of atoms functioning together (Loading Button, Search Bar, Form Field).
+3. **Organisms:** Complex UI sections (Header, Product Card, Sidebar).
+4. **Templates:** Page-level layout structure without content.
+5. **Pages:** Specific instances of templates with real content.
+
+### Atomic Independence Rule
+
+**Atoms cannot depend on other atoms.** If you need to combine atoms, create a molecule.
+
+```typescript
+// ✅ Atom: Pure, independent - no atom imports
+@Component({ selector: "ui-button" })
+export class ButtonComponent {
+  /* Simple button */
+}
+
+// ✅ Molecule: Combines atoms
+@Component({
+  selector: "ui-loading-button",
+  imports: [ButtonComponent, SpinnerComponent],
+})
+export class LoadingButtonComponent {
+  /* Button with loading state */
+}
+```
 
 ## Component Library Structure
 
-All shared components reside in `libs/ui/src/lib/`.
+All shared components reside in `apps/web/src/app/shared/components/`.
 
-### 1. Atoms (`libs/ui/src/lib/atoms/`)
+**CRITICAL:** Use direct imports only. NO barrel files (index.ts).
 
-- `ui-button`: Standard button with variants (primary, secondary, outline).
-- `ui-icon`: SVG icon wrapper.
-- `ui-input`: Base input field.
-- `ui-badge`: Status indicators.
+```typescript
+// ✅ DO: Direct imports
+import { ButtonComponent } from "@shared/components/atoms/button/button.component";
+import { CardComponent } from "@shared/components/molecules/card/card.component";
 
-### 2. Molecules (`libs/ui/src/lib/molecules/`)
+// ❌ DON'T: Barrel imports
+import { ButtonComponent } from "@shared/components";
+```
 
-- `ui-form-field`: Label + Input + Error Message.
-- `ui-search-bar`: Input + Search Icon + Button.
-- `ui-user-avatar`: Image + Name + Role.
+### 1. Atoms (`apps/web/src/app/shared/components/atoms/`)
 
-### 3. Organisms (`libs/ui/src/lib/organisms/`)
+**Rule:** Atoms are independent - they cannot import other atoms.
 
-- `ui-navbar`: Logo + Navigation Links + User Menu.
-- `ui-sidebar`: Collapsible side navigation.
-- `ui-data-table`: Complex table with pagination and sorting.
+| Component | Selector      | Purpose                                      |
+| :-------- | :------------ | :------------------------------------------- |
+| Button    | `ui-button`   | Pure button (no loading - use LoadingButton) |
+| Input     | `ui-input`    | Text input with validation states            |
+| Icon      | `ui-icon`     | Lucide icons (2000+ available)               |
+| Spinner   | `ui-spinner`  | Loading indicator (sm/md/lg/xl)              |
+| Badge     | `ui-badge`    | Status indicators with variants              |
+| Avatar    | `ui-avatar`   | User avatar with image/initials              |
+| Skeleton  | `ui-skeleton` | Loading placeholder                          |
+
+#### Icon Component (Lucide Icons)
+
+Icons use the [Lucide](https://lucide.dev/icons/) library via `lucide-angular`. Import icons directly and pass them to the component:
+
+```typescript
+import { Home, Settings, User, Search } from "lucide-angular";
+
+@Component({
+  template: `
+    <ui-icon [name]="Home" size="md" />
+    <ui-icon [name]="Settings" size="lg" class="text-brand-primary" />
+  `,
+})
+export class MyComponent {
+  protected readonly Home = Home;
+  protected readonly Settings = Settings;
+}
+```
+
+Available sizes: `xs` (12px), `sm` (16px), `md` (20px), `lg` (24px), `xl` (32px)
+
+### 2. Molecules (`apps/web/src/app/shared/components/molecules/`)
+
+**Rule:** Molecules combine atoms. They can import atoms but not other molecules.
+
+| Component     | Selector            | Combines         | Purpose                      |
+| :------------ | :------------------ | :--------------- | :--------------------------- |
+| LoadingButton | `ui-loading-button` | Button + Spinner | Button with loading state    |
+| FormField     | `ui-form-field`     | Input + Icon     | Label + Input + Error        |
+| SearchBar     | `ui-search-bar`     | Input + Icon     | Input + Icon with debounce   |
+| Card          | `ui-card`           | -                | Container with header/footer |
+| Dropdown      | `ui-dropdown`       | Button + Icon    | Select with options          |
+| Tabs          | `ui-tabs`           | Button           | Tab navigation (3 variants)  |
+| Toast         | `ui-toast`          | Icon             | Notification messages        |
+| EmptyState    | `ui-empty-state`    | Icon + Button    | No content placeholder       |
+
+### 3. Organisms (`apps/web/src/app/shared/components/organisms/`)
+
+| Component | Selector        | Purpose                          |
+| :-------- | :-------------- | :------------------------------- |
+| Sidebar   | `ui-sidebar`    | Collapsible side navigation      |
+| Header    | `ui-header`     | App header with search/actions   |
+| DataTable | `ui-data-table` | Table with pagination/sorting    |
+| Modal     | `ui-modal`      | Dialog with configurable actions |
+
+### 4. Layouts (`apps/web/src/app/shared/components/layouts/`)
+
+| Component        | Selector            | Purpose               |
+| :--------------- | :------------------ | :-------------------- |
+| DashboardLayout  | `layout-dashboard`  | Main app layout       |
+| AuthLayout       | `layout-auth`       | Login/register pages  |
+| FullscreenLayout | `layout-fullscreen` | POS/kiosk mode        |
+| PrintLayout      | `layout-print`      | Print-optimized pages |
 
 ## Design Tokens (Tailwind CSS v4)
 

@@ -1,7 +1,6 @@
 ---
-skill_id: ux-flow-creation
-name: "UX Flow Creation"
-description: "Generate user experience flow documentation following the UX-FLOW template. Documents screens, interactions, and user journeys."
+name: ux-flow-creation
+description: "Generate user experience flow documentation following the UX-FLOW template. Use when designing UI flows, documenting user journeys, or when the user asks for UX documentation."
 event: ux-design
 auto_trigger: false
 version: "1.0.0"

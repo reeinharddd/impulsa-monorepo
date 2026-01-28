@@ -1,7 +1,6 @@
 ---
-skill_id: pull-request
-name: "Pull Request Generation"
-description: "Generate comprehensive PR descriptions from commits and changes."
+name: pull-request
+description: "Generate comprehensive PR descriptions from commits and changes. Use when creating pull requests, writing PR descriptions, or when the user asks for a PR summary."
 event: pr-creation
 auto_trigger: true
 version: "2.0.0"

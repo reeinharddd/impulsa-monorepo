@@ -1,7 +1,6 @@
 ---
-skill_id: testing
-name: "Test Suggestion & Coverage"
-description: "Suggest appropriate tests for code changes and verify coverage targets."
+name: testing
+description: "Suggest appropriate tests for code changes and verify coverage targets. Use when writing tests, suggesting test cases, or when the user asks about testing."
 event: code-change
 auto_trigger: false
 version: "2.0.0"
