@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, signal } from '@angular/core';
-import { PaymentIntent } from '../../../core/models/payment-intent.model';
-import { MockApiService } from '../../../core/services/mock-api.service';
+import { PaymentIntent } from '@core/models/payment/payment-intent.model';
+import { MockApiService } from '@core/services/auth/mock-api.service';
 
 @Component({
   selector: 'app-history',

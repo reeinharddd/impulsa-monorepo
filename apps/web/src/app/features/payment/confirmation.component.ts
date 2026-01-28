@@ -1,9 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, input, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { UserType } from '../../core/models/enums';
-import { PaymentIntent } from '../../core/models/payment-intent.model';
-import { MockApiService } from '../../core/services/mock-api.service';
+import { UserType } from '@core/models/auth/enums';
+import { PaymentIntent } from '@core/models/payment/payment-intent.model';
+import { MockApiService } from '@core/services/auth/mock-api.service';
 
 @Component({
   selector: 'app-confirmation',

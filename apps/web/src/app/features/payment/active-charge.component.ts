@@ -1,11 +1,11 @@
 import { CommonModule } from '@angular/common';
 import { Component, effect, inject, input, OnDestroy, OnInit, signal } from '@angular/core';
 import { Router } from '@angular/router';
+import { ChargeStatus } from '@core/models/auth/enums';
+import { PaymentIntent } from '@core/models/payment/payment-intent.model';
+import { MockApiService } from '@core/services/auth/mock-api.service';
+import { PaymentStateService } from '@core/services/payment/payment-state.service';
 import { interval, Subscription } from 'rxjs';
-import { ChargeStatus } from '../../core/models/enums';
-import { PaymentIntent } from '../../core/models/payment-intent.model';
-import { MockApiService } from '../../core/services/mock-api.service';
-import { PaymentStateService } from '../../core/services/payment-state.service';
 
 @Component({
   selector: 'app-active-charge',

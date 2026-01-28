@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { MockApiService } from '../../../core/services/mock-api.service';
+import { MockApiService } from '@core/services/auth/mock-api.service';
 
 @Component({
   selector: 'app-generate-charge',

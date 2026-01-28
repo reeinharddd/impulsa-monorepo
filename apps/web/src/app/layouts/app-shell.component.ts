@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { Router, RouterLink, RouterOutlet } from '@angular/router';
-import { MockApiService } from '../core/services/mock-api.service';
+import { MockApiService } from '@core/services/auth/mock-api.service';
 
 @Component({
   selector: 'app-shell',

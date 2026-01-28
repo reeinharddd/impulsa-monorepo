@@ -1,7 +1,7 @@
 import { inject } from '@angular/core';
 import { ResolveFn, Router } from '@angular/router';
-import { PaymentIntent } from '../../core/models/payment-intent.model';
-import { MockApiService } from '../../core/services/mock-api.service';
+import { PaymentIntent } from '@core/models/payment/payment-intent.model';
+import { MockApiService } from '@core/services/auth/mock-api.service';
 
 export const paymentIntentResolver: ResolveFn<PaymentIntent> = (route) => {
   const api = inject(MockApiService);

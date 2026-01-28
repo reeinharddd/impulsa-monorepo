@@ -6,6 +6,9 @@
       "REGISTER": "Crear Cuenta",
       "START_FREE": "Empieza Gratis",
       "VIEW_DEMO": "Ver Demo"
+    },
+    "FOOTER": {
+      "RIGHTS": "© {{year}} Impulsa. Todos los derechos reservados."
     }
   },
   "LANDING": {
@@ -18,6 +21,18 @@
     },
     "FEATURES": {
       "TITLE": "¿Por qué Impulsa?",
+      "POS": {
+        "TITLE": "Punto de Venta",
+        "DESC": "Sistema de cobros rápido e intuitivo para tu negocio."
+      },
+      "INVENTORY": {
+        "TITLE": "Inventario Inteligente",
+        "DESC": "Gestiona tus productos y controla tu stock en tiempo real."
+      },
+      "CLOUD": {
+        "TITLE": "Sincronización en la Nube",
+        "DESC": "Accede a tu información desde cualquier dispositivo."
+      },
       "FEATURE_1_TITLE": "Pagos al Instante",
       "FEATURE_1_DESC": "Recibe pagos en tiempo real con nuestra integración directa.",
       "FEATURE_2_TITLE": "Seguridad Total",

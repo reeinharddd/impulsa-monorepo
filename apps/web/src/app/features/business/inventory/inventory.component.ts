@@ -1,8 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Product } from '../../../core/models/product.model';
-import { MockApiService } from '../../../core/services/mock-api.service';
+import { Product } from '@core/models/product/product.model';
+import { MockApiService } from '@core/services/auth/mock-api.service';
 
 @Component({
   selector: 'app-inventory',

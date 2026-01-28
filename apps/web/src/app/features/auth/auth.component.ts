@@ -1,8 +1,8 @@
 import { Component, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { UserType } from '../../core/models/enums';
-import { MockApiService } from '../../core/services/mock-api.service';
+import { UserType } from '@core/models/auth/enums';
+import { MockApiService } from '@core/services/auth/mock-api.service';
 
 @Component({
   selector: 'app-auth',

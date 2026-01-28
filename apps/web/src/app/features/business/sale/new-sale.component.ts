@@ -1,9 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { Component, computed, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
-import { Product } from '../../../core/models/product.model';
-import { SaleItem } from '../../../core/models/sale.model';
-import { MockApiService } from '../../../core/services/mock-api.service';
+import { SaleItem } from '@core/models/payment/sale.model';
+import { Product } from '@core/models/product/product.model';
+import { MockApiService } from '@core/services/auth/mock-api.service';
 
 @Component({
   selector: 'app-new-sale',
