@@ -80,7 +80,7 @@ Before creating ANY button, input, card, etc., check `@shared/components/`.
 
 **Icon System (ADR-003):** Icons MUST use `lucide-angular` and the `ui-icon` component. NEVER use string names.
 
-```typescript
+````typescript
 // ✅ DO: Use existing shared components
 import { ButtonComponent } from '@shared/components/atoms/button/button.component';
 import { LoadingButtonComponent } from '@shared/components/molecules/loading-button/loading-button.component';
@@ -98,6 +98,30 @@ export class MyComponent {
 // ❌ DON'T: Create inline buttons or use string icons
 <button class="bg-blue-500 px-4 py-2" (click)="save()">Save</button>
 <ui-icon name="home" />
+
+### 4. Localized Page Titles (ADR-004)
+
+Routes MUST use translation keys for the `title` property. Never use static strings.
+
+```typescript
+// ✅ DO: Use translation key
+{ path: 'dashboard', component: DashboardComponent, title: 'PAGES.DASHBOARD.TITLE' }
+
+// ❌ DON'T: Static string
+{ path: 'dashboard', component: DashboardComponent, title: 'Dashboard' }
+````
+
+### 5. Asset Synchronization
+
+When editing translations in `libs/assets/src/i18n/*.json` or adding images to `libs/assets/src/images/`, you MUST sync them to the web app:
+
+```bash
+# Sync assets manually (if dev server is already running)
+cp libs/assets/src/i18n/es.json apps/web/public_override/assets/i18n/es.json
+```
+
+_Note: `bun run dev` syncs automatically on start, but not during runtime._
+
 ```
 
 ### 4. Domain-Based File Organization
@@ -105,31 +129,33 @@ export class MyComponent {
 Organize models and services by business domain:
 
 ```
+
 core/
 ├── models/
-│   ├── auth/           # User, enums, roles
-│   │   ├── enums.ts
-│   │   ├── user.model.ts
-│   │   └── user-role.model.ts
-│   ├── navigation/     # Nav items, menus
-│   │   └── navigation.model.ts
-│   ├── payment/        # Payments, sales
-│   │   ├── payment-intent.model.ts
-│   │   └── sale.model.ts
-│   └── product/        # Products, inventory
-│       └── product.model.ts
+│ ├── auth/ # User, enums, roles
+│ │ ├── enums.ts
+│ │ ├── user.model.ts
+│ │ └── user-role.model.ts
+│ ├── navigation/ # Nav items, menus
+│ │ └── navigation.model.ts
+│ ├── payment/ # Payments, sales
+│ │ ├── payment-intent.model.ts
+│ │ └── sale.model.ts
+│ └── product/ # Products, inventory
+│ └── product.model.ts
 ├── services/
-│   ├── auth/           # Auth-related services
-│   │   └── mock-api.service.ts
-│   ├── navigation/     # Navigation services
-│   │   └── navigation.service.ts
-│   ├── payment/        # Payment services
-│   │   └── payment-state.service.ts
-│   └── device/         # Device services
-│       └── device-detection.service.ts
+│ ├── auth/ # Auth-related services
+│ │ └── mock-api.service.ts
+│ ├── navigation/ # Navigation services
+│ │ └── navigation.service.ts
+│ ├── payment/ # Payment services
+│ │ └── payment-state.service.ts
+│ └── device/ # Device services
+│ └── device-detection.service.ts
 └── guards/
-    └── auth.guard.ts
-```
+└── auth.guard.ts
+
+````
 
 ### 5. No Unnecessary Comments
 
@@ -151,7 +177,7 @@ const isActive = computed(() => this.status() === 'active');
 // =========================================
 // COMPUTED PROPERTIES
 // =========================================
-```
+````
 
 ### 6. ALL Text Must Use Translations
 

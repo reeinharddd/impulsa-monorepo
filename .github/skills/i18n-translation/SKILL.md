@@ -34,8 +34,11 @@ output: "Updated component + translation keys"
 
 **Files:**
 
-- `apps/web/public_override/assets/i18n/es.json` - Spanish (primary)
-- `apps/web/public_override/assets/i18n/en.json` - English
+- `libs/assets/src/i18n/es.json` - Source of Truth (Edit here)
+- `apps/web/public_override/assets/i18n/es.json` - Runtime file (Sync here)
+
+**Sync Rule:**
+If you edit `libs/assets/...`, you MUST copy the file to `apps/web/public_override/...` for changes to reflect in the running app.
 
 ## Key Naming Convention
 
@@ -197,3 +200,15 @@ After adding translations:
 2. Verify no hardcoded text in templates
 3. Test with different locales
 4. Verify placeholders render correctly
+
+## Route Titles (ADR-004)
+
+When reviewing or creating routes, ensure the `title` property uses a translation key starting with `PAGES.` or `TITLES.`.
+
+```typescript
+// ✅ VALID
+title: "PAGES.SETTINGS.TITLE";
+
+// ❌ INVALID
+title: "Settings Page";
+```

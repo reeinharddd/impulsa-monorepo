@@ -52,3 +52,4 @@ prisma/*.db-journal
 # Misc
 tmp/
 temp/
+\n# Generated Assets\napps/web/public_override/

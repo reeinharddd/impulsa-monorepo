@@ -11,6 +11,14 @@
       "RIGHTS": "© {{year}} Impulsa. Todos los derechos reservados."
     }
   },
+  "NAV": {
+    "PUBLIC": {
+      "FEATURES": "Características",
+      "PRICING": "Precios",
+      "ABOUT": "Nosotros",
+      "CONTACT": "Contacto"
+    }
+  },
   "LANDING": {
     "HERO": {
       "TITLE_PREFIX": "Tus cobros,",
@@ -60,6 +68,26 @@
       "SUBMIT_BUTTON": "Registrarse",
       "HAS_ACCOUNT": "¿Ya tienes cuenta?",
       "LOGIN_LINK": "Inicia sesión"
+    }
+  },
+  "PAGES": {
+    "WELCOME": {
+      "TITLE": "Bienvenido"
+    },
+    "DASHBOARD": {
+      "TITLE": "Panel Principal"
+    },
+    "POS": {
+      "TITLE": "Punto de Venta"
+    },
+    "INVENTORY": {
+      "TITLE": "Inventario"
+    },
+    "ORDERS": {
+      "TITLE": "Pedidos"
+    },
+    "SETTINGS": {
+      "TITLE": "Configuración"
     }
   }
 }

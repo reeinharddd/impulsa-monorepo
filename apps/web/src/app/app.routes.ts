@@ -5,7 +5,7 @@ export const routes: Routes = [
   {
     path: '',
     loadChildren: () => import('./features/landing/landing.routes').then((m) => m.LANDING_ROUTES),
-    title: 'Impulsa - Bienvenido',
+    title: 'PAGES.WELCOME.TITLE',
     pathMatch: 'full',
   },
   {
@@ -24,29 +24,29 @@ export const routes: Routes = [
         path: 'dashboard',
         loadChildren: () =>
           import('./features/dashboard/dashboard.routes').then((m) => m.DASHBOARD_ROUTES),
-        title: 'Impulsa - Dashboard',
+        title: 'PAGES.DASHBOARD.TITLE',
       },
       {
         path: 'pos',
         loadChildren: () => import('./features/pos/pos.routes').then((m) => m.POS_ROUTES),
-        title: 'Impulsa - Punto de Venta',
+        title: 'PAGES.POS.TITLE',
       },
       {
         path: 'inventory',
         loadChildren: () =>
           import('./features/inventory/inventory.routes').then((m) => m.INVENTORY_ROUTES),
-        title: 'Impulsa - Inventario',
+        title: 'PAGES.INVENTORY.TITLE',
       },
       {
         path: 'orders',
         loadChildren: () => import('./features/orders/orders.routes').then((m) => m.ORDERS_ROUTES),
-        title: 'Impulsa - Pedidos',
+        title: 'PAGES.ORDERS.TITLE',
       },
       {
         path: 'settings',
         loadChildren: () =>
           import('./features/settings/settings.routes').then((m) => m.SETTINGS_ROUTES),
-        title: 'Impulsa - Configuración',
+        title: 'PAGES.SETTINGS.TITLE',
       },
     ],
   },

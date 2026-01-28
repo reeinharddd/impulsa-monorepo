@@ -109,6 +109,12 @@ export class MyComponent {
 <ui-icon name="home" />
 ```
 
+## Routing & Page Titles (ADR-004)
+
+1.  **Strict Localization**: Use `TitleStrategy` with translation keys in `app.routes.ts`.
+2.  **Route Pattern**: `title: 'PAGES.DOMAIN.TITLE'`.
+3.  **Strictly Forbidden**: Static strings for titles (e.g. `title: 'Dashboard'`).
+
 ## Template Rules
 
 ### Control Flow (Use These)

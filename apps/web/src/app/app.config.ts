@@ -5,17 +5,22 @@ import {
   provideBrowserGlobalErrorListeners,
   provideZonelessChangeDetection,
 } from '@angular/core';
-import { provideRouter, withComponentInputBinding } from '@angular/router';
+import { provideRouter, TitleStrategy, withComponentInputBinding } from '@angular/router';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TRANSLATE_HTTP_LOADER_CONFIG, TranslateHttpLoader } from '@ngx-translate/http-loader';
 
 import { routes } from './app.routes';
+import { LocalizedTitleStrategy } from './core/strategies/localized-title.strategy';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideZonelessChangeDetection(),
     provideBrowserGlobalErrorListeners(),
     provideRouter(routes, withComponentInputBinding()),
+    {
+      provide: TitleStrategy,
+      useClass: LocalizedTitleStrategy,
+    },
     provideHttpClient(withFetch()),
     importProvidersFrom(
       TranslateModule.forRoot({
