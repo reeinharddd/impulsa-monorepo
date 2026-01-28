@@ -13,6 +13,10 @@ export const routes: Routes = [
     loadChildren: () => import('./features/auth/auth.routes').then((m) => m.AUTH_ROUTES),
   },
   {
+    path: 'error',
+    loadChildren: () => import('./features/errors/errors.routes').then((m) => m.ERROR_ROUTES),
+  },
+  {
     path: '',
     component: MainLayoutComponent,
     children: [
@@ -48,6 +52,6 @@ export const routes: Routes = [
   },
   {
     path: '**',
-    redirectTo: 'dashboard',
+    redirectTo: 'error/404',
   },
 ];
