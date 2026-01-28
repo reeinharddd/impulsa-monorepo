@@ -65,11 +65,23 @@ Every document needs:
 
 ## Markdown Standards
 
+**CRITICAL RULE: English Only**
+
+ALL documentation, code, comments, and commit messages MUST be in English:
+
+- Documentation files: English only
+- Code comments: English only
+- Variable/function names: English only
+- Commit messages: English only
+- Exception: User-facing UI text uses i18n system for localization
+
+**Additional standards:**
+
 - Use CommonMark spec
 - Fenced code blocks with language
 - Tables with alignment
 - Relative links for internal docs
-- No emojis in technical docs
+- NO emojis in technical docs
 - No trailing whitespace
 
 ## MCP Integration
