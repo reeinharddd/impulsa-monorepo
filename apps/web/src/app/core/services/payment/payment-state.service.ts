@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
-import { ChargeStatus } from '../models/enums';
-import { PaymentIntent } from '../models/payment-intent.model';
+import { ChargeStatus } from '../../models/auth/enums';
+import { PaymentIntent } from '../../models/payment/payment-intent.model';
 
 export interface PaymentTransition {
   intentId: string;

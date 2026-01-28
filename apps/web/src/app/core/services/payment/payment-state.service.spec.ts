@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
-import { ChargeStatus } from '../models/enums';
-import { PaymentIntent } from '../models/payment-intent.model';
+import { ChargeStatus } from '../../models/auth/enums';
+import { PaymentIntent } from '../../models/payment/payment-intent.model';
 import { PaymentStateService } from './payment-state.service';
 
 describe('PaymentStateService', () => {

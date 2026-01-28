@@ -1,10 +1,10 @@
 import { Injectable, effect, inject, signal } from '@angular/core';
-import { ChargeStatus, UserType } from '../models/enums';
-import { PaymentIntent } from '../models/payment-intent.model';
-import { Product } from '../models/product.model';
-import { Sale } from '../models/sale.model';
-import { User } from '../models/user.model';
-import { PaymentStateService, PaymentTransition } from './payment-state.service';
+import { ChargeStatus, UserType } from '../../models/auth/enums';
+import { User } from '../../models/auth/user.model';
+import { PaymentIntent } from '../../models/payment/payment-intent.model';
+import { Sale } from '../../models/payment/sale.model';
+import { Product } from '../../models/product/product.model';
+import { PaymentStateService, PaymentTransition } from '../payment/payment-state.service';
 
 @Injectable({
   providedIn: 'root',

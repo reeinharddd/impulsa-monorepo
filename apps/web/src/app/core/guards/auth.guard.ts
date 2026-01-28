@@ -1,6 +1,6 @@
 import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
-import { MockApiService } from '../services/mock-api.service';
+import { MockApiService } from '../services/auth/mock-api.service';
 
 export const authGuard: CanActivateFn = (route, state) => {
   const mockApi = inject(MockApiService);

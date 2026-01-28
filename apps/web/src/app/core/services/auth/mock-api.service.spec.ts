@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
-import { ChargeStatus } from '../models/enums';
+import { ChargeStatus } from '../../models/auth/enums';
+import { PaymentStateService } from '../payment/payment-state.service';
 import { MockApiService } from './mock-api.service';
-import { PaymentStateService } from './payment-state.service';
 
 describe('MockApiService', () => {
   let service: MockApiService;

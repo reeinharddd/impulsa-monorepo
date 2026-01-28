@@ -1,4 +1,4 @@
-import { ChannelType, ChargeStatus } from './enums';
+import { ChannelType, ChargeStatus } from '../auth/enums';
 
 export interface PaymentIntent {
   id: string;
