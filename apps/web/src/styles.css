@@ -1,5 +1,4 @@
-@import 'tailwindcss';
-@source "../src/**/*.{html,ts}";
+@import 'tailwindcss' source('.');
 
 @theme {
   --font-sans: 'Inter', sans-serif;

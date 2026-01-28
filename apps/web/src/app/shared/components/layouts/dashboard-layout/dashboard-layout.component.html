@@ -1,0 +1,37 @@
+<div class="flex h-screen overflow-hidden bg-gray-50">
+  <ui-sidebar
+    [appName]="appName()"
+    [logoInitial]="logoInitial()"
+    [navItems]="navItems()"
+    [user]="sidebarUser()"
+    [isOpen]="sidebarOpen()"
+    [isMobile]="isMobile()"
+    (openChange)="sidebarOpen.set($event)"
+  >
+    <ng-container sidebar-footer>
+      <ng-content select="[sidebar-footer]" />
+    </ng-container>
+  </ui-sidebar>
+
+  <div class="flex min-w-0 flex-1 flex-col overflow-hidden">
+    <ui-header
+      [title]="pageTitle()"
+      [subtitle]="pageSubtitle()"
+      [showMenuButton]="true"
+      [showSearch]="showSearch()"
+      [searchPlaceholder]="searchPlaceholder()"
+      [user]="headerUser()"
+      [actions]="headerActions()"
+      (menuToggle)="toggleSidebar()"
+      (search)="searchQuery.emit($event)"
+      (actionClick)="actionClicked.emit($event)"
+      (userClick)="userClicked.emit()"
+    />
+
+    <main class="flex-1 overflow-y-auto">
+      <div [class]="contentClasses()">
+        <router-outlet />
+      </div>
+    </main>
+  </div>
+</div>
