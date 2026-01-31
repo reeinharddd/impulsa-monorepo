@@ -21,32 +21,49 @@
   },
   "LANDING": {
     "HERO": {
-      "TITLE_PREFIX": "Tus cobros,",
-      "TITLE_HIGHLIGHT": "más simples y rápidos",
-      "SUBTITLE": "La plataforma que transforma cómo gestionas tu negocio. Sin comisiones ocultas, sin complicaciones.",
+      "TITLE": "Gestión inteligente para negocios modernos",
+      "SUBTITLE": "La plataforma que transforma cómo gestionas tu negocio. Sin comisiones ocultas, sin complicaciones. Todo lo que necesitas en un solo lugar.",
       "CTA_PRIMARY": "Empezar Ahora",
       "CTA_SECONDARY": "Saber Más"
     },
     "FEATURES": {
       "TITLE": "¿Por qué Impulsa?",
-      "POS": {
-        "TITLE": "Punto de Venta",
-        "DESC": "Sistema de cobros rápido e intuitivo para tu negocio."
+      "SUBTITLE": "Herramientas potentes diseñadas para simplificar tu operación diaria y potenciar tus ventas.",
+      "PAYMENTS": {
+        "TITLE": "Pagos Flexibles",
+        "DESC": "Acepta tarjetas, transferencias y efectivo sin complicaciones técnicas."
       },
       "INVENTORY": {
-        "TITLE": "Inventario Inteligente",
-        "DESC": "Gestiona tus productos y controla tu stock en tiempo real."
+        "TITLE": "Inventario en Tiempo Real",
+        "DESC": "Gestiona tus productos, stock y alertas de reabastecimiento automáticamente."
       },
-      "CLOUD": {
-        "TITLE": "Sincronización en la Nube",
-        "DESC": "Accede a tu información desde cualquier dispositivo."
+      "GROWTH": {
+        "TITLE": "Análisis de Crecimiento",
+        "DESC": "Toma decisiones basadas en datos reales y reportes detallados de tu rendimiento."
+      }
+    },
+    "HOW_IT_WORKS": {
+      "TITLE": "Empieza en minutos",
+      "STEP_1": {
+        "TITLE": "Crea tu cuenta",
+        "DESC": "Regístrate gratis y configura tu perfil de negocio en pocos pasos."
       },
-      "FEATURE_1_TITLE": "Pagos al Instante",
-      "FEATURE_1_DESC": "Recibe pagos en tiempo real con nuestra integración directa.",
-      "FEATURE_2_TITLE": "Seguridad Total",
-      "FEATURE_2_DESC": "Tus datos protegidos con los más altos estándares de la industria.",
-      "FEATURE_3_TITLE": "Análisis Fácil",
-      "FEATURE_3_DESC": "Lleva el control de tus ventas con tableros intuitivos."
+      "STEP_2": {
+        "TITLE": "Carga tus productos",
+        "DESC": "Importa tu inventario o añade productos manualmente de forma sencilla."
+      },
+      "STEP_3": {
+        "TITLE": "Empieza a vender",
+        "DESC": "Gestiona ventas, clientes y cobros desde cualquier dispositivo."
+      }
+    },
+    "SCALABILITY": {
+      "TITLE": "Escala sin límites",
+      "SUBTITLE": "Diseñado para crecer contigo. Desde tu primera venta hasta franquicias multinacionales, nuestra plataforma se adapta a tu volumen y necesidades sin interrupciones."
+    },
+    "CTA": {
+      "TITLE": "¿Listo para transformar tu negocio?",
+      "SUBTITLE": "Únete a miles de emprendedores que ya usan Impulsa para gestionar sus empresas."
     }
   },
   "AUTH": {
