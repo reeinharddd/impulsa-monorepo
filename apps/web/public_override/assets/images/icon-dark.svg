@@ -1,0 +1,31 @@
+<svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <!-- Icon solo - Tema Oscuro (para favicons, app icons en modo oscuro) -->
+  <!-- Background: Deep Violet Squircle -->
+  <defs>
+    <linearGradient id="gradient-icon-dark" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#4C1D95;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#5B21B6;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <rect x="0" y="0" width="512" height="512" rx="120" fill="url(#gradient-icon-dark)"/>
+
+  <!-- Central Pulse Point with glow -->
+  <circle cx="256" cy="220" r="48" fill="#10B981" opacity="0.4"/>
+  <circle cx="256" cy="220" r="34" fill="#10B981"/>
+  
+  <!-- Antenna/Root Line -->
+  <line x1="256" y1="264" x2="256" y2="430" stroke="#CBC3E3" stroke-width="38" stroke-linecap="round"/>
+
+  <!-- Inner Waves (smaller arcs) -->
+  <path d="M 180 165 A 95 95 0 0 0 180 275" fill="none" stroke="#CBC3E3" stroke-width="38" stroke-linecap="round"/>
+  <path d="M 332 165 A 95 95 0 0 1 332 275" fill="none" stroke="#CBC3E3" stroke-width="38" stroke-linecap="round"/>
+
+  <!-- Outer Waves (larger arcs) -->
+  <path d="M 120 105 A 165 165 0 0 0 120 335" fill="none" stroke="#CBC3E3" stroke-width="38" stroke-linecap="round"/>
+  <path d="M 392 105 A 165 165 0 0 1 392 335" fill="none" stroke="#CBC3E3" stroke-width="38" stroke-linecap="round"/>
+
+  <!-- Outermost Waves (subtle, widest reach) -->
+  <path d="M 60 45 A 235 235 0 0 0 60 395" fill="none" stroke="#CBC3E3" stroke-width="30" stroke-linecap="round" opacity="0.5"/>
+  <path d="M 452 45 A 235 235 0 0 1 452 395" fill="none" stroke="#CBC3E3" stroke-width="30" stroke-linecap="round" opacity="0.5"/>
+</svg>
