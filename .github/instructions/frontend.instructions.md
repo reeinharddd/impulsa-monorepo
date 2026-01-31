@@ -24,6 +24,39 @@ These instructions apply to all TypeScript and HTML files in the web application
    - Always use `OnPush`
    - Never mutate inputs directly
 
+4. **Strict Separation (HTML/TS/CSS)**
+   - **NO inline templates**. Use `templateUrl`.
+   - **NO inline styles**. Use `styleUrl`.
+   - Keep files separate (`.ts`, `.html`, `.css`).
+
+## Component Naming & Selectors
+
+- **Shared Components (@shared/...)**: MUST use `ui-` prefix.
+  - `ui-button`, `ui-card`, `ui-navbar`
+- **Feature Components (app/features/...)**: MUST use `app-` prefix.
+  - `app-landing`, `app-dashboard`
+
+## UI/UX Rules
+
+1. **Mobile First Design**
+   - Write base Tailwind classes for mobile.
+   - Use responsive modifiers (`sm:`, `md:`, `lg:`) for larger screens.
+   - Example: `class="w-full sm:w-auto"` (Full width on mobile, auto on desktop).
+
+2. **Layout Pattern**
+   - Layout components (`PublicLayout`, `AuthLayout`) are containers only.
+   - They orchestrate shared organisms (`ui-navbar`, `ui-footer`).
+   - They contain the `<router-outlet>`.
+   - They do NOT contain heavy implementation details.
+
+3. **Composition over Monoliths**
+   - Break large pages into `molecules` (e.g., `ui-section-title`) or `organisms`.
+   - Don't put huge blocks of HTML in a single page file.
+
+4. **Internationalization**
+   - All text visible to users MUST be in `i18n/*.json`.
+   - Group keys logically: `LANDING.HERO.TITLE`, `COMMON.BUTTONS.SAVE`.
+
 ## Import Rules (CRITICAL - NO BARREL FILES)
 
 Use direct, explicit imports only. Never create or use `index.ts` barrel files.
