@@ -150,6 +150,10 @@ Use these to retrieve context - don't guess:
 - Use barrel files (index.ts) → use direct imports
 - Mix doc concerns → keep DB, API, UX separate
 - Create docs without templates
+- **Use `--no-verify` with git commands** → always run hooks
+- **Use `--force` or `-f` with git push** → never force push
+- **Bypass pre-commit or pre-push hooks** → fix issues instead
+- **Commit unformatted or unlinted code** → use format/lint tools
 
 ### ALWAYS
 
@@ -158,6 +162,10 @@ Use these to retrieve context - don't guess:
 - Write tests (80% coverage)
 - Update docs with code changes
 - Use MCP tools for context
+- Respect all Git hooks (pre-commit, pre-push)
+- Format code before committing (`bun run format`)
+- Fix linting issues before committing (`bun run lint:fix`)
+- Ensure all tests pass before pushing (`bun test`)
 
 ---
 

@@ -20,7 +20,6 @@ scope:
     - "docs/technical/frontend/ANGULAR-ZONELESS.md"
     - "docs/technical/frontend/UI-DESIGN-SYSTEM.md"
     - "docs/process/standards/VISUAL-IDENTITY.md"
-    - ".github/instructions/frontend.instructions.md"
 
 # Auto-Invocation Rules
 auto_invoke:

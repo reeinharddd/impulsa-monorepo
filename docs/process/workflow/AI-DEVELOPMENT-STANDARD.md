@@ -98,6 +98,51 @@ To ensure the AI operates effectively, the human developer must adhere to the fo
 2. **Data Modeling:** Define `schema.prisma` first.
 3. **Contracts:** Define Interfaces/DTOs.
 4. **State:** Define Stores/Services.
+
+### 2.2. Code Quality Requirements
+
+**AI agents MUST ensure:**
+
+1. **Formatting:**
+   - All code formatted with Prettier before committing
+   - Never bypass pre-commit hooks
+   - Use `bun run format` to format all files
+
+2. **Linting:**
+   - No ESLint violations
+   - Fix all warnings and errors
+   - Use `bun run lint:fix` for auto-fixes
+
+3. **Type Safety:**
+   - No `any` types (use proper typing)
+   - All TypeScript errors resolved
+   - Run `bun run typecheck` before pushing
+
+4. **Testing:**
+   - Minimum 80% code coverage
+   - All tests passing
+   - Run `bun test` before pushing
+
+5. **Git Discipline:**
+   - **NEVER** suggest using `--no-verify`
+   - **NEVER** suggest using `--force` or `-f`
+   - **ALWAYS** respect pre-commit and pre-push hooks
+   - If hooks fail, investigate and fix the root cause
+
+**Rationale:**
+Validation hooks exist to catch errors early. Bypassing them:
+
+- Hides infrastructure issues (permissions, dependencies)
+- Breaks CI/CD pipelines
+- Creates technical debt
+- Violates team standards
+
+**When hooks fail, AI should:**
+
+1. Identify the specific error
+2. Provide the fix (not a bypass)
+3. Explain why the error occurred
+4. Suggest preventive measures
 5. **UI:** Implement Components last.
 
 ### 2.2. Atomic Scope

@@ -68,7 +68,7 @@ keywords:
 3. **Placement:** Diagrams go in their own section AFTER text description
 4. **Legend:** Include legend for complex diagrams
 
-````markdown
+`````markdown
 ## Database Schema
 
 <!-- Text description -->
@@ -88,6 +88,8 @@ entity users {
 @enduml
 \```
 ````
+`````
+
 ````
 
 ## Diagram Types
@@ -640,3 +642,4 @@ Inventory --> InventoryDB
 **Last Updated:** 2026-01-27
 **Author:** @Scribe
 **Related Skills:** documentation, schema-doc-sync, api-doc-generation
+````

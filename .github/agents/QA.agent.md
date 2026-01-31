@@ -17,7 +17,6 @@ scope:
   reads:
     - "docs/process/workflow/CONSTRUCTION-CHECKLIST.md"
     - "docs/templates/07-TESTING-STRATEGY-TEMPLATE.md"
-    - ".github/instructions/testing.instructions.md"
 
 # Auto-Invocation Rules
 auto_invoke:

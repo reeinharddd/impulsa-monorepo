@@ -11,9 +11,9 @@
  * Usage: bun run scripts/validate-agents-system.ts
  */
 
-import { readdir, readFile } from 'node:fs/promises';
-import { join } from 'node:path';
-import { parse as parseYaml } from 'yaml';
+import { readdir, readFile } from "node:fs/promises";
+import { join } from "node:path";
+import { parse as parseYaml } from "yaml";
 
 // ============================================================================
 // Types
@@ -21,7 +21,7 @@ import { parse as parseYaml } from 'yaml';
 
 interface ValidationResult {
   file: string;
-  type: 'agent' | 'skill' | 'instruction' | 'orchestrator';
+  type: "agent" | "skill" | "instruction" | "orchestrator";
   errors: string[];
   warnings: string[];
   info: string[];
@@ -89,63 +89,63 @@ interface InstructionFrontmatter {
 
 // VS Code instructions have a different format, so we have separate required fields
 const REQUIRED_INSTRUCTION_FIELDS_STANDARD = [
-  'instruction_id',
-  'name',
-  'applies_to',
-  'version',
-  'last_updated',
+  "instruction_id",
+  "name",
+  "applies_to",
+  "version",
+  "last_updated",
 ];
-const REQUIRED_INSTRUCTION_FIELDS_VSCODE = ['applyTo'];
+const REQUIRED_INSTRUCTION_FIELDS_VSCODE = ["applyTo"];
 
 // ============================================================================
 // Constants
 // ============================================================================
 
 const ROOT_DIR = process.cwd();
-const AGENTS_DIR = join(ROOT_DIR, '.github/agents');
-const SKILLS_DIR = join(ROOT_DIR, '.github/skills');
-const INSTRUCTIONS_DIR = join(ROOT_DIR, '.github/instructions');
-const ORCHESTRATOR_PATH = join(ROOT_DIR, 'AGENTS.md');
+const AGENTS_DIR = join(ROOT_DIR, ".github/agents");
+const SKILLS_DIR = join(ROOT_DIR, ".github/skills");
+const INSTRUCTIONS_DIR = join(ROOT_DIR, ".github/instructions");
+const ORCHESTRATOR_PATH = join(ROOT_DIR, "AGENTS.md");
 
 const VALID_AGENTS = [
-  '@Architect',
-  '@Backend',
-  '@Frontend',
-  '@QA',
-  '@Scribe',
-  '@Security',
-  '@DataArchitect',
-  '@SyncEngineer',
-  '@DevOps',
+  "@Architect",
+  "@Backend",
+  "@Frontend",
+  "@QA",
+  "@Scribe",
+  "@Security",
+  "@DataArchitect",
+  "@SyncEngineer",
+  "@DevOps",
 ];
 
 const VALID_COMMIT_TYPES = [
-  'feat',
-  'fix',
-  'docs',
-  'style',
-  'refactor',
-  'perf',
-  'test',
-  'build',
-  'ci',
-  'chore',
-  'revert',
+  "feat",
+  "fix",
+  "docs",
+  "style",
+  "refactor",
+  "perf",
+  "test",
+  "build",
+  "ci",
+  "chore",
+  "revert",
 ];
 
 const REQUIRED_AGENT_FIELDS = [
-  'agent_id',
-  'name',
-  'description',
-  'version',
-  'last_updated',
+  "agent_id",
+  "name",
+  "description",
+  "version",
+  "last_updated",
 ];
 const REQUIRED_SKILL_FIELDS = [
-  'skill_id',
-  'name',
-  'description',
-  'version',
-  'last_updated',
+  "skill_id",
+  "name",
+  "description",
+  "version",
+  "last_updated",
 ];
 // Keep for compatibility but instructions will use format-specific validation
 
@@ -170,7 +170,7 @@ function extractFrontmatter(content: string): {
 
   // VS Code instructions format (````instructions with YAML inside)
   match = content.match(
-    /^````instructions\n---\n([\s\S]*?)\n---\n([\s\S]*?)````$/
+    /^````instructions\n---\n([\s\S]*?)\n---\n([\s\S]*?)````$/,
   );
   if (match) {
     try {
@@ -187,7 +187,7 @@ function extractFrontmatter(content: string): {
 function checkRequiredFields(
   obj: Record<string, unknown>,
   fields: string[],
-  result: ValidationResult
+  result: ValidationResult,
 ): void {
   for (const field of fields) {
     if (!(field in obj) || obj[field] === undefined || obj[field] === null) {
@@ -207,7 +207,7 @@ function checkVersionFormat(version: string, result: ValidationResult): void {
   const versionRegex = /^\d+\.\d+\.\d+$/;
   if (!versionRegex.test(version)) {
     result.warnings.push(
-      `Non-standard version format: ${version} (expected X.Y.Z)`
+      `Non-standard version format: ${version} (expected X.Y.Z)`,
     );
   }
 }
@@ -218,18 +218,18 @@ function checkVersionFormat(version: string, result: ValidationResult): void {
 
 async function validateAgent(filePath: string): Promise<ValidationResult> {
   const result: ValidationResult = {
-    file: filePath.replace(ROOT_DIR + '/', ''),
-    type: 'agent',
+    file: filePath.replace(ROOT_DIR + "/", ""),
+    type: "agent",
     errors: [],
     warnings: [],
     info: [],
   };
 
-  const content = await readFile(filePath, 'utf-8');
+  const content = await readFile(filePath, "utf-8");
   const parsed = extractFrontmatter(content);
 
   if (!parsed) {
-    result.errors.push('Invalid or missing YAML frontmatter');
+    result.errors.push("Invalid or missing YAML frontmatter");
     return result;
   }
 
@@ -239,7 +239,7 @@ async function validateAgent(filePath: string): Promise<ValidationResult> {
   checkRequiredFields(
     fm as unknown as Record<string, unknown>,
     REQUIRED_AGENT_FIELDS,
-    result
+    result,
   );
 
   // Check date format
@@ -253,64 +253,64 @@ async function validateAgent(filePath: string): Promise<ValidationResult> {
   }
 
   // Check name starts with @
-  if (fm.name && !fm.name.startsWith('@')) {
+  if (fm.name && !fm.name.startsWith("@")) {
     result.errors.push(`Agent name must start with @: ${fm.name}`);
   }
 
   // Check scope
   if (!fm.scope) {
-    result.warnings.push('Missing scope definition');
+    result.warnings.push("Missing scope definition");
   } else {
     if (!fm.scope.owns || fm.scope.owns.length === 0) {
-      result.warnings.push('Agent has no owned paths defined');
+      result.warnings.push("Agent has no owned paths defined");
     }
   }
 
   // Check auto_invoke
   if (!fm.auto_invoke) {
-    result.warnings.push('Missing auto_invoke rules');
+    result.warnings.push("Missing auto_invoke rules");
   } else {
     if (
       !fm.auto_invoke.keywords?.primary ||
       fm.auto_invoke.keywords.primary.length === 0
     ) {
-      result.warnings.push('No primary keywords defined for auto-invocation');
+      result.warnings.push("No primary keywords defined for auto-invocation");
     }
     if (
       !fm.auto_invoke.file_patterns ||
       fm.auto_invoke.file_patterns.length === 0
     ) {
-      result.warnings.push('No file patterns defined for auto-invocation');
+      result.warnings.push("No file patterns defined for auto-invocation");
     }
   }
 
   // Check outputs
   if (!fm.outputs) {
-    result.info.push('No outputs defined');
+    result.info.push("No outputs defined");
   }
 
   // Check body content
   if (parsed.body.trim().length < 100) {
-    result.warnings.push('Agent documentation body seems too short');
+    result.warnings.push("Agent documentation body seems too short");
   }
 
   // Check for required sections in body (accept inline > **Purpose:** format too)
   const hasPurpose =
-    parsed.body.includes('## Purpose') ||
-    parsed.body.includes('> **Purpose:**');
-  const hasConstraints = parsed.body.includes('## Constraints');
-  const hasWorkflow = parsed.body.includes('## Workflow');
+    parsed.body.includes("## Purpose") ||
+    parsed.body.includes("> **Purpose:**");
+  const hasConstraints = parsed.body.includes("## Constraints");
+  const hasWorkflow = parsed.body.includes("## Workflow");
 
   if (!hasPurpose) {
     result.warnings.push(
-      'Missing recommended section: ## Purpose (or > **Purpose:**)'
+      "Missing recommended section: ## Purpose (or > **Purpose:**)",
     );
   }
   if (!hasConstraints) {
-    result.warnings.push('Missing recommended section: ## Constraints');
+    result.warnings.push("Missing recommended section: ## Constraints");
   }
   if (!hasWorkflow) {
-    result.warnings.push('Missing recommended section: ## Workflow');
+    result.warnings.push("Missing recommended section: ## Workflow");
   }
 
   result.info.push(`Agent ID: ${fm.agent_id}`);
@@ -321,18 +321,18 @@ async function validateAgent(filePath: string): Promise<ValidationResult> {
 
 async function validateSkill(filePath: string): Promise<ValidationResult> {
   const result: ValidationResult = {
-    file: filePath.replace(ROOT_DIR + '/', ''),
-    type: 'skill',
+    file: filePath.replace(ROOT_DIR + "/", ""),
+    type: "skill",
     errors: [],
     warnings: [],
     info: [],
   };
 
-  const content = await readFile(filePath, 'utf-8');
+  const content = await readFile(filePath, "utf-8");
   const parsed = extractFrontmatter(content);
 
   if (!parsed) {
-    result.errors.push('Invalid or missing YAML frontmatter');
+    result.errors.push("Invalid or missing YAML frontmatter");
     return result;
   }
 
@@ -342,7 +342,7 @@ async function validateSkill(filePath: string): Promise<ValidationResult> {
   checkRequiredFields(
     fm as unknown as Record<string, unknown>,
     REQUIRED_SKILL_FIELDS,
-    result
+    result,
   );
 
   // Check date format
@@ -363,30 +363,30 @@ async function validateSkill(filePath: string): Promise<ValidationResult> {
       }
     }
   } else {
-    result.warnings.push('No called_by agents defined');
+    result.warnings.push("No called_by agents defined");
   }
 
   // Check chain references
   if (fm.chain_before) {
-    result.info.push(`Chains before: ${fm.chain_before.join(', ')}`);
+    result.info.push(`Chains before: ${fm.chain_before.join(", ")}`);
   }
   if (fm.chain_after) {
-    result.info.push(`Chains after: ${fm.chain_after.join(', ')}`);
+    result.info.push(`Chains after: ${fm.chain_after.join(", ")}`);
   }
 
   // Check auto_invoke
   if (fm.auto_trigger && !fm.auto_invoke) {
-    result.warnings.push('auto_trigger is true but no auto_invoke rules');
+    result.warnings.push("auto_trigger is true but no auto_invoke rules");
   }
 
   // Check MCP tools
   if (fm.mcp_tools && fm.mcp_tools.length > 0) {
-    result.info.push(`MCP tools: ${fm.mcp_tools.join(', ')}`);
+    result.info.push(`MCP tools: ${fm.mcp_tools.join(", ")}`);
   }
 
   // Check body content
   if (parsed.body.trim().length < 50) {
-    result.warnings.push('Skill documentation body seems too short');
+    result.warnings.push("Skill documentation body seems too short");
   }
 
   result.info.push(`Skill ID: ${fm.skill_id}`);
@@ -396,35 +396,35 @@ async function validateSkill(filePath: string): Promise<ValidationResult> {
 }
 
 async function validateInstruction(
-  filePath: string
+  filePath: string,
 ): Promise<ValidationResult> {
   const result: ValidationResult = {
-    file: filePath.replace(ROOT_DIR + '/', ''),
-    type: 'instruction',
+    file: filePath.replace(ROOT_DIR + "/", ""),
+    type: "instruction",
     errors: [],
     warnings: [],
     info: [],
   };
 
-  const content = await readFile(filePath, 'utf-8');
+  const content = await readFile(filePath, "utf-8");
   const parsed = extractFrontmatter(content);
 
   if (!parsed) {
-    result.errors.push('Invalid or missing YAML frontmatter');
+    result.errors.push("Invalid or missing YAML frontmatter");
     return result;
   }
 
   const fm = parsed.frontmatter as InstructionFrontmatter;
 
   // Detect format: VS Code (applyTo) vs AGENTS.md standard (instruction_id)
-  const isVSCodeFormat = 'applyTo' in fm;
+  const isVSCodeFormat = "applyTo" in fm;
 
   if (isVSCodeFormat) {
     // VS Code format validation
     checkRequiredFields(
       fm as unknown as Record<string, unknown>,
       REQUIRED_INSTRUCTION_FIELDS_VSCODE,
-      result
+      result,
     );
 
     if (fm.applyTo) {
@@ -439,7 +439,7 @@ async function validateInstruction(
     checkRequiredFields(
       fm as unknown as Record<string, unknown>,
       REQUIRED_INSTRUCTION_FIELDS_STANDARD,
-      result
+      result,
     );
 
     // Check date format
@@ -457,7 +457,7 @@ async function validateInstruction(
       const patterns = Array.isArray(fm.applies_to)
         ? fm.applies_to
         : [fm.applies_to];
-      result.info.push(`Applies to: ${patterns.join(', ')}`);
+      result.info.push(`Applies to: ${patterns.join(", ")}`);
     }
 
     result.info.push(`Instruction ID: ${fm.instruction_id}`);
@@ -466,7 +466,7 @@ async function validateInstruction(
 
   // Check body content
   if (parsed.body.trim().length < 100) {
-    result.warnings.push('Instruction documentation seems too short');
+    result.warnings.push("Instruction documentation seems too short");
   }
 
   return result;
@@ -474,21 +474,21 @@ async function validateInstruction(
 
 async function validateOrchestrator(): Promise<ValidationResult> {
   const result: ValidationResult = {
-    file: 'AGENTS.md',
-    type: 'orchestrator',
+    file: "AGENTS.md",
+    type: "orchestrator",
     errors: [],
     warnings: [],
     info: [],
   };
 
-  const content = await readFile(ORCHESTRATOR_PATH, 'utf-8');
+  const content = await readFile(ORCHESTRATOR_PATH, "utf-8");
 
   // Check for required sections
   const requiredSections = [
-    'Agent Routing',
-    'File Pattern Triggers',
-    'Skill Auto-Triggers',
-    'Commands',
+    "Agent Routing",
+    "File Pattern Triggers",
+    "Skill Auto-Triggers",
+    "Commands",
   ];
   for (const section of requiredSections) {
     if (!content.includes(`## ${section}`)) {
@@ -524,7 +524,7 @@ interface CrossValidationResult {
 
 async function crossValidate(
   agents: ValidationResult[],
-  skills: ValidationResult[]
+  skills: ValidationResult[],
 ): Promise<CrossValidationResult> {
   const result: CrossValidationResult = {
     errors: [],
@@ -535,7 +535,7 @@ async function crossValidate(
   // Build skill ID list
   const skillIds: Set<string> = new Set();
   for (const skill of skills) {
-    const content = await readFile(join(ROOT_DIR, skill.file), 'utf-8');
+    const content = await readFile(join(ROOT_DIR, skill.file), "utf-8");
     const parsed = extractFrontmatter(content);
     if (parsed) {
       const fm = parsed.frontmatter as SkillFrontmatter;
@@ -547,7 +547,7 @@ async function crossValidate(
 
   // Check skill chaining references
   for (const skill of skills) {
-    const content = await readFile(join(ROOT_DIR, skill.file), 'utf-8');
+    const content = await readFile(join(ROOT_DIR, skill.file), "utf-8");
     const parsed = extractFrontmatter(content);
     if (parsed) {
       const fm = parsed.frontmatter as SkillFrontmatter;
@@ -556,7 +556,7 @@ async function crossValidate(
         for (const chainedSkill of fm.chain_before) {
           if (!skillIds.has(chainedSkill)) {
             result.errors.push(
-              `Skill ${fm.skill_id} chains to non-existent skill: ${chainedSkill}`
+              `Skill ${fm.skill_id} chains to non-existent skill: ${chainedSkill}`,
             );
           }
         }
@@ -566,7 +566,7 @@ async function crossValidate(
         for (const chainedSkill of fm.chain_after) {
           if (!skillIds.has(chainedSkill)) {
             result.errors.push(
-              `Skill ${fm.skill_id} chains from non-existent skill: ${chainedSkill}`
+              `Skill ${fm.skill_id} chains from non-existent skill: ${chainedSkill}`,
             );
           }
         }
@@ -577,7 +577,7 @@ async function crossValidate(
   // Check for unused agents (agents not called by any skill)
   const usedAgents = new Set<string>();
   for (const skill of skills) {
-    const content = await readFile(join(ROOT_DIR, skill.file), 'utf-8');
+    const content = await readFile(join(ROOT_DIR, skill.file), "utf-8");
     const parsed = extractFrontmatter(content);
     if (parsed) {
       const fm = parsed.frontmatter as SkillFrontmatter;
@@ -605,18 +605,18 @@ async function crossValidate(
 // ============================================================================
 
 async function main() {
-  console.log('\n🔍 AGENTS.md System Validator\n');
-  console.log('='.repeat(60));
+  console.log("\n🔍 AGENTS.md System Validator\n");
+  console.log("=".repeat(60));
 
   const results: ValidationResult[] = [];
   let totalErrors = 0;
   let totalWarnings = 0;
 
   // Validate Agents
-  console.log('\n📦 Validating Agents...\n');
+  console.log("\n📦 Validating Agents...\n");
   try {
     const agentFiles = (await readdir(AGENTS_DIR)).filter(
-      (f) => f.endsWith('.agent.md') && f !== 'README.md'
+      (f) => f.endsWith(".agent.md") && f !== "README.md",
     );
     for (const file of agentFiles) {
       const result = await validateAgent(join(AGENTS_DIR, file));
@@ -626,20 +626,20 @@ async function main() {
 
       const status =
         result.errors.length > 0
-          ? '❌'
+          ? "❌"
           : result.warnings.length > 0
-            ? '⚠️'
-            : '✅';
+            ? "⚠️"
+            : "✅";
       console.log(`  ${status} ${file}`);
       result.errors.forEach((e) => console.log(`     ❌ ${e}`));
       result.warnings.forEach((w) => console.log(`     ⚠️  ${w}`));
     }
   } catch {
-    console.log('  ❌ Failed to read agents directory');
+    console.log("  ❌ Failed to read agents directory");
   }
 
   // Validate Skills
-  console.log('\n⚡ Validating Skills...\n');
+  console.log("\n⚡ Validating Skills...\n");
   try {
     // Skills are now in folders: skills/<skill-name>/skill.md
     const skillDirs = (await readdir(SKILLS_DIR, { withFileTypes: true }))
@@ -668,14 +668,14 @@ async function main() {
       }
     }
   } catch {
-    console.log('  ❌ Failed to read skills directory');
+    console.log("  ❌ Failed to read skills directory");
   }
 
   // Validate Instructions
-  console.log('\n📋 Validating Instructions...\n');
+  console.log("\n📋 Validating Instructions...\n");
   try {
     const instructionFiles = (await readdir(INSTRUCTIONS_DIR)).filter(
-      (f) => f.endsWith('.instructions.md') && f !== 'README.md'
+      (f) => f.endsWith(".instructions.md") && f !== "README.md",
     );
     for (const file of instructionFiles) {
       const result = await validateInstruction(join(INSTRUCTIONS_DIR, file));
@@ -685,20 +685,20 @@ async function main() {
 
       const status =
         result.errors.length > 0
-          ? '❌'
+          ? "❌"
           : result.warnings.length > 0
-            ? '⚠️'
-            : '✅';
+            ? "⚠️"
+            : "✅";
       console.log(`  ${status} ${file}`);
       result.errors.forEach((e) => console.log(`     ❌ ${e}`));
       result.warnings.forEach((w) => console.log(`     ⚠️  ${w}`));
     }
   } catch {
-    console.log('  ❌ Failed to read instructions directory');
+    console.log("  ❌ Failed to read instructions directory");
   }
 
   // Validate Orchestrator
-  console.log('\n🎯 Validating Orchestrator...\n');
+  console.log("\n🎯 Validating Orchestrator...\n");
   const orchestratorResult = await validateOrchestrator();
   results.push(orchestratorResult);
   totalErrors += orchestratorResult.errors.length;
@@ -706,18 +706,18 @@ async function main() {
 
   const status =
     orchestratorResult.errors.length > 0
-      ? '❌'
+      ? "❌"
       : orchestratorResult.warnings.length > 0
-        ? '⚠️'
-        : '✅';
+        ? "⚠️"
+        : "✅";
   console.log(`  ${status} AGENTS.md`);
   orchestratorResult.errors.forEach((e) => console.log(`     ❌ ${e}`));
   orchestratorResult.warnings.forEach((w) => console.log(`     ⚠️  ${w}`));
 
   // Cross-Validation
-  console.log('\n🔗 Cross-Validation...\n');
-  const agents = results.filter((r) => r.type === 'agent');
-  const skills = results.filter((r) => r.type === 'skill');
+  console.log("\n🔗 Cross-Validation...\n");
+  const agents = results.filter((r) => r.type === "agent");
+  const skills = results.filter((r) => r.type === "skill");
   const crossResult = await crossValidate(agents, skills);
   totalErrors += crossResult.errors.length;
   totalWarnings += crossResult.warnings.length;
@@ -727,13 +727,13 @@ async function main() {
   crossResult.info.forEach((i) => console.log(`  ℹ️  ${i}`));
 
   // Summary
-  console.log('\n' + '='.repeat(60));
-  console.log('\n📊 Summary\n');
+  console.log("\n" + "=".repeat(60));
+  console.log("\n📊 Summary\n");
 
-  const agentCount = results.filter((r) => r.type === 'agent').length;
-  const skillCount = results.filter((r) => r.type === 'skill').length;
+  const agentCount = results.filter((r) => r.type === "agent").length;
+  const skillCount = results.filter((r) => r.type === "skill").length;
   const instructionCount = results.filter(
-    (r) => r.type === 'instruction'
+    (r) => r.type === "instruction",
   ).length;
 
   console.log(`  Components validated:`);
@@ -748,20 +748,18 @@ async function main() {
   console.log();
 
   if (totalErrors > 0) {
-    console.log('  ❌ Validation FAILED - Fix errors before proceeding\n');
+    console.log("  ❌ Validation FAILED - Fix errors before proceeding\n");
     process.exit(1);
   } else if (totalWarnings > 0) {
-    console.log(
-      '  ⚠️  Validation PASSED with warnings - Review recommended\n'
-    );
+    console.log("  ⚠️  Validation PASSED with warnings - Review recommended\n");
     process.exit(0);
   } else {
-    console.log('  ✅ Validation PASSED - All checks passed\n');
+    console.log("  ✅ Validation PASSED - All checks passed\n");
     process.exit(0);
   }
 }
 
 main().catch((err) => {
-  console.error('Fatal error:', err);
+  console.error("Fatal error:", err);
   process.exit(1);
 });

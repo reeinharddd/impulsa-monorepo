@@ -610,9 +610,15 @@ docker-compose -f docker-compose.dev.yml up -d     # Start services
 docker-compose -f docker-compose.dev.yml down      # Stop services
 docker-compose -f docker-compose.dev.yml logs -f   # View logs
 
-# Git
+# Git (ALWAYS respect hooks - NEVER use --no-verify or --force)
 git checkout -b feat/TICKET-description    # Create branch
 git add .                                  # Stage changes
-git commit -m "feat(scope): message"       # Commit
-git push origin feat/TICKET-description    # Push
+git commit -m "feat(scope): message"       # Commit (runs pre-commit hooks)
+git push origin feat/TICKET-description    # Push (runs pre-push hooks)
+
+# Quality checks (run manually if needed)
+bun run format                             # Format all files
+bun run lint:fix                           # Fix linting issues
+bun test                                   # Run all tests
+bun run build                              # Build all packages
 ```

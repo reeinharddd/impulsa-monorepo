@@ -1,6 +1,6 @@
 # AGENTS.md - Impulsa AI Orchestrator
 
-> **Version:** 5.2.0 | **Standard:** AGENTS.md v1 + Agent Skills
+> **Version:** 6.0.0 | **Standard:** AGENTS.md v1 + Agent Skills v2
 
 ## Purpose
 
@@ -10,12 +10,76 @@ This is the **root orchestrator** for AI agent interactions. It routes tasks to 
 
 ## Quick Reference
 
-| Component            | Location                                                | Purpose                              |
-| :------------------- | :------------------------------------------------------ | :----------------------------------- |
-| **Skills (18)**      | [.github/skills/](.github/skills/README.md)             | Auto-discovered specialized tasks    |
-| **Subagents (9)**    | [.github/agents/](.github/agents/README.md)             | Domain specialists (via runSubagent) |
-| **Instructions (7)** | [.github/instructions/](.github/instructions/README.md) | Path-specific rules                  |
-| **Standards**        | [docs/process/](docs/process/)                          | Development rules                    |
+| Component         | Location                                    | Purpose                              |
+| :---------------- | :------------------------------------------ | :----------------------------------- |
+| **Skills (25+)**  | [.github/skills/](.github/skills/README.md) | Auto-discovered specialized tasks    |
+| **Subagents (9)** | [.github/agents/](.github/agents/README.md) | Domain specialists (via runSubagent) |
+| **Standards**     | [docs/process/](docs/process/)              | Development rules                    |
+
+## Available Skills
+
+Use these skills for detailed patterns on-demand:
+
+### Development Skills
+
+| Skill              | Description                            | URL                                                                                  |
+| :----------------- | :------------------------------------- | :----------------------------------------------------------------------------------- |
+| `angular`          | Angular 19+ (Signals, Standalone)      | [.github/skills/angular/SKILL.md](.github/skills/angular/SKILL.md)                   |
+| `tailwind`         | Tailwind CSS v4 patterns               | [.github/skills/tailwind/SKILL.md](.github/skills/tailwind/SKILL.md)                 |
+| `nestjs`           | NestJS Architecture (Thin Controllers) | [.github/skills/nestjs/SKILL.md](.github/skills/nestjs/SKILL.md)                     |
+| `prisma`           | Database schema & migrations           | [.github/skills/prisma/SKILL.md](.github/skills/prisma/SKILL.md)                     |
+| `i18n-translation` | Translation handling                   | [.github/skills/i18n-translation/SKILL.md](.github/skills/i18n-translation/SKILL.md) |
+
+### Testing Skills
+
+| Skill              | Description                  | URL                                                                                                    |
+| :----------------- | :--------------------------- | :----------------------------------------------------------------------------------------------------- |
+| `testing-backend`  | Jest/NestJS testing patterns | [.github/skills/testing-backend/SKILL.md](.github/skills/testing-backend/SKILL.md)                     |
+| `testing-frontend` | Component/Signal testing     | [.github/skills/testing-frontend/SKILL.md](.github/skills/testing-frontend/SKILL.md)                   |
+| `testing-strategy` | Test plans & coverage        | [.github/skills/testing-strategy-creation/SKILL.md](.github/skills/testing-strategy-creation/SKILL.md) |
+
+### Workflow & DevOps
+
+| Skill          | Description          | URL                                                                                                        |
+| :------------- | :------------------- | :--------------------------------------------------------------------------------------------------------- |
+| `commit`       | Conventional Commits | [.github/skills/commit/SKILL.md](.github/skills/commit/SKILL.md)                                           |
+| `pull-request` | PR Descriptions      | [.github/skills/pull-request/SKILL.md](.github/skills/pull-request/SKILL.md)                               |
+| `code-review`  | Automated Review     | [.github/skills/code-review/SKILL.md](.github/skills/code-review/SKILL.md)                                 |
+| `migration`    | Migration validation | [.github/skills/migration/SKILL.md](.github/skills/migration/SKILL.md)                                     |
+| `deployment`   | Runbook creation     | [.github/skills/deployment-runbook-creation/SKILL.md](.github/skills/deployment-runbook-creation/SKILL.md) |
+
+### Meta-Skills
+
+| Skill           | Description          | URL                                                                            |
+| :-------------- | :------------------- | :----------------------------------------------------------------------------- |
+| `skill-creator` | Create new skills    | [.github/skills/skill-creator/SKILL.md](.github/skills/skill-creator/SKILL.md) |
+| `skill-sync`    | Update AGENTS.md     | [.github/skills/skill-sync/SKILL.md](.github/skills/skill-sync/SKILL.md)       |
+| `self-update`   | Update Agents system | [.github/skills/self-update/SKILL.md](.github/skills/self-update/SKILL.md)     |
+
+## Auto-invoke Skills
+
+When performing these actions, ALWAYS invoke the corresponding skill FIRST:
+
+| Action                                  | Skill                    |
+| :-------------------------------------- | :----------------------- |
+| **Backend Development**                 |                          |
+| Create/Modify NestJS Controller/Service | `nestjs`                 |
+| Modify `schema.prisma`                  | `prisma`, `migration`    |
+| Write Backend Tests                     | `testing-backend`        |
+| Add API Endpoint                        | `api-doc-generation`     |
+| **Frontend Development**                |                          |
+| Create/Modify Angular Component         | `angular`, `tailwind`    |
+| Add new UI Text                         | `i18n-translation`       |
+| Write Frontend Tests                    | `testing-frontend`       |
+| Design UX Flow                          | `ux-flow-creation`       |
+| **Workflow**                            |                          |
+| Create Git Commit                       | `commit`                 |
+| Create Pull Request                     | `pull-request`           |
+| Request Code Review                     | `code-review`            |
+| Create ADR                              | `adr-creation`           |
+| **System**                              |                          |
+| Add/Modify Skill                        | `skill-sync`             |
+| Create new Documentation                | `frontmatter-validation` |
 
 ## MCP Tools (Quick Ref)
 
@@ -83,19 +147,6 @@ bun run lint         # Lint code
 | `.github/workflows/**`               | @DevOps                              |
 | `docs/technical/backend/database/**` | @DataArchitect                       |
 
-## Skill Auto-Triggers
-
-| Event                      | Skill(s) Invoked                 |
-| :------------------------- | :------------------------------- |
-| `schema.prisma` modified   | migration → schema-doc-sync      |
-| `*.controller.ts` modified | api-doc-generation               |
-| `docs/**/*.md` saved       | frontmatter-validation           |
-| `docs/**/*.md` created     | documentation → doc-index-update |
-| `related_docs` modified    | related-docs-sync                |
-| Agent/Skill modified       | self-update                      |
-| Security review requested  | security-audit-creation          |
-| Deployment planned         | deployment-runbook-creation      |
-
 ## Nested AGENTS.md
 
 | Path                                     | Context           |
@@ -115,6 +166,9 @@ bun run lint         # Lint code
 - Use `any` type
 - Use NgModules (standalone only)
 - Use barrel files (index.ts) - use direct imports
+- **Use `git commit --no-verify`** (always run pre-commit hooks)
+- **Use `git push --force`** (never force push)
+- **Bypass quality gates** (pre-commit, pre-push hooks)
 
 **ALWAYS:**
 
@@ -122,6 +176,11 @@ bun run lint         # Lint code
 - Use Conventional Commits
 - Write tests (80% coverage)
 - Update docs with code changes
+- Run and pass all pre-commit hooks (format, lint, commitlint)
+- Run and pass all pre-push hooks (lint, typecheck, test, build)
+- Fix formatting: `bun run format`
+- Fix linting: `bun run lint:fix`
+- Investigate and fix hook failures (never bypass)
 
 ## Documentation
 
@@ -136,6 +195,8 @@ bun run lint         # Lint code
 
 | Version | Date       | Changes                                                                                                                     |
 | :------ | :--------- | :-------------------------------------------------------------------------------------------------------------------------- |
+| 6.0.0   | 2026-01-30 | **Architecture Shift:** Adopted Granular Skills (vs Instructions); Action-Oriented Auto-invoke; Added Meta-Skills           |
+| 5.2.1   | 2026-01-30 | ADR-005 Frontend Assets Configuration; Fixed favicon/logo display; Updated LOGO-USAGE-GUIDE.md; Asset management docs       |
 | 5.2.0   | 2026-01-27 | Skills use SKILL.md convention; Auto-discovery via description field; Updated skill count to 18                             |
 | 5.1.0   | 2026-01-27 | Added NO barrel files constraint; Updated import rules across all documentation                                             |
 | 5.0.0   | 2026-01-26 | Complete YAML frontmatter (scope, triggers, auto_invoke); 4 new template skills; business.instructions.md                   |

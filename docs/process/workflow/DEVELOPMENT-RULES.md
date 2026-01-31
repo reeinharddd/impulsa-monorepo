@@ -156,6 +156,100 @@ _This section contains mandatory instructions for AI Agents (Copilot, Cursor, et
 
 **Rule:** If you skip a step, you MUST document why in the PR description.
 
+## 1.2. Git Workflow and Quality Gates
+
+### Critical Rules
+
+**NEVER bypass quality gates:**
+
+```bash
+# ❌ FORBIDDEN - Never do this
+git commit --no-verify
+git push --no-verify
+git push --force
+git push -f
+
+# ✅ CORRECT - Always do this
+git commit -m "feat(scope): message"  # Triggers pre-commit hooks
+git push origin branch-name            # Triggers pre-push hooks
+```
+
+### Pre-commit Hooks
+
+Automatically run on every commit:
+
+1. **Prettier**: Formats all staged files
+2. **ESLint**: Lints TypeScript/JavaScript files
+3. **Commitlint**: Validates commit message format
+
+**If hooks fail:**
+
+- Review the error messages
+- Fix formatting: `bun run format`
+- Fix linting: `bun run lint:fix`
+- Fix commit message format
+- Re-stage files and commit again
+
+### Pre-push Hooks
+
+Automatically run on every push:
+
+1. **Turbo validation**: Runs across all packages in monorepo
+   - `lint`: Validates code style
+   - `typecheck`: Validates TypeScript types
+   - `test`: Runs unit and integration tests
+   - `build`: Ensures code compiles successfully
+
+**If hooks fail:**
+
+- Check the specific package that failed
+- Fix the underlying issue (type errors, test failures, build errors)
+- Ensure all changes are committed
+- Retry the push
+
+**Common Issues:**
+
+| Error             | Cause               | Solution                                 |
+| ----------------- | ------------------- | ---------------------------------------- |
+| Permission denied | Files owned by root | `sudo chown -R $USER:$USER .`            |
+| Build failed      | TypeScript errors   | Fix type errors, run `bun run typecheck` |
+| Tests failed      | Broken tests        | Fix failing tests, run `bun test`        |
+| Lint failed       | Style violations    | Run `bun run lint:fix`                   |
+
+### Why Never Skip Validation
+
+1. **Quality Assurance**: Hooks catch errors before they reach the repository
+2. **Team Standards**: Ensures everyone follows the same code style
+3. **CI/CD Reliability**: Prevents failures in automated pipelines
+4. **Code Review Efficiency**: Reviewers focus on logic, not formatting
+5. **Infrastructure Issues**: Hooks reveal real problems (permissions, dependencies)
+
+**Example: Permission Issues**
+
+During development, you might encounter:
+
+```bash
+Error: EACCES: permission denied, unlink 'dist/file.ts'
+```
+
+This indicates files created with wrong ownership (often from Docker).
+
+**Solution:**
+
+```bash
+# Fix ownership
+sudo chown -R $USER:$USER apps/api/dist
+sudo chown -R $USER:$USER apps/web/public_override
+
+# Verify
+ls -la apps/api/dist
+
+# Then retry push
+git push origin main
+```
+
+**Never bypass with `--no-verify`** - it hides the real problem.
+
 ## 2. Code Construction Rules
 
 ### 2.0. General Style Rules
@@ -165,6 +259,13 @@ _This section contains mandatory instructions for AI Agents (Copilot, Cursor, et
    - Do not state the obvious.
    - Focus on naming variables and functions clearly so comments are unnecessary.
    - Use comments only to explain complex business logic or "magic" numbers/strings.
+3. **Code Quality Gates:**
+   - **NEVER** use `--no-verify` with git commands.
+   - **NEVER** use `--force` or `-f` with git push.
+   - **ALWAYS** run and pass all pre-commit hooks (prettier, eslint, tests).
+   - **ALWAYS** run and pass all pre-push hooks (build, typecheck, full test suite).
+   - **ALWAYS** fix formatting and linting issues before committing.
+   - If hooks fail, fix the underlying issue - never bypass validation.
 
 ### 2.1. Backend (NestJS)
 

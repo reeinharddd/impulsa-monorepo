@@ -103,7 +103,7 @@ Violations occur when:
 
 2. **API doc with database schema details**
 
-   ````markdown
+   `````markdown
    <!-- ❌ WRONG: In API-DESIGN.md -->
 
    ## POST /api/products
@@ -118,7 +118,11 @@ Violations occur when:
    );
    \```
    ````
-   ````
+   `````
+
+   ```
+
+   ```
 
 3. **Feature doc duplicating API + DB + UX**
 
@@ -148,7 +152,7 @@ Violations occur when:
 
 **Before:** `FEATURE-LOYALTY-POINTS.md` has database schema
 
-````markdown
+`````markdown
 ## Database Schema
 
 ````sql
@@ -164,7 +168,9 @@ CREATE TABLE loyalty_points (
 CREATE INDEX idx_loyalty_customer ON loyalty_points(customer_id);
 CREATE INDEX idx_loyalty_merchant ON loyalty_points(merchant_id);
 ````
-````
+`````
+
+`````
 
 **After (Step 1):** Create `docs/technical/backend/database/LOYALTY-POINTS-SCHEMA.md`
 
@@ -237,8 +243,9 @@ merchants ||--o{ loyalty_points : "manages"
 \```
 
 For business logic and use cases, see [FEATURE-LOYALTY-POINTS.md](../../features/FEATURE-LOYALTY-POINTS.md)
-````
-````
+`````
+
+`````
 
 **After (Step 2):** Update `FEATURE-LOYALTY-POINTS.md` to REFERENCE
 
@@ -284,8 +291,9 @@ For the complete database schema, see [LOYALTY-POINTS-SCHEMA.md](../../technical
 \```
 
 [30 more lines of endpoint specs]
-````
-````
+`````
+
+`````
 
 **After (Step 1):** Create `docs/technical/backend/api/AUTH-API.md`
 
@@ -343,7 +351,8 @@ User registration with email/password.
 | 409    | Email already exists| Error message                 |
 
 For feature requirements, see [FEATURE-USER-AUTH.md](../../features/FEATURE-USER-AUTH.md)
-````
+`````
+
 ````
 
 **After (Step 2):** Update `FEATURE-USER-AUTH.md` to REFERENCE
@@ -639,3 +648,4 @@ Update related_docs in ALL affected docs
 **Last Updated:** 2026-01-27
 **Author:** @Scribe
 **Related Skills:** documentation, frontmatter-validation, related-docs-sync, doc-index-update
+````

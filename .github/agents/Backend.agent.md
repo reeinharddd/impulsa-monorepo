@@ -17,7 +17,6 @@ scope:
   reads:
     - "docs/technical/architecture/DESIGN-PATTERNS.md"
     - "docs/templates/04-API-DESIGN-TEMPLATE.md"
-    - ".github/instructions/backend.instructions.md"
 
 # Auto-Invocation Rules
 auto_invoke:
