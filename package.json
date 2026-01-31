@@ -28,6 +28,7 @@
     "typecheck": "turbo run typecheck",
     "validate": "turbo run lint typecheck test build",
     "validate:agents": "bun run scripts/validate-agents-system.ts",
+    "permissions:fix": "./scripts/fix-permissions.sh",
     "clean": "turbo run clean && rm -rf node_modules",
     "db:migrate": "bun run --filter @impulsa/api db:migrate",
     "db:seed": "bun run --filter @impulsa/api db:seed",
