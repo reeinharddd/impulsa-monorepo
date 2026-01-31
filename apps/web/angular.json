@@ -26,6 +26,10 @@
             "assets": [
               {
                 "glob": "**/*",
+                "input": "public"
+              },
+              {
+                "glob": "**/*",
                 "input": "public_override"
               }
             ],

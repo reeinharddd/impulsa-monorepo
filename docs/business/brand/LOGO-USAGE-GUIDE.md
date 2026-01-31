@@ -150,17 +150,18 @@ The Impulsa logo consists of the following elements:
 
 The logo system includes the following variants:
 
-| File                         | Location                          | Use                                    |
-| :--------------------------- | :-------------------------------- | :------------------------------------- |
-| `logo-light.svg`             | `/libs/assets/src/images/`        | Full logo with text - Light theme      |
-| `logo-dark.svg`              | `/libs/assets/src/images/`        | Full logo with text - Dark theme       |
-| `icon-light.svg`             | `/libs/assets/src/images/`        | Icon only (no text) - Light theme      |
-| `icon-dark.svg`              | `/libs/assets/src/images/`        | Icon only (no text) - Dark theme       |
-| `icon-mono.svg`              | `/libs/assets/src/images/`        | Monochrome icon (black on transparent) |
-| `favicon.svg`                | `/apps/web/public/`               | Simplified favicon for 16x16px         |
-| `apple-touch-icon.svg`       | `/apps/web/public/assets/images/` | Apple Touch Icon 180x180px             |
-| `android-chrome-192x192.svg` | `/apps/web/public/assets/images/` | Android Chrome 192x192px               |
-| `android-chrome-512x512.svg` | `/apps/web/public/assets/images/` | Android Chrome 512x512px               |
+| File                   | Source Location                            | Deployed Location       | Use                                    |
+| :--------------------- | :----------------------------------------- | :---------------------- | :------------------------------------- |
+| `logo-light.svg`       | `/libs/assets/src/images/`                 | `/assets/images/`       | Full logo with text - Light theme      |
+| `logo-dark.svg`        | `/libs/assets/src/images/`                 | `/assets/images/`       | Full logo with text - Dark theme       |
+| `icon-light.svg`       | `/libs/assets/src/images/`                 | `/assets/images/`       | Icon only (no text) - Light theme      |
+| `icon-dark.svg`        | `/libs/assets/src/images/`                 | `/assets/images/`       | Icon only (no text) - Dark theme       |
+| `icon-mono.svg`        | `/libs/assets/src/images/`                 | `/assets/images/`       | Monochrome icon (black on transparent) |
+| `favicon.svg`          | `/apps/web/public/`                        | `/favicon.svg` (root)   | Browser tab favicon (16x16/32x32)      |
+| `apple-touch-icon.svg` | `/apps/web/public_override/assets/images/` | `/assets/images/`       | Apple Touch Icon 180x180px             |
+| `manifest.json`        | `/apps/web/public/`                        | `/manifest.json` (root) | PWA manifest for app installation      |
+
+**Note:** Files in `public/` are copied to the root of the build. Files in `public_override/` override `libs/assets/` in the build output.
 
 ### 3.2. Light Theme
 
@@ -284,21 +285,38 @@ The logo is implemented via the standalone `LogoComponent`:
 ```typescript
 import { LogoComponent } from '@shared/components/atoms/logo/logo.component';
 
-// In template
-<app-logo
-  variant="light"    // 'light' | 'dark' | 'mono'
-  type="icon"        // 'full' | 'icon'
-  class="h-12 w-12"  // Tailwind classes for sizing
-  [attr.aria-label]="'Impulsa Logo'"
-/>
+@Component({
+  selector: 'my-component',
+  imports: [LogoComponent],  // Add to component imports
+  template: `
+    <app-logo
+      [variantInput]="'light'"    // 'light' | 'dark' | 'mono'
+      [typeInput]="'icon'"        // 'full' | 'icon'
+      [classInput]="'h-12 w-12'"  // Tailwind classes for sizing
+    />
+  `,
+})
 ```
 
 **Props:**
 
-- `variant`: Selects logo theme
-- `type`: 'full' includes "Impulsa" text, 'icon' symbol only
-- `class`: Tailwind classes for size and style
-- `aria-label`: Accessibility (required)
+- `variantInput`: Selects logo theme ('light', 'dark', or 'mono')
+- `typeInput`: 'full' includes "Impulsa" text, 'icon' symbol only
+- `classInput`: Tailwind CSS classes for size and style
+
+**File Resolution:**
+
+The component automatically resolves to the correct SVG file:
+
+```typescript
+// Computed path logic:
+const prefix = type === "full" ? "logo" : "icon";
+return `/assets/images/${prefix}-${variant}.svg`;
+
+// Examples:
+// type='icon', variant='light' → /assets/images/icon-light.svg
+// type='full', variant='dark'  → /assets/images/logo-dark.svg
+```
 
 ### 5.2. In Documentation
 
@@ -315,31 +333,75 @@ To include the logo in Markdown files:
 
 ### 5.3. In PWA and Manifests
 
-The `manifest.json` file must include all icon sizes:
+**File:** `/apps/web/public/manifest.json`
 
 ```json
 {
+  "name": "Impulsa",
+  "short_name": "Impulsa",
+  "description": "Business management platform for LATAM merchants",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#4C1D95",
   "icons": [
     {
-      "src": "/assets/images/android-chrome-192x192.svg",
-      "sizes": "192x192",
-      "type": "image/svg+xml"
+      "src": "/assets/images/icon-light.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
     },
     {
-      "src": "/assets/images/android-chrome-512x512.svg",
-      "sizes": "512x512",
+      "src": "/assets/images/apple-touch-icon.svg",
+      "sizes": "180x180",
       "type": "image/svg+xml"
     }
   ]
 }
 ```
 
-In `index.html`:
+**File:** `/apps/web/src/index.html`
 
 ```html
-<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-<link rel="apple-touch-icon" href="/assets/images/apple-touch-icon.svg" />
+<!-- Favicons -->
+<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+<link
+  rel="icon"
+  href="/assets/images/icon-light.svg"
+  type="image/svg+xml"
+  sizes="any"
+/>
+<link
+  rel="apple-touch-icon"
+  sizes="180x180"
+  href="/assets/images/apple-touch-icon.svg"
+/>
+<link rel="manifest" href="/manifest.json" />
 ```
+
+**Important Notes:**
+
+1. **Favicon Caching:** Browsers aggressively cache favicons. To see changes:
+   - Clear browser cache: `Ctrl + Shift + Delete`
+   - Hard refresh: `Ctrl + F5`
+   - Test in incognito mode
+
+2. **Angular Assets Configuration:** Both `public` and `public_override` folders must be listed in `angular.json`:
+
+```json
+"assets": [
+  {
+    "glob": "**/*",
+    "input": "public"
+  },
+  {
+    "glob": "**/*",
+    "input": "public_override"
+  }
+]
+```
+
+1. **File Override Priority:** `public_override/` files take precedence over `libs/assets/` files during build.
 
 ---
 

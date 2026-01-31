@@ -111,20 +111,77 @@ Routes MUST use translation keys for the `title` property. Never use static stri
 { path: 'dashboard', component: DashboardComponent, title: 'Dashboard' }
 ````
 
-### 5. Asset Synchronization
+### 5. Asset Management (ADR-005)
 
-When editing translations in `libs/assets/src/i18n/*.json` or adding images to `libs/assets/src/images/`, you MUST sync them to the web app:
+**Angular Assets Configuration:**
+
+The web app uses a **two-folder strategy** for static assets:
+
+```json
+// angular.json
+"assets": [
+  {
+    "glob": "**/*",
+    "input": "public"           // Root-level files (favicon, manifest)
+  },
+  {
+    "glob": "**/*",
+    "input": "public_override"  // App-specific overrides
+  }
+]
+```
+
+**Folder Structure:**
+
+```
+apps/web/
+├── public/                     # Root-level static files
+│   ├── favicon.svg             # Browser tab icon → /favicon.svg
+│   └── manifest.json           # PWA manifest → /manifest.json
+├── public_override/            # App-specific assets (override libs/assets)
+│   └── assets/
+│       ├── images/             # Logo variants, icons → /assets/images/
+│       └── i18n/               # Translations → /assets/i18n/
+```
+
+**Using the LogoComponent:**
+
+```typescript
+import { LogoComponent } from '@shared/components/atoms/logo/logo.component';
+
+@Component({
+  imports: [LogoComponent],
+  template: `
+    <app-logo
+      [variantInput]="'light'"    // 'light' | 'dark' | 'mono'
+      [typeInput]="'icon'"        // 'full' | 'icon'
+      [classInput]="'h-9 w-9'"    // Tailwind sizing
+    />
+  `,
+})
+```
+
+**Asset Sync Process:**
+
+When updating shared assets in `libs/assets/src/`:
 
 ```bash
-# Sync assets manually (if dev server is already running)
+# Copy images to web app override
+cp libs/assets/src/images/*.svg apps/web/public_override/assets/images/
+
+# Copy translations
 cp libs/assets/src/i18n/es.json apps/web/public_override/assets/i18n/es.json
 ```
 
-_Note: `bun run dev` syncs automatically on start, but not during runtime._
+**Important:**
 
-```
+- `bun run dev` syncs automatically on start, but NOT during runtime
+- Restart dev server after asset changes
+- Clear browser cache for favicon updates: `Ctrl + Shift + Delete` or `Ctrl + F5`
 
-### 4. Domain-Based File Organization
+_See: [ADR-005: Frontend Assets Configuration](../../docs/technical/architecture/adr/005-FRONTEND-ASSETS-CONFIGURATION.md)_
+
+--- 4. Domain-Based File Organization
 
 Organize models and services by business domain:
 
@@ -155,7 +212,7 @@ core/
 └── guards/
 └── auth.guard.ts
 
-````
+```
 
 ### 5. No Unnecessary Comments
 
@@ -177,7 +234,7 @@ const isActive = computed(() => this.status() === 'active');
 // =========================================
 // COMPUTED PROPERTIES
 // =========================================
-````
+```
 
 ### 6. ALL Text Must Use Translations
 
@@ -492,6 +549,7 @@ describe('ProductCardComponent', () => {
 
 | Version | Date       | Changes                                                                                                                                     |
 | :------ | :--------- | :------------------------------------------------------------------------------------------------------------------------------------------ |
+| 2.1.0   | 2026-01-30 | Added Asset Management section (ADR-005); Documented favicon/logo configuration; LogoComponent integration in layouts                       |
 | 2.0.0   | 2026-01-27 | Added Critical Rules section: zoneless, templates, shared components, domain folders, comments, translations; Reorganized models & services |
 | 1.0.0   | 2026-01-01 | Initial AGENTS.md for frontend app                                                                                                          |
 

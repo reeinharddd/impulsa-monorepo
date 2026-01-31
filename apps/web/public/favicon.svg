@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <!-- Favicon 16x16/32x32 - Versión ultra simplificada para tamaños pequeños -->
+  <rect x="0" y="0" width="32" height="32" rx="7" fill="#CBC3E3"/>
+
+  <!-- Solo el símbolo central simplificado -->
+  <circle cx="16" cy="14" r="3" fill="#10B981"/>
+  <line x1="16" y1="17" x2="16" y2="28" stroke="#4C1D95" stroke-width="3" stroke-linecap="round"/>
+
+  <!-- Ondas simplificadas (solo 2 niveles para claridad) -->
+  <path d="M 11 9 A 6 6 0 0 0 11 19" fill="none" stroke="#4C1D95" stroke-width="3" stroke-linecap="round"/>
+  <path d="M 21 9 A 6 6 0 0 1 21 19" fill="none" stroke="#4C1D95" stroke-width="3" stroke-linecap="round"/>
+
+  <path d="M 7 5 A 11 11 0 0 0 7 23" fill="none" stroke="#4C1D95" stroke-width="2.5" stroke-linecap="round" opacity="0.7"/>
+  <path d="M 25 5 A 11 11 0 0 1 25 23" fill="none" stroke="#4C1D95" stroke-width="2.5" stroke-linecap="round" opacity="0.7"/>
+</svg>

@@ -4,11 +4,13 @@ This directory contains records of important architectural decisions made for th
 
 ## List of ADRs
 
-| ID                             | Title                       | Status   | Date       |
-| :----------------------------- | :-------------------------- | :------- | :--------- |
-| [001](001-AUTH-STRATEGY.md)    | **Authentication Strategy** | Accepted | 2025-11-25 |
-| [002](002-OFFLINE-STRATEGY.md) | **Offline-First Strategy**  | Accepted | 2025-11-26 |
-| [003](003-ICON-SYSTEM.md)      | **Icon System (Lucide)**    | Accepted | 2026-01-27 |
+| ID                                          | Title                              | Status   | Date       |
+| :------------------------------------------ | :--------------------------------- | :------- | :--------- |
+| [001](001-AUTH-STRATEGY.md)                 | **Authentication Strategy**        | Accepted | 2025-11-25 |
+| [002](002-OFFLINE-STRATEGY.md)              | **Offline-First Strategy**         | Accepted | 2025-11-26 |
+| [003](003-ICON-SYSTEM.md)                   | **Icon System (Lucide)**           | Accepted | 2026-01-27 |
+| [004](004-LOCALIZED-TITLES.md)              | **Localized Page Titles Strategy** | Accepted | 2026-01-27 |
+| [005](005-FRONTEND-ASSETS-CONFIGURATION.md) | **Frontend Assets Configuration**  | Accepted | 2026-01-30 |
 
 ## Process
 

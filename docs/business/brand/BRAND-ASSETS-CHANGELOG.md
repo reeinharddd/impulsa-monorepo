@@ -3,8 +3,8 @@
 document_type: "general"
 module: "brand"
 status: "approved"
-version: "1.0.0"
-last_updated: "2026-01-27"
+version: "1.0.1"
+last_updated: "2026-01-30"
 author: "@Scribe"
 
 # Keywords for semantic search
@@ -51,7 +51,7 @@ doc_metadata:
 
   <img src="https://img.shields.io/badge/Status-Approved-green?style=flat-square" alt="Status" />
   <img src="https://img.shields.io/badge/Type-Changelog-blue?style=flat-square" alt="Type" />
-  <img src="https://img.shields.io/badge/Last%20Updated-2026--01--27-lightgrey?style=flat-square" alt="Date" />
+  <img src="https://img.shields.io/badge/Last%20Updated-2026--01--30-lightgrey?style=flat-square" alt="Date" />
 
 </div>
 
@@ -82,6 +82,74 @@ This document maintains a historical record of all changes to Impulsa's brand vi
 ---
 
 ## 2. Changelog
+
+### Version 1.0.1 - 2026-01-30
+
+**Type:** Update - Frontend Assets Configuration
+
+**Author:** @Frontend, @Architect
+
+**Reason for Change:**
+Fixed favicon and logo display issues in the web application. Implemented proper Angular assets configuration and integrated LogoComponent in the public layout to replace hardcoded initial letters.
+
+**Files Created:**
+
+| File                   | Description                       | Location                                   |
+| :--------------------- | :-------------------------------- | :----------------------------------------- |
+| `favicon.svg`          | Simplified 32x32px browser icon   | `/apps/web/public/`                        |
+| `manifest.json`        | PWA manifest with icon references | `/apps/web/public/`                        |
+| `apple-touch-icon.svg` | iOS app icon (180x180px)          | `/apps/web/public_override/assets/images/` |
+
+**Files Modified:**
+
+| File                           | Change                                      |
+| :----------------------------- | :------------------------------------------ |
+| `apps/web/angular.json`        | Added `public` and `public_override` assets |
+| `apps/web/src/index.html`      | Updated favicon links with proper fallbacks |
+| `public-layout.component.ts`   | Added LogoComponent import                  |
+| `public-layout.component.html` | Replaced `<div>I</div>` with `<app-logo />` |
+
+**Technical Changes:**
+
+1. **Assets Configuration:** Implemented two-folder strategy in `angular.json`:
+   - `public/` for root-level files (favicon, manifest)
+   - `public_override/` for app-specific assets
+
+2. **LogoComponent Integration:**
+
+   ```typescript
+   <app-logo
+     [variantInput]="'light'"
+     [typeInput]="'icon'"
+     [classInput]="'h-9 w-9'"
+   />
+   ```
+
+3. **Favicon Configuration:**
+   - Primary: `/favicon.svg` (simplified for browser tabs)
+   - Fallback: `/assets/images/icon-light.svg` (full quality)
+   - Apple: `/assets/images/apple-touch-icon.svg` (iOS devices)
+
+**Documentation Created:**
+
+- [ADR-005: Frontend Assets Configuration](../../technical/architecture/adr/005-FRONTEND-ASSETS-CONFIGURATION.md)
+- Updated [LOGO-USAGE-GUIDE.md](./LOGO-USAGE-GUIDE.md) with correct file locations and implementation details
+- Updated [apps/web/AGENTS.md](../../../apps/web/AGENTS.md) with asset management section
+
+**Impact:**
+
+- ✅ Favicons now display correctly in browser tabs
+- ✅ Logo renders using official SVG assets instead of fallback text
+- ✅ PWA manifest properly configured for app installation
+- ✅ Clear separation between shared and app-specific assets
+
+**Migration Notes:**
+
+- Developers must clear browser cache (`Ctrl + Shift + Delete`) to see favicon changes
+- Hard refresh (`Ctrl + F5`) recommended after asset updates
+- Test in incognito mode to verify without cache interference
+
+---
 
 ### Version 1.0.0 - 2026-01-27
 
