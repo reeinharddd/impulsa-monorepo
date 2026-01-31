@@ -24,6 +24,9 @@ related_docs:
   api_design: ""
   feature_design: ""
   ux_flow: "docs/technical/frontend/UI-DESIGN-SYSTEM.md"
+  logo_usage: "docs/business/brand/LOGO-USAGE-GUIDE.md"
+  visual_identity: "docs/process/standards/VISUAL-IDENTITY.md"
+  brand_changelog: "docs/business/brand/BRAND-ASSETS-CHANGELOG.md"
 
 # Document-specific metadata
 doc_metadata:
@@ -143,12 +146,37 @@ We see a world where the size of your shop does not dictate the size of your opp
 
 ### 4.1. Product Logo Concept (Impulsa)
 
-The product logo must be distinct from the corporate logo. It should represent **connectivity** and **modern payments**.
+The product logo represents **growth without limits** through expanding waves radiating from a central point.
 
-- **Symbol:** A central antenna with expanding signal waves (NFC style), contained within a soft squircle.
-- **Style:** Minimalist, geometric, high-contrast (Deep Violet on Soft Lavender).
+**Implemented Design** (Version 1.0.0 - 2026-01-27):
+
+- **Symbol:** Expanding concentric waves (NFC/contactless payment style)
+  - Center point: The merchant (heart of business)
+  - Waves: Growth, reach, unlimited potential
+  - Partial arcs: Continuous expansion, dynamic movement
+- **Container:** Soft squircle (rounded rectangle, modern app icon standard)
+- **Style:** Minimalist, geometric, high-contrast
+- **Colors:**
+  - Light theme: Soft Lavender background (#CBC3E3), Deep Violet waves (#4C1D95)
+  - Dark theme: Deep Violet background (#4C1D95), Soft Lavender waves (#CBC3E3)
+  - Accent: Growth Green center pulse (#10B981)
 - **Meaning:** Connectivity, contactless payments, and the transmission of value.
-- **Usage:** App icon, splash screen, QR stand, marketing materials.
+- **Usage:** App icon, splash screen, favicon, QR stand, marketing materials.
+
+**Asset Files:**
+
+- SVG Masters: `/libs/assets/src/images/` (logo-light.svg, logo-dark.svg, icon-light.svg, icon-dark.svg, icon-mono.svg)
+- Generated PNGs: `/apps/web/public/assets/images/` (favicons, app icons)
+- Full documentation: [LOGO-USAGE-GUIDE.md](./LOGO-USAGE-GUIDE.md)
+
+**In Code:**
+
+```typescript
+import { LogoComponent } from '@shared/components/atoms/logo/logo.component';
+
+// Use in templates
+<app-logo variant="light" class="h-10 w-10" />
+```
 
 ### 3.2. Color Palette
 
