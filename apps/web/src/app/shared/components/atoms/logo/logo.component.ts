@@ -1,5 +1,5 @@
-import { Component, Input, computed, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component, Input, computed, signal } from '@angular/core';
 
 /**
  * LogoComponent - Impulsa Logo/Icon Display
@@ -20,31 +20,11 @@ import { CommonModule } from '@angular/common';
  * ```
  */
 @Component({
-  selector: 'app-logo',
+  selector: 'ui-logo',
   standalone: true,
   imports: [CommonModule],
-  template: `
-    <img
-      [src]="logoSrc()"
-      [alt]="altText()"
-      [class]="'select-none ' + (class() || '')"
-      draggable="false"
-    />
-  `,
-  styles: [
-    `
-      :host {
-        display: inline-block;
-      }
-
-      img {
-        display: block;
-        width: 100%;
-        height: 100%;
-        object-fit: contain;
-      }
-    `,
-  ],
+  templateUrl: './logo.component.html',
+  styleUrl: './logo.component.css',
 })
 export class LogoComponent {
   /**
